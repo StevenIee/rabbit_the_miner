@@ -69,6 +69,10 @@ class resting_eye(pygame.sprite.Sprite):
         # self.index += 1
         self.current_time += mt
         
+        # if restart:
+        #     self.index = 0
+        #     restart = False
+        
         if self.current_time >= self.animation_time:
             self.current_time = 0
    
@@ -77,6 +81,7 @@ class resting_eye(pygame.sprite.Sprite):
             self.index = len(self.images)-1
 
         self.image = self.images[self.index]
+    
         
         # if self.index >= len(self.images):
         #     self.index = len(self.images)-1
