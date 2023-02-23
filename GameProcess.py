@@ -118,12 +118,7 @@ def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result):# resting_eye):
     screen.blit(resting_back,(0,0))
     screen.blit(rest_ins,((de_x-1600)/2,50))
-    # screen.blit(resting_eye,(de_x/2-800,de_y/2-220))
-    # resting_eye()
-    # resting_eye = AS.resting_eye((de_x/2-800,de_y/2-220))
-    # resting_eye.update()
-    # all_sprites
-    # all_sprites.draw(screen)
+
     
     if resting_start:
         AS.resting_eye_play(screen, all_sprites, mt)
