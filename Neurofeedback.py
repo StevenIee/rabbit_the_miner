@@ -46,6 +46,9 @@ class Neurofeedback:
         # clock - for game loop (fps)
         clock= pygame.time.Clock()
         mt = clock.tick(60) / 800  # for resting frame num
+        cumtime = 0;
+        curtime = 0;
+        times = [cumtime, curtime];
         run = True
         game_starter = False
         resting_start = False
@@ -115,7 +118,7 @@ class Neurofeedback:
 
                 elif game_status == "rest_start":
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, self.rpy)#, resting_eye )
+                    game_status, game_status_old, resting_start, base_result, cumtime, curtime = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times)#, resting_eye )
                     pygame.display.update()
                 
                 elif game_status == "rest_result":

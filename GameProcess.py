@@ -10,8 +10,10 @@ Created on Wed Feb 15 16:07:32 2023
 import assets as AS
 import numpy as np
 from datetime import datetime
+import time
 import EEG_Calc as EC
-
+import TIME_CON as T
+import pygame
 import os
 # class Player_data:
     
@@ -122,49 +124,61 @@ def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, 
     return game_status, game_status_old, connection_check
 
 
-def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy):# resting_eye):
+def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times):# resting_eye):
     screen.blit(resting_back,(0,0))
     screen.blit(rest_ins,((de_x-1600)/2,50))
-
     
     if resting_start:
-        # if 3초전:
-            # 눈뜬거
-        AS.resting_eye_play(screen, all_sprites, mt) #* 여기에 알아서 3초 뒤에 시작
+        cumtime = times[0]; curtime = times[1];
+        temp_curtime = time.time();
+        cumtime += temp_curtime - curtime;
+        curtime = temp_curtime;
+        times = [cumtime, curtime];
+        if cumtime < T.RESTING_EYE:
+
+            AS.resting_eye_play(screen, all_sprites, mt) #* 여기에 알아서 3초 뒤에 시작
             
-        # elif 3초지나면:
+        elif cumtime < T.RESTING_EYE + T.RESTING:
             # resting 돌아가고
-        
-        # if resting 끝나면:
-            # 결과 페이지 나오게
+            # baseline FAA calculator
+            temp_buffer = np.array(rpy.root.data_storage);
+            time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
+            # online-processing 1. epoching with the newest data
+            eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
             
-        # 3초 기다렸다가
-        # baseline & timer
-        # baseline FAA calculator
+            # online-processing 2. preprocessing
+            eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
+            
+            # calculate data using fft
+            faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
+            
+            base_result.append([faa, cumtime, time_temp])
         
-        temp_buffer = np.array(rpy.root.data_storage);
-        time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
-        # online-processing 1. epoching with the newest data
-        eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
-        
-        # online-processing 2. preprocessing
-        eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
-        
-        # calculate data using fft
-        faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-        
-        if button_jstart.draw(screen): # 여기에 baselinse 부분이 들어가면 되는건가여?  
-            game_status_old = game_status
-            game_status = "rest_result"
-            base_result = 1 
+        else:
+            # baseline result calc
+            base_outlierx = np.transpose(np.array(base_result));
+            temp = base_outlierx[0,:];
+            outidx = EC.reject_outliers(temp, 3);
+            base_outlierx[0,outidx] = np.NaN
+            
+            faa_mean = np.nanmean(base_outlierx[0,:]);
+            faa_std = np.nanstd(base_outlierx[0,:]);
+            duration = base_outlierx[1,-1];
+            
+            # 결과 페이지 나오게 #@JISU 여기 좀 부탁
+            if button_jstart.draw(screen): 
+                game_status_old = game_status
+                game_status = "rest_result"
         
         
     else:
         screen.blit(eye_1,(de_x/2-800,de_y/2-220))
         if button_jstart.draw(screen): 
             resting_start = True
+            cumtime = 0; curtime = time.time();
+            times = [cumtime, curtime];
     
-    return game_status, game_status_old, resting_start, base_result
+    return game_status, game_status_old, resting_start, base_result, times
 
 
 def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest):
