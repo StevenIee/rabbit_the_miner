@@ -102,7 +102,7 @@ class Neurofeedback:
                 # 1) before baseline, 2) before main_game
                 if connection_check == False:
                     self.rpy = self.connect.check()
-                
+                    
                 # Game process
                 elif game_status == "intro":
                     game_status, game_status_old = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old)

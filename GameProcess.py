@@ -128,7 +128,16 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
 
     
     if resting_start:
-        AS.resting_eye_play(screen, all_sprites, mt)
+        # if 3초전:
+            # 눈뜬거
+        AS.resting_eye_play(screen, all_sprites, mt) #* 여기에 알아서 3초 뒤에 시작
+            
+        # elif 3초지나면:
+            # resting 돌아가고
+        
+        # if resting 끝나면:
+            # 결과 페이지 나오게
+            
         # 3초 기다렸다가
         # baseline & timer
         # baseline FAA calculator
