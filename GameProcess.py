@@ -21,7 +21,7 @@ import os
 
     
 def player_data():
-  org_path = 'D:/DCNL/DTx/neurofeedback/rabbit_the_miner'
+  org_path = './'
   # os.chdir(org_path) 
   data_path = org_path + '/data'
   
@@ -169,7 +169,7 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
             if button_jstart.draw(screen): 
                 game_status_old = game_status
                 game_status = "rest_result"
-        
+                print(faa_mean, faa_std)
         
     else:
         screen.blit(eye_1,(de_x/2-800,de_y/2-220))
