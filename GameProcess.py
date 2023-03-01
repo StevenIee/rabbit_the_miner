@@ -155,16 +155,6 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
             base_result.append([faa, cumtime, time_temp])
         
         else:
-            # baseline result calc
-            base_outlierx = np.transpose(np.array(base_result));
-            temp = base_outlierx[0,:];
-            outidx = EC.reject_outliers(temp, 3);
-            base_outlierx[0,outidx] = np.NaN
-            
-            faa_mean = np.nanmean(base_outlierx[0,:]);
-            faa_std = np.nanstd(base_outlierx[0,:]);
-            duration = base_outlierx[1,-1];
-            
             # 결과 페이지 나오게 #@JISU 여기 좀 부탁
             if button_jstart.draw(screen): 
                 game_status_old = game_status
@@ -185,6 +175,15 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
     screen.blit(resting_back,(0,0))
     screen.blit(rest_rep,((de_x-1000)/2,70))
     
+     # baseline result calc
+    base_outlierx = np.transpose(np.array(base_result));
+    temp = base_outlierx[0,:];
+    outidx = EC.reject_outliers(temp, 3);
+    base_outlierx[0,outidx] = np.NaN
+    
+    faa_mean = np.nanmean(base_outlierx[0,:]);
+    faa_std = np.nanstd(base_outlierx[0,:]);
+    duration = base_outlierx[1,-1];
     if button_start3.draw(screen):
         game_status_old = game_status
         game_status = "game_starting"
