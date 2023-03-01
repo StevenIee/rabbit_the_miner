@@ -11,15 +11,19 @@ from datetime import datetime
 # from assets import Button
 import assets as AS
 import GameProcess as GP
+from Connection import Connect
+import rpyc
+
 
 class Neurofeedback:
-
     def __init__(self, player_id, player_session, player_datafile):
 
         self.player_id = player_id
         self.player_session = player_session
         self.player_datafile =player_datafile
+        self.connect = Connect()
 
+        
         # start pygame
         pygame.init()
         
@@ -91,20 +95,27 @@ class Neurofeedback:
                     game_status = "intro"
                 
         
-                    
+            connection_check = True;
+            
             if game_starter:
-                if game_status == "intro":
+                # Connection check
+                # 1) before baseline, 2) before main_game
+                if connection_check == False:
+                    self.rpy = self.connect.check()
+                
+                # Game process
+                elif game_status == "intro":
                     game_status, game_status_old = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old)
                 
                 elif game_status == "method":
                     game_status, game_status_old = GP.method(self.screen, game_status, game_status_old, de_x, de_y, method_back, button_start2, method)
                 
                 elif game_status == "rest_method":
-                    game_status, game_status_old = GP.rest_method(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart)
-                
+                    game_status, game_status_old, connection_check = GP.rest_method(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart)
+
                 elif game_status == "rest_start":
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result)#, resting_eye )
+                    game_status, game_status_old, resting_start, base_result = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, self.rpy)#, resting_eye )
                     pygame.display.update()
                 
                 elif game_status == "rest_result":

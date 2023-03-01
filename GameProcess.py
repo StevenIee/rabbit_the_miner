@@ -8,9 +8,15 @@ Created on Wed Feb 15 16:07:32 2023
 # import pygame
 # from assets import *
 import assets as AS
+import numpy as np
 from datetime import datetime
+import EEG_Calc as EC
+
 import os
 # class Player_data:
+    
+    
+
     
 def player_data():
   org_path = 'D:/DCNL/DTx/neurofeedback/rabbit_the_miner'
@@ -108,14 +114,15 @@ def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, 
     screen.blit(resting_back,(0,0))    
     screen.blit(rest_expl,(de_x*0.05,de_y*0.07))
     screen.blit(rest_title,((de_x-1000)/2,50))
+    connection_check = True
     if button_jstart.draw(screen): 
         game_status_old = game_status
         game_status = "rest_start"
-                
-    return game_status, game_status_old
+        connection_check = False
+    return game_status, game_status_old, connection_check
 
 
-def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result):# resting_eye):
+def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy):# resting_eye):
     screen.blit(resting_back,(0,0))
     screen.blit(rest_ins,((de_x-1600)/2,50))
 
@@ -124,11 +131,23 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
         AS.resting_eye_play(screen, all_sprites, mt)
         # 3초 기다렸다가
         # baseline & timer
+        # baseline FAA calculator
         
-        if button_jstart.draw(screen): 
+        temp_buffer = np.array(rpy.root.data_storage);
+        time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
+        # online-processing 1. epoching with the newest data
+        eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
+        
+        # online-processing 2. preprocessing
+        eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
+        
+        # calculate data using fft
+        faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
+        
+        if button_jstart.draw(screen): # 여기에 baselinse 부분이 들어가면 되는건가여?  
             game_status_old = game_status
             game_status = "rest_result"
-            base_result = 1
+            base_result = 1 
         
         
     else:

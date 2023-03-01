@@ -13,11 +13,11 @@ import GameProcess as GP
 # import pygame
 
 
-#%% get player data
+if __name__ == "__main__":
+    #%% get player data
 
-player_id, player_session, player_datafile = GP.player_data()
+    player_id, player_session, player_datafile = GP.player_data()
+    
+    #%% start game!
 
-
-#%% start game!
-
-NF = Neurofeedback(player_id, player_session, player_datafile)
+    NF = Neurofeedback(player_id, player_session, player_datafile)
