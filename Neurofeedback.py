@@ -120,15 +120,15 @@ class Neurofeedback:
                 elif game_status == "rest_start":
                     # print('1111')
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result, times = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times)#, resting_eye )
+                    game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times)#, resting_eye )
                     pygame.display.update()
                 
                 elif game_status == "rest_result":
                     # del all_sprites
-                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest)
+                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std)
                 
                 elif game_status == "game_start":
-                    game_status, game_status_old, game_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y)
+                    game_status, game_status_old, game_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back)
                 
                 
             else:    
