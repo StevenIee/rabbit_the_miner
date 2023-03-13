@@ -20,4 +20,4 @@ if __name__ == "__main__":
     
     #%% start game!
 
-    NF = Neurofeedback(player_id, player_session, player_datafile)
+    NF = Neurofeedback(player_id, player_session, player_datafile) 

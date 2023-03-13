@@ -124,7 +124,7 @@ def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, 
     return game_status, game_status_old, connection_check
 
 
-def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times):# resting_eye):
+def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times, faa_mean, faa_std):# resting_eye):
     screen.blit(resting_back,(0,0))
     screen.blit(rest_ins,((de_x-1600)/2,50))
     
@@ -178,12 +178,25 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
             cumtime = 0; curtime = time.time();
             times = [cumtime, curtime];
     
-    return game_status, game_status_old, resting_start, base_result, times
+    return game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std
 
 
-def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest):
+def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std):
     screen.blit(resting_back,(0,0))
     screen.blit(rest_rep,((de_x-1000)/2,70))
+    
+    mean_word = 'Mean : ' + str(round(faa_mean, 2))
+    std_word ='Std : ' + str(round(faa_std, 2))
+    
+    font6 = pygame.font.SysFont('arial',70, True)
+    for_mean = font6.render(mean_word, False, 'White')
+    for_std = font6.render(std_word, False, 'White')
+    mean_x, mean_y = for_mean.get_size()
+    std_x, std_y = for_std.get_size()
+    
+    screen.blit(for_mean, ((de_x-mean_x)/2, 500-mean_y))
+    screen.blit(for_std, ((de_x-std_x)/2, 500+std_y))
+    
     
     if button_start3.draw(screen):
         game_status_old = game_status
@@ -198,7 +211,65 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart):
+    # background 
+    screen.blit(game_back,(0,0))
     
-    return game_status
+    
+    if game_rd:
+        # ready start 화면 2초씩
+        # ready
+        # screen.blit(game_back,(0,0))
+        
+        # start
+        
+        game_st = True
+        
+    if game_st:
+                        
+        if game_stop:
+            # game stop 이라면
+            screen.blit(game_pauseb,(de_x*0.025,de_y*0.05))
+            screen.blit(pause_title,(de_x*0.5-275, de_y*0.2))
+            if button_resume.draw(screen):
+                game_stop = False               
+            if button_main.draw(screen):
+                game_status = "intro"
+            if button_restart.draw(screen):
+                game_status = "game_starting"
+        
+        else: 
+            # game stop이 아니라면
+            screen.blit(game_back,(0,0))
+            
+            # game data - mean, std ... 
+            
+            
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    game_result = 11
+    
+    return game_status, game_status_old, game_result, game_rd, game_st, game_stop 
+
+
+
+
+
+
+def game_result(screen, game_status, game_status_old, game_result):
+    
+    
+    
+    
+    return game_status, game_status_old
+
+
+
 
