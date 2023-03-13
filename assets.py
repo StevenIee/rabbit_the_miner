@@ -149,10 +149,13 @@ def back_img(de_x, de_y):
     
     rest_rep = pygame.image.load('IMAGES/picset/resting/resting_report.png').convert_alpha() 
     rest_rep = pygame.transform.scale(rest_rep, (1000, 250))
+    
+    game_pauseb = pygame.image.load('picset/pause2.png').convert_alpha() 
+    game_pauseb = pygame.transform.scale(game_pauseb, (de_x*0.95, de_y*0.9))
 
 
 
-    return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep
+    return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb
 
 def miner_img():
     miner_intro = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
@@ -164,3 +167,81 @@ def cart_img():
     cart_full = pygame.transform.scale(cart_full, (600, 600))
     return cart_full
 
+
+
+class gaming_ani(pygame.sprite.Sprite):
+    def __init__(self, de_x, de_y):
+        super().__init__()
+        
+        miner_size = (1600, 560)
+        miner_position = (de_x/2-400,de_y-875)
+        
+        miner_images = []
+        miner_images.append(pygame.image.load('IMAGES/picset/character/miner_1.png'))
+        miner_images.append(pygame.image.load('IMAGES/picset/character/miner_2.png'))
+        miner_images.append(pygame.image.load('IMAGES/picset/character/miner_3.png'))
+        miner_images.append(pygame.image.load('IMAGES/picset/character/miner_4.png'))
+        miner_images.append(pygame.image.load('IMAGES/picset/character/miner_5.png'))
+        miner_images.append(pygame.image.load('IMAGES/picset/character/miner_6.png'))
+        
+        
+        
+        self.miner_rect = pygame.Rect(miner_position, miner_size)
+        
+        self.miner_images = [pygame.transform.scale(miner_image, miner_size) for miner_image in miner_images]
+        
+        self.miner_index = 0
+        self.miner_image = miner_images[self.miner_index]
+        
+        self.animation_time = round(100 / len(self.miner_images * 100), 2)
+        self.current_time = 0
+        
+        
+        # stat_size = 
+        # stat_bar = 
+        
+        
+        # stat_images = []
+        
+        cart_size = (600, 600)
+        cart_position = (de_x/2-950, de_y-625)
+        
+        cart_images = []
+        cart_images.append(pygame.image.load('IMAGES/picset/cart/cart_0.png'))
+        cart_images.append(pygame.image.load('IMAGES/picset/cart/cart_1.png'))
+        cart_images.append(pygame.image.load('IMAGES/picset/cart/cart_2.png'))
+        
+        
+        
+        
+        
+                      
+    def miner_update(self, mt):
+        # self.index += 1
+        self.current_time += mt
+        
+        # if restart:
+        #     self.index = 0
+        #     restart = False
+        
+        if self.current_time >= self.animation_time:
+            self.current_time = 0
+   
+            self.miner_index += 1
+        if self.miner_index >= len(self.miner_images):
+            self.miner_index = len(self.miner_images)-1
+
+        self.miner_image = self.miner_images[self.miner_index]
+
+
+
+    def update(self, ):
+
+        self.index += 1
+
+ 
+
+        if self.index >= len(self.images):
+            self.index = 0
+
+        self.image = self.images[self.index]

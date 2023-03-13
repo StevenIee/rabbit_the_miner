@@ -211,10 +211,65 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart):
+    # background 
+    screen.blit(game_back,(0,0))
+    
+    
+    if game_rd:
+        # ready start 화면 2초씩
+        # ready
+        # screen.blit(game_back,(0,0))
+        
+        # start
+        
+        game_st = True
+        
+    if game_st:
+                        
+        if game_stop:
+            # game stop 이라면
+            screen.blit(game_pauseb,(de_x*0.025,de_y*0.05))
+            screen.blit(pause_title,(de_x*0.5-275, de_y*0.2))
+            if button_resume.draw(screen):
+                game_stop = False               
+            if button_main.draw(screen):
+                game_status = "intro"
+            if button_restart.draw(screen):
+                game_status = "game_starting"
+        
+        else: 
+            # game stop이 아니라면
+            screen.blit(game_back,(0,0))
+            
+            # game data - mean, std ... 
+            
+            
+        
+        
+        
+        
+        
     
     
     
     
-    return game_status
+    game_result = 11
+    
+    return game_status, game_status_old, game_result, game_rd, game_st, game_stop 
+
+
+
+
+
+
+def game_result(screen, game_status, game_status_old, game_result):
+    
+    
+    
+    
+    return game_status, game_status_old
+
+
+
 
