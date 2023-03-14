@@ -241,34 +241,34 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         else: 
             # game stop이 아니라면
             
-            # game data - mean, std ... 
-            raw_faa_std = 22
-            game_faa, game_bound = game_faa_convert(raw_faa_std)
+            # game data 
+            raw_faa = 22
+            game_faa, game_bound = game_faa_convert(raw_faa)
             
             # game_animation(game_bound)
             
             
-    
+            
     game_result = 11
     
     return game_status, game_status_old, game_result, game_rd, game_st, game_stop 
 
 
 
-def game_faa_convert(raw_faa_std):
+def game_faa_convert(raw_faa):
     game_faa_range = [-0.4, 0.4]
     game_unit = game_faa_range/5
     
     bound_range = [game_unit*(-5), game_unit*(-3), game_unit*(-1), game_unit*(1), game_unit*(3), game_unit*(5)]
     
-    if raw_faa_std > game_faa_range[1]:
+    if raw_faa > game_faa_range[1]:
         game_faa = game_faa_range[1]
     
-    elif raw_faa_std < game_faa_range[0]:
+    elif raw_faa < game_faa_range[0]:
         game_faa = game_faa_range[0]
     
     else:
-        game_faa = raw_faa_std
+        game_faa = raw_faa
     
     
     if game_faa >= bound_range[0] and game_faa < bound_range[1]:
