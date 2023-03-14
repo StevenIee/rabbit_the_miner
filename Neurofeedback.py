@@ -53,6 +53,7 @@ class Neurofeedback:
         game_starter = False
         resting_start = False
         base_result = []
+        nf_result = [];
         game_rd = True
         game_st = False
         game_stop = False
@@ -133,7 +134,7 @@ class Neurofeedback:
                     game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std)
                 
                 elif game_status == "game_start":
-                    game_status, game_status_old, game_result, game_rd, game_st, game_stop = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart)
+                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times,nf_result, self.rpy)
                 
                 
                 

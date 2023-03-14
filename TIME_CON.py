@@ -2,3 +2,5 @@
 
 RESTING_EYE = 3
 RESTING = 30
+NF_T= 600
+NF_update_t = 0.1

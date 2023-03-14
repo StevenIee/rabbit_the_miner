@@ -211,11 +211,9 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times,nf_result, rpy):
     # background 
     screen.blit(game_back,(0,0))
-    
-    
     if game_rd:
         # ready start 화면 2초씩
         # ready
@@ -224,9 +222,16 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         # start
         
         game_st = True
+        # time init
+
+        cumtime = 0; 
+        curtime = time.time();
+        times = [cumtime , curtime];
+        
         
     if game_st:
-                        
+        temp_curtime = time.time();
+        
         if game_stop:
             # game stop 이라면
             screen.blit(game_pauseb,(de_x*0.025,de_y*0.05))
@@ -238,20 +243,40 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
             if button_restart.draw(screen):
                 game_status = "game_starting"
         
-        else: 
-            # game stop이 아니라면
-            
-            # game data 
-            raw_faa = 22
-            game_faa, game_bound = game_faa_convert(raw_faa)
-            
+        else: # game stop이 아니라면
+            if times[1] - temp_curtime  >= T.NF_update_t: # time update 
+                
+                # baseline faa
+                faa_mean; faa_std;
+                # NF faa calc
+                temp_buffer = np.array(rpy.root.data_storage);
+                time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
+                # online-processing 1. epoching with the newest data
+                eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
+                # online-processing 2. preprocessing
+                eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
+                # calculate data using fft
+                raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
+                
+                game_faa, game_bound = game_faa_convert(raw_faa)
+                
+                # time save
+                cumtime = times[0];
+                cumtime += temp_curtime - curtime;
+                curtime = temp_curtime;
+                times = [cumtime, curtime];
+                
+                # data save
+                nf_result.append([faa, cumtime, time_temp])
+                
             # game_animation(game_bound)
-            
-            
+            if times[0] > T.NF_T:
+                #game stop
+                game_stop = True;
             
     game_result = 11
     
-    return game_status, game_status_old, game_result, game_rd, game_st, game_stop 
+    return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
 
 
 
