@@ -240,19 +240,14 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         
         else: 
             # game stop이 아니라면
-            screen.blit(game_back,(0,0))
             
             # game data - mean, std ... 
+            raw_faa_std = 22
+            game_faa, game_bound = game_faa_convert(raw_faa_std)
+            
+            # game_animation(game_bound)
             
             
-        
-        
-        
-        
-        
-    
-    
-    
     
     game_result = 11
     
@@ -260,13 +255,61 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 
 
 
-
-
-
-def game_result(screen, game_status, game_status_old, game_result):
+def game_faa_convert(raw_faa_std):
+    game_faa_range = [-0.4, 0.4]
+    game_unit = game_faa_range/5
+    
+    bound_range = [game_unit*(-5), game_unit*(-3), game_unit*(-1), game_unit*(1), game_unit*(3), game_unit*(5)]
+    
+    if raw_faa_std > game_faa_range[1]:
+        game_faa = game_faa_range[1]
+    
+    elif raw_faa_std < game_faa_range[0]:
+        game_faa = game_faa_range[0]
+    
+    else:
+        game_faa = raw_faa_std
+    
+    
+    if game_faa >= bound_range[0] and game_faa < bound_range[1]:
+        game_bound = 1
+    
+    elif game_faa >= bound_range[1] and game_faa < bound_range[2]:
+        game_bound = 2
+    
+    elif game_faa >= bound_range[2] and game_faa < bound_range[3]:
+        game_bound = 3
+        
+    elif game_faa >= bound_range[3] and game_faa < bound_range[4]:
+        game_bound = 4
+        
+    elif game_faa >= bound_range[4] and game_faa <= bound_range[5]:
+        game_bound = 5
     
     
     
+    
+    
+    return game_faa, game_bound
+
+
+
+def game_result(screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2):
+    
+    screen.blit(game_back,(0,0))
+    screen.blit(game_cl_b,(de_x*0.025,de_y*0.05))
+    screen.blit(game_cl_res,(de_x*0.025,de_y*0.5-200))
+    screen.blit(cart_result,(de_x-930, de_y-750))
+    screen.blit(miner_intro,(de_x-750, de_y-900))
+    
+    screen.blit(game_clear,(de_x*0.05, 120))
+    
+    if button_main2.draw(screen):
+        game_status_old = game_status
+        game_status = "intro"
+    if button_restart2.draw(screen):
+        game_status_old = game_status
+        game_status = "game_starting"
     
     return game_status, game_status_old
 

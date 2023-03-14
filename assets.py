@@ -169,6 +169,8 @@ def cart_img():
 
 
 
+
+
 class gaming_ani(pygame.sprite.Sprite):
     def __init__(self, de_x, de_y):
         super().__init__()
@@ -212,7 +214,12 @@ class gaming_ani(pygame.sprite.Sprite):
         cart_images.append(pygame.image.load('IMAGES/picset/cart/cart_2.png'))
         
         
+        self.cart_rect = pygame.Rect(cart_position, cart_size)
         
+        self.cart_images = [pygame.transform.scale(cart_image, cart_size) for cart_image in cart_images]
+        
+        self.cart_index = 0
+        self.cart_image = cart_images[self.cart_index]
         
         
                       

@@ -138,8 +138,9 @@ class Neurofeedback:
                 
                 
                 elif game_status == "game_result":
-                    game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result)
+                    game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2)
                     game_rd = True
+                    
             else:    
                 self.screen.fill((100, 100, 110))
                 self.screen.blit(for_start, ((de_x-font_x)/2, 500))
