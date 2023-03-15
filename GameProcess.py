@@ -257,7 +257,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
                 # calculate data using fft
                 raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-                game_faa, game_bound, statbar_loc = game_faa_convert(raw_faa, de_x, de_y)
+                faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
+                game_faa, game_bound, statbar_loc = game_faa_convert(faa_z, de_x, de_y)
                 
                 # time save
                 cumtime = times[0];
@@ -287,28 +288,32 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 #game stop
                 game_stop = True;
             
-    game_result = 11
+    game_result = 11 # @jisu 이거 머임?
+    
     
     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
 
 
 
-def game_faa_convert(raw_faa, de_x, de_y):
-    game_faa_range = [-1, 1]
-    game_unit = game_faa_range/5
+def game_faa_convert(faa_z, de_x, de_y):
+    #game_faa_range = [-1, 1]
+    #game_unit = game_faa_range/5
+    #bound_range = [game_unit*(-5), game_unit*(-3), game_unit*(-1), game_unit*(1), game_unit*(3), game_unit*(5)]
+
+    max_faa_std = T.max_faa_std; # = 2
+    game_unit = np.linspace((-1)*max_faa_std, max_faa_std, T.faa_steps); # [-2 -1.2 -0.4 0.4 1.2 2];
+    bound_range = list(game_unit);
     
-    bound_range = [game_unit*(-5), game_unit*(-3), game_unit*(-1), game_unit*(1), game_unit*(3), game_unit*(5)]
-    
-    if raw_faa > game_faa_range[1]:
-        game_faa = game_faa_range[1]
+    if faa_z > max_faa_std:
+        game_faa = max_faa_std
         statbar_loc = (de_x*0.5-297.5-15+(595*.9), 50-7.5)
     
-    elif raw_faa < game_faa_range[0]:
-        game_faa = game_faa_range[0]
+    elif faa_z < (-1)*max_faa_std:
+        game_faa = (-1)*max_faa_std
         statbar_loc = (de_x*0.5-297.5-15+(595*.1), 50-7.5)
     
     else:
-        game_faa = raw_faa
+        game_faa = faa_z
         statbar_loc = (de_x*0.5-297.5-15+(595*(0.5+0.4*game_faa)), 50-7.5)
     
     

@@ -37,7 +37,7 @@ class SendWorker(QThread):
         while True:
 
             if self._send_queue.empty():  # SendQueue에 데이터가 없을때 잠시 Sleep
-                time.sleep(0.1)
+                time.sleep(0.05) # sleep duration shorter
                 continue
 
             # data_list = []
