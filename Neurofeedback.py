@@ -69,7 +69,7 @@ class Neurofeedback:
         button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi = AS.button_img()
         button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test = GP.buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi)
         # images
-        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb = AS.back_img(de_x, de_y)
+        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear = AS.back_img(de_x, de_y)
         # objects
         miner_intro = AS.miner_img()
         cart_full = AS.cart_img()
@@ -134,12 +134,12 @@ class Neurofeedback:
                     game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std)
                 
                 elif game_status == "game_start":
-                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times,nf_result, self.rpy)
+                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy)
                 
                 
                 
                 elif game_status == "game_result":
-                    game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2)
+                    game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2)
                     game_rd = True
                     
             else:    

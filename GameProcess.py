@@ -211,7 +211,7 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times,nf_result, rpy):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy):
     # background 
     screen.blit(game_back,(0,0))
     if game_rd:
@@ -244,7 +244,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 game_status = "game_starting"
         
         else: # game stop이 아니라면
-            if times[1] - temp_curtime  >= T.NF_update_t: # time update 
+            if times[1] - temp_curtime >= T.NF_update_t: # time update 
                 
                 # baseline faa
                 faa_mean; faa_std;
@@ -257,8 +257,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
                 # calculate data using fft
                 raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-                
-                game_faa, game_bound = game_faa_convert(raw_faa)
+                game_faa, game_bound, statbar_loc = game_faa_convert(raw_faa, de_x, de_y)
                 
                 # time save
                 cumtime = times[0];
@@ -266,8 +265,22 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 curtime = temp_curtime;
                 times = [cumtime, curtime];
                 
+                
+                # stat_bar & color, miner, rock, cart, reward
+                
+                
+                AS.gaming_ani()
+                
+                
+                
+                
+                
+                # stat bar는 여기서 따로 움직이도록
+                
+                
+                
                 # data save
-                nf_result.append([faa, cumtime, time_temp])
+                nf_result.append([raw_faa, cumtime, time_temp]) # raw_faa ? faa라고 되어있길래 수정함
                 
             # game_animation(game_bound)
             if times[0] > T.NF_T:
@@ -280,42 +293,42 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 
 
 
-def game_faa_convert(raw_faa):
-    game_faa_range = [-0.4, 0.4]
+def game_faa_convert(raw_faa, de_x, de_y):
+    game_faa_range = [-1, 1]
     game_unit = game_faa_range/5
     
     bound_range = [game_unit*(-5), game_unit*(-3), game_unit*(-1), game_unit*(1), game_unit*(3), game_unit*(5)]
     
     if raw_faa > game_faa_range[1]:
         game_faa = game_faa_range[1]
+        statbar_loc = (de_x*0.5-297.5-15+(595*.9), 50-7.5)
     
     elif raw_faa < game_faa_range[0]:
         game_faa = game_faa_range[0]
+        statbar_loc = (de_x*0.5-297.5-15+(595*.1), 50-7.5)
     
     else:
         game_faa = raw_faa
+        statbar_loc = (de_x*0.5-297.5-15+(595*(0.5+0.4*game_faa)), 50-7.5)
     
     
     if game_faa >= bound_range[0] and game_faa < bound_range[1]:
-        game_bound = 1
+        game_bound = 0
     
     elif game_faa >= bound_range[1] and game_faa < bound_range[2]:
-        game_bound = 2
+        game_bound = 1
     
     elif game_faa >= bound_range[2] and game_faa < bound_range[3]:
-        game_bound = 3
+        game_bound = 2
         
     elif game_faa >= bound_range[3] and game_faa < bound_range[4]:
-        game_bound = 4
+        game_bound = 3
         
     elif game_faa >= bound_range[4] and game_faa <= bound_range[5]:
-        game_bound = 5
+        game_bound = 4
     
     
-    
-    
-    
-    return game_faa, game_bound
+    return game_faa, game_bound, statbar_loc
 
 
 

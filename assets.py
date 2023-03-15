@@ -152,10 +152,21 @@ def back_img(de_x, de_y):
     
     game_pauseb = pygame.image.load('IMAGES/picset/pause2.png').convert_alpha() 
     game_pauseb = pygame.transform.scale(game_pauseb, (de_x*0.95, de_y*0.9))
+    
+    game_cl_b = pygame.image.load('IMAGES/picset/result_2.png').convert_alpha() 
+    game_cl_b = pygame.transform.scale(game_cl_b, (de_x*0.95, de_y*0.9))
+    
+    game_cl_res = pygame.image.load('IMAGES/picset/result.png').convert_alpha() 
+    game_cl_res = pygame.transform.scale(game_cl_res, (923, 445))
+    
+    game_clear = pygame.image.load('IMAGES/picset/object/clear.png').convert_alpha() 
+    game_clear = pygame.transform.scale(game_clear, (1100, 200))
+    
+    
 
 
 
-    return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb
+    return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear
 
 def miner_img():
     miner_intro = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
@@ -199,14 +210,11 @@ class gaming_ani(pygame.sprite.Sprite):
         self.current_time = 0
         
         
-        # stat_size = 
-        # stat_bar = 
-        
-        
-        # stat_images = []
         
         cart_size = (600, 600)
-        cart_position = (de_x/2-950, de_y-625)
+        cart_positions = []
+        cart_positions.append((de_x/2-950, de_y-625))
+        cart_positions.append((de_x/2-950, de_y-627))
         
         cart_images = []
         cart_images.append(pygame.image.load('IMAGES/picset/cart/cart_0.png'))
@@ -214,13 +222,51 @@ class gaming_ani(pygame.sprite.Sprite):
         cart_images.append(pygame.image.load('IMAGES/picset/cart/cart_2.png'))
         
         
-        self.cart_rect = pygame.Rect(cart_position, cart_size)
+        self.cart_rect = pygame.Rect(cart_positions[0], cart_size) # 밑에서 조절하기!
         
         self.cart_images = [pygame.transform.scale(cart_image, cart_size) for cart_image in cart_images]
         
         self.cart_index = 0
         self.cart_image = cart_images[self.cart_index]
         
+        
+        rock_size = (900,800)
+        rock_positions = []
+        rock_positions.append((de_x-600, de_y-600))
+        rock_positions.append((de_x-600+2, de_y-600+4))
+        
+        self.rock_image = pygame.image.load('IMAGES/picset/cart/cart_0.png')
+        
+        self.rock_rect = pygame.Rect(rock_positions[0], rock_size) # 밑에서 조절해야함
+        # self.rock_image = [p]
+        
+        stat_size = (595,70)
+        stat_position = (de_x*0.5-297.5, 50)
+        
+        stat_images = []
+        stat_images.append(pygame.image.load('IMAGES/picset/status/bar1.png'))
+        stat_images.append(pygame.image.load('IMAGES/picset/status/bar2.png'))
+        stat_images.append(pygame.image.load('IMAGES/picset/status/bar3.png'))
+        stat_images.append(pygame.image.load('IMAGES/picset/status/bar4.png'))
+        stat_images.append(pygame.image.load('IMAGES/picset/status/bar5.png'))
+        
+        self.stat_rect = pygame.Rect(stat_position, stat_size)
+        self.stat_images = [pygame.transform.scale(stat_image, stat_size) for stat_image in stat_images]
+        
+        self.stat_index = 0 # 이걸 밑에서 조절해야함
+        
+        
+        reward_size = (2,2)
+        reward_position = (2,2)
+        
+        reward_images = []
+        reward_images.append(pygame.image.load('IMAGES/picset/object/gold.png'))
+        reward_images.append(pygame.image.load('IMAGES/picset/object/diamond.png'))
+        
+        self.reward_rect = pygame.Rect(reward_position, reward_size)
+        self.reward_images = [pygame.transform.scale(stat_image, stat_size) for stat_image in stat_images]
+        
+        self.reward_index = 0 # 이걸 밑에서 조절해야함
         
                       
     def miner_update(self, mt):
@@ -242,13 +288,13 @@ class gaming_ani(pygame.sprite.Sprite):
 
 
 
-    def update(self, ):
+    def reward_update(self):
+        reward_position = (1,2)
 
-        self.index += 1
 
- 
 
-        if self.index >= len(self.images):
-            self.index = 0
-
-        self.image = self.images[self.index]
+    def stat_color(self, game_bound):
+        self.stat_image = self.stat_images[game_bound]
+        
+        
+        
