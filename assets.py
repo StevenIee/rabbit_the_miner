@@ -414,6 +414,8 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt):
     miner_sprite.animation_control(ani_init)
     init_rock = miner_sprite.update(mt)
     #rock 
+    if init_rock == True:
+        
     
     #miner
     miner_sprite.draw(screen)
