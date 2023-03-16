@@ -11,14 +11,13 @@ from scipy.signal import find_peaks
 import mne
 import copy
 
-
-srate = 250;
-FFT_win = 5;
-FFT_slides = 0.1;
-filter_range = [2, 40];
-noise_thr = 100;
-freq4asymmetry = [8, 13];
-
+##VARIABLES##
+srate = 250; #SAMPLING RATE IN Hz
+FFT_win = 5; # seconds / averaging window
+FFT_slides = 0.1; # seconds / calculation intervals
+filter_range = [2, 40]; # highpass and low pass cutoffs in Hz
+noise_thr = 100; # uV voltage threshold for rejection
+freq4asymmetry = [8, 13]; # set faa calculation frequency
 
 def set_EEGcalc(FFT_win, SRATE):
     fs = SRATE;
