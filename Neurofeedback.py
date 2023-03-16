@@ -34,7 +34,7 @@ class Neurofeedback:
         
         #screen size setting
         
-        screen_size = (1920,1080)
+        screen_size = (1920, 1080)
         self.screen = pygame.display.set_mode(screen_size)
         
         
@@ -53,6 +53,12 @@ class Neurofeedback:
         game_starter = False
         resting_start = False
         base_result = []
+        nf_result = [];
+        game_rd = True
+        game_st = False
+        game_stop = False
+        faa_mean = 0
+        faa_std = 0
         
         # words 
         font6 = pygame.font.SysFont('arial',50, True)
@@ -63,13 +69,18 @@ class Neurofeedback:
         button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi = AS.button_img()
         button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test = GP.buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi)
         # images
-        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep = AS.back_img(de_x, de_y)
+        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear = AS.back_img(de_x, de_y)
         # objects
         miner_intro = AS.miner_img()
         cart_full = AS.cart_img()
+        
+        game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward = AS.gaming_img()
+        
 
         resting_eye = AS.resting_eye((de_x/2-800,de_y/2-220))
         # all_sprites = pygame.sprite.Group(resting_eye)
+        miner_ani = AS.miner_animation()
+        
         
         eye_1 = pygame.image.load('IMAGES/picset/resting/eye1.png').convert_alpha() 
         eye_1 = pygame.transform.scale(eye_1, (1600, 560))
@@ -120,17 +131,22 @@ class Neurofeedback:
                 elif game_status == "rest_start":
                     # print('1111')
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result, times = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times)#, resting_eye )
+                    game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times, faa_mean, faa_std)#, resting_eye )
                     pygame.display.update()
                 
                 elif game_status == "rest_result":
                     # del all_sprites
-                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest)
+                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std)
                 
                 elif game_status == "game_start":
-                    game_status, game_status_old, game_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y)
+                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                 
                 
+                
+                elif game_status == "game_result":
+                    game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2)
+                    game_rd = True
+                    
             else:    
                 self.screen.fill((100, 100, 110))
                 self.screen.blit(for_start, ((de_x-font_x)/2, 500))
