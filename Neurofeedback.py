@@ -73,9 +73,14 @@ class Neurofeedback:
         # objects
         miner_intro = AS.miner_img()
         cart_full = AS.cart_img()
+        
+        game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward = AS.gaming_img()
+        
 
         resting_eye = AS.resting_eye((de_x/2-800,de_y/2-220))
         # all_sprites = pygame.sprite.Group(resting_eye)
+        miner_ani = AS.miner_animation()
+        
         
         eye_1 = pygame.image.load('IMAGES/picset/resting/eye1.png').convert_alpha() 
         eye_1 = pygame.transform.scale(eye_1, (1600, 560))
@@ -134,7 +139,7 @@ class Neurofeedback:
                     game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std)
                 
                 elif game_status == "game_start":
-                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy)
+                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                 
                 
                 

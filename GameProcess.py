@@ -211,7 +211,7 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
     screen.blit(game_back,(0,0))
     if game_rd:
@@ -267,28 +267,59 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 times = [cumtime, curtime];
                 
                 
-                # stat_bar & color, miner, rock, cart, reward
+                # stat_barcolor, miner, rock, cart, reward
+                screen.blit(game_stat[game_bound],(de_x*0.5-297.5, 50))
+                screen.blit(game_stbar, statbar_loc)
+                
+                # reward 몇개 얻었는지 계산.. 이건 나중에하자! 일단 밑에 카트는 다 half로
                 
                 
-                AS.gaming_ani()
+                
+                if game_bound == 0:
+                    # rock
+                    screen.blit(game_rock,(de_x-600, de_y-600))
+                    # miner
+                    screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
+                    # cart
+                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                    
+                
+                elif game_bound == 1:
+                    # rock
+                    screen.blit(game_rock,(de_x-600, de_y-600))
+                    # miner
+                    screen.blit(miner_set[game_bound],(de_x/2-340, de_y-850))
+                    # cart
+                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                
+                elif game_bound == 2:
+                    # rock
+                    screen.blit(game_rock,(de_x-600, de_y-600))
+                    # miner
+                    screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
+                    # cart
+                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                    
                 
                 
-                
-                
-                
-                # stat bar는 여기서 따로 움직이도록
-                
-                
+                else:
+                    ani_start = True
+                    if ani_start == True:
+                        ani_start = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt) 
+                        
+                    
+                    
+                    
+
                 
                 # data save
-                nf_result.append([raw_faa, cumtime, time_temp]) # raw_faa ? faa라고 되어있길래 수정함
+                nf_result.append([raw_faa, cumtime, time_temp])
                 
             # game_animation(game_bound)
             if times[0] > T.NF_T:
                 #game stop
                 game_stop = True;
             
-    game_result = 11 # @jisu 이거 머임?
     
     
     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
@@ -314,7 +345,7 @@ def game_faa_convert(faa_z, de_x, de_y):
     
     else:
         game_faa = faa_z
-        statbar_loc = (de_x*0.5-297.5-15+(595*(0.5+0.4*game_faa)), 50-7.5)
+        statbar_loc = (de_x*0.5-297.5-15+(595*(0.5+0.2*game_faa)), 50-7.5) # range에 따라 계속 다시 계산해야 지금은 -2 ~ 2 기준
     
     
     if game_faa >= bound_range[0] and game_faa < bound_range[1]:
