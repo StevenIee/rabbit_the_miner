@@ -77,12 +77,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 그래프 그리기 (ch3-sepctrum)
         self.graph_spectrum = pg.PlotWidget(title="Power Spectrum")
         self.graph_spectrum.enableAutoRange(axis="y")
-        self.graph_spectrum.setXRange(0, 205)
+        self.graph_spectrum.setXRange(0, 80)
         self.graph_spectrum.plotItem.setMouseEnabled(x=False, y=False)
         self.spectrum_plot = self.graph_spectrum.plot(pen='w')
 
-        self.spectrum_x = [n for n in range(0, 205 + 1)]
-        self.spectrum_y = [0 for n in range(0, 205 + 1)]
+        self.spectrum_x = [n for n in range(0, 80 + 1)]
+        self.spectrum_y = [0 for n in range(0, 80 + 1)]
 
         self.graph_spectrum_layout.addWidget(self.graph_spectrum)
         #os.system('python Nf_server_app.py')
@@ -159,7 +159,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ppg_plot.setData(self.ppg_x, self.ppg_y)
 
         # 그래프 출력 (Spectrum)
-        if (data_dict['ch3'] is not None) and (data_dict['ch3_n'] <= 205):
+        if (data_dict['ch3'] is not None) and (data_dict['ch3_n'] <= 80):
             self.spectrum_y[data_dict['ch3_n']] = data_dict['ch3']
             self.spectrum_plot.setData(self.spectrum_x, self.spectrum_y)
 
