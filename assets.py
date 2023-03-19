@@ -409,13 +409,13 @@ class miner_animation(pygame.sprite.Sprite):
     
 
 
-def miner_ani_starter(screen, miner_sprite, ani_init, mt):
+def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock):
     init_rock = False
     miner_sprite.animation_control(ani_init)
     init_rock = miner_sprite.update(mt)
     #rock 
     if init_rock == True:
-        
+        screen.blit(game_rock,(de_x-600, de_y-600))
     
     #miner
     miner_sprite.draw(screen)
