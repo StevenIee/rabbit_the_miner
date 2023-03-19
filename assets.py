@@ -5,7 +5,7 @@ Created on Fri Feb 17 16:25:44 2023
 @author: JISU
 """
 
-import pygame
+import pygame, math, random
 
 
 #button class
@@ -397,6 +397,8 @@ class miner_animation(pygame.sprite.Sprite):
         
         if self.index == 4:
             init_rock = True
+        else:
+            init_rock = False
         return init_rock
             
         
@@ -409,25 +411,48 @@ class miner_animation(pygame.sprite.Sprite):
     
 
 
-def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock):
-    init_rock = False
+def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, reward_select, game_reward):
     miner_sprite.animation_control(ani_init)
     init_rock = miner_sprite.update(mt)
     #rock 
     if init_rock == True:
         screen.blit(game_rock,(de_x-600, de_y-600))
+        cr_st = False
+    else:
+        screen.blit(game_rock,(de_x-600+2, de_y-600+4))
+        cr_st = True
     
     #miner
     miner_sprite.draw(screen)
     
-    #cart
+    #cart & reward
+    if cr_st == True:
+        # reward 뭐가 나올지 지정
+        if reward_select == 1:
+            draw_reward = game_reward[0]
+        elif reward_select == 2:
+            draw_reward = game_reward[1]
+        # reward rotate
+        draw_reward = pygame.transform.rotate(game_reward, random.randint(1,4)*90)
+        # ani_frame = cart_reward()
+
+
+
+def cart_reward(screen, ani_frame, de_x, de_y, game_reward):
+    ani_frame = ani_frame + 1
+    vel = 380
+    ang = 60
     
-    #reward
+    y_ani_temp = vel*math.sin(math.radians(ang))*ani_frame
 
+    
+    x_ani = de_x-500 - vel*math.cos(math.radians(ang))*ani_frame*0.1
+    y_ani = de_y-450 - (y_ani_temp - 5*(ani_frame**2))*0.1
 
-def 
-
-
+    if y_ani == de_y-440:
+        screen.blit(game_reward, (x_ani, y_ani))
+    else:
+        screen.blit(game_reward, (x_ani, y_ani))
     
 
 

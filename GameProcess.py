@@ -201,7 +201,7 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, ani_start):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, ani_start, miner_sprites):
     # background 
     screen.blit(game_back,(0,0))
     if game_rd:
@@ -293,9 +293,12 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 
                 
                 else:
+                    
+                    reward_select = 1 # 1 gold 2 dia
+                    
                     # ani_start = True
                     if ani_start == True:
-                        ani_start = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt) 
+                        ani_start = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, reward_select, game_reward)
                         
                     
                     
