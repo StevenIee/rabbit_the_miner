@@ -379,7 +379,7 @@ class miner_animation(pygame.sprite.Sprite):
         
         # self.animation_time = round(100 / len(self.images * 100), 2)
         self.current_time = 0
-        
+        self.animation_time = self.animation_time = round(100 / len(self.images * 100), 2)
         
                       
     def update(self, mt):
@@ -403,16 +403,16 @@ class miner_animation(pygame.sprite.Sprite):
             
         
     
-    def animation_control(self, ani_init):
-        if ani_init == 3:
-            self.animation_time = self.animation_time = round(100 / len(self.images * 100), 2)
-        elif ani_init == 4:
-            self.animation_time = self.animation_time = round(100 / len(self.images * 150), 2)
+    # def animation_control(self, ani_init):
+    #     if ani_init == 3:
+    #         self.animation_time = self.animation_time = round(100 / len(self.images * 100), 2)
+    #     elif ani_init == 4:
+    #         self.animation_time = self.animation_time = round(100 / len(self.images * 150), 2)
     
 
 
 def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, reward_select, game_reward, cart_group):
-    miner_sprite.animation_control(ani_init)
+    # miner_sprite.animation_control(ani_init)
     init_rock = miner_sprite.update(mt)
     #rock 
     if init_rock == True:
@@ -435,7 +435,7 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
             
         draw_cart = cart_group[0]
         # reward rotate
-        draw_reward = pygame.transform.rotate(game_reward, random.randint(1,4)*90)
+        draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
         ani_frame = cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart)
 
 

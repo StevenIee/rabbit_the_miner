@@ -151,13 +151,17 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
             faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
             
             base_result.append([faa, cumtime, time_temp])
-        
+            # print(faa)
         else:
             # 결과 페이지 나오게 #@JISU 여기 좀 부탁
+            faa_mean = np.mean(np.array(base_result)[:,0]);
+            faa_std = np.std(np.array(base_result)[:,0]);
+            base_result
             if button_jstart.draw(screen): 
                 resting_num = resting_num + 1
                 game_status_old = game_status
                 game_status = "rest_result"
+                
                 print(faa_mean, faa_std)
         
     else:
@@ -166,7 +170,7 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
             resting_start = True
             cumtime = 0; curtime = time.time();
             times = [cumtime, curtime];
-    
+   
     return game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std, resting_num
 
 
@@ -200,8 +204,8 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-# def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, ani_start, miner_sprites):
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, ani_start, miner_sprites):
+# def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
     screen.blit(game_back,(0,0))
     if game_rd:
@@ -234,7 +238,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 game_status = "game_starting"
         
         else: # game stop이 아니라면
-            if times[1] - temp_curtime >= T.NF_update_t: # time update 
+            if times[1] - temp_curtime <= T.NF_update_t: # time update 
                 
                 # baseline faa
                 faa_mean; faa_std;
@@ -252,10 +256,11 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 
                 # time save
                 cumtime = times[0];
+                curtime = times[1];
                 cumtime += temp_curtime - curtime;
                 curtime = temp_curtime;
                 times = [cumtime, curtime];
-                
+                print(curtime)
                 
                 # stat_barcolor, miner, rock, cart, reward
                 screen.blit(game_stat[game_bound],(de_x*0.5-297.5, 50))
@@ -265,40 +270,40 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 
                 
                 
-                # if game_bound == 0:
-                #     # rock
-                #     screen.blit(game_rock,(de_x-600, de_y-600))
-                #     # miner
-                #     screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
-                #     # cart
-                #     screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                if game_bound == 0:
+                    # rock
+                    screen.blit(game_rock,(de_x-600, de_y-600))
+                    # miner
+                    screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
+                    # cart
+                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
                     
                 
-                # elif game_bound == 1:
-                #     # rock
-                #     screen.blit(game_rock,(de_x-600, de_y-600))
-                #     # miner
-                #     screen.blit(miner_set[game_bound],(de_x/2-340, de_y-850))
-                #     # cart
-                #     screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                elif game_bound == 1:
+                    # rock
+                    screen.blit(game_rock,(de_x-600, de_y-600))
+                    # miner
+                    screen.blit(miner_set[game_bound],(de_x/2-340, de_y-850))
+                    # cart
+                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
                 
-                # elif game_bound == 2:
-                #     # rock
-                #     screen.blit(game_rock,(de_x-600, de_y-600))
-                #     # miner
-                #     screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
-                #     # cart
-                #     screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                elif game_bound == 2:
+                    # rock
+                    screen.blit(game_rock,(de_x-600, de_y-600))
+                    # miner
+                    screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
+                    # cart
+                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
                     
                 
                 
-                # else:
+                else:
                     
-                #     reward_select = 1 # 1 gold 2 dia
+                    reward_select = 1 # 1 gold 2 dia
                     
-                #     # ani_start = True
-                #     if ani_start == True:
-                #         ani_start = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, reward_select, game_reward, cart_group)
+                    # ani_start = True
+                    if ani_start == True:
+                        ani_start = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, reward_select, game_reward, cart_group)
                         
                 
                 # data save
