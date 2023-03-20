@@ -179,56 +179,56 @@ def cart_img():
     return cart_full
 
 def gaming_img():
-    game_stat1 = pygame.image.load('picset/status/bar1.png').convert_alpha() 
+    game_stat1 = pygame.image.load('IMAGES/picset/status/bar1.png').convert_alpha() 
     game_stat1 = pygame.transform.scale(game_stat1, (595, 70))
 
-    game_stat2 = pygame.image.load('picset/status/bar2.png').convert_alpha() 
+    game_stat2 = pygame.image.load('IMAGES/picset/status/bar2.png').convert_alpha() 
     game_stat2 = pygame.transform.scale(game_stat2, (595, 70))
     
-    game_stat3 = pygame.image.load('picset/status/bar3.png').convert_alpha() 
+    game_stat3 = pygame.image.load('IMAGES/picset/status/bar3.png').convert_alpha() 
     game_stat3 = pygame.transform.scale(game_stat3, (595, 70))
     
-    game_stat4 = pygame.image.load('picset/status/bar4.png').convert_alpha() 
+    game_stat4 = pygame.image.load('IMAGES/picset/status/bar4.png').convert_alpha() 
     game_stat4 = pygame.transform.scale(game_stat4, (595, 70))
     
-    game_stat5 = pygame.image.load('picset/status/bar5.png').convert_alpha() 
+    game_stat5 = pygame.image.load('IMAGES/picset/status/bar5.png').convert_alpha() 
     game_stat5 = pygame.transform.scale(game_stat5, (595, 70))
     
-    game_stbar = pygame.image.load('picset/status/bar_stat.png').convert_alpha() 
+    game_stbar = pygame.image.load('IMAGES/picset/status/bar_stat.png').convert_alpha() 
     game_stbar = pygame.transform.scale(game_stbar, (15, 90))
 
     game_stat = [game_stat1, game_stat2, game_stat3, game_stat4, game_stat5]
     
     
-    cart_full = pygame.image.load('picset/cart/cart_2.png').convert_alpha() 
+    cart_full = pygame.image.load('IMAGES/picset/cart/cart_2.png').convert_alpha() 
     cart_full = pygame.transform.scale(cart_full, (600, 600))
     
-    cart_half = pygame.image.load('picset/cart/cart_1.png').convert_alpha() 
+    cart_half = pygame.image.load('IMAGES/picset/cart/cart_1.png').convert_alpha() 
     cart_half = pygame.transform.scale(cart_half, (600, 600))
     
-    cart_empty = pygame.image.load('picset/cart/cart_0.png').convert_alpha() 
+    cart_empty = pygame.image.load('IMAGES/picset/cart/cart_0.png').convert_alpha() 
     cart_empty = pygame.transform.scale(cart_empty, (600, 600))
     
     cart_group = [cart_empty, cart_half, cart_full]
     
-    miner_rest = pygame.image.load('picset/character/miner_rest.png').convert_alpha() 
+    miner_rest = pygame.image.load('IMAGES/picset/character/miner_rest.png').convert_alpha() 
     miner_rest = pygame.transform.scale(miner_rest, (780, 850))
     
-    miner_tired = pygame.image.load('picset/character/miner_tired2.png').convert_alpha() 
+    miner_tired = pygame.image.load('IMAGES/picset/character/miner_tired2.png').convert_alpha() 
     miner_tired = pygame.transform.scale(miner_tired, (780, 850))
     
-    miner_very = pygame.image.load('picset/character/miner_very.png').convert_alpha() 
+    miner_very = pygame.image.load('IMAGES/picset/character/miner_very.png').convert_alpha() 
     miner_very = pygame.transform.scale(miner_very, (780, 850))
     
     miner_set = [miner_very, miner_tired, miner_rest]
 
-    game_rock = pygame.image.load('picset/object/rock2.png').convert_alpha() 
+    game_rock = pygame.image.load('IMAGES/picset/object/rock2.png').convert_alpha() 
     game_rock = pygame.transform.scale(game_rock, (900, 800))
     
-    game_dia = pygame.image.load('picset/object/diamond.png').convert_alpha() 
+    game_dia = pygame.image.load('IMAGES/picset/object/diamond.png').convert_alpha() 
     game_dia = pygame.transform.scale(game_dia, (200, 200))
     
-    game_gold = pygame.image.load('picset/object/gold.png').convert_alpha() 
+    game_gold = pygame.image.load('IMAGES/picset/object/gold.png').convert_alpha() 
     game_gold = pygame.transform.scale(game_gold, (200, 200))
     
     game_reward = [game_gold, game_dia]
@@ -411,7 +411,7 @@ class miner_animation(pygame.sprite.Sprite):
     
 
 
-def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, reward_select, game_reward):
+def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, reward_select, game_reward, cart_group):
     miner_sprite.animation_control(ani_init)
     init_rock = miner_sprite.update(mt)
     #rock 
@@ -432,13 +432,15 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
             draw_reward = game_reward[0]
         elif reward_select == 2:
             draw_reward = game_reward[1]
+            
+        draw_cart = cart_group[0]
         # reward rotate
         draw_reward = pygame.transform.rotate(game_reward, random.randint(1,4)*90)
-        ani_frame = cart_reward(screen, ani_frame, de_x, de_y, draw_reward)
+        ani_frame = cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart)
 
 
 
-def cart_reward(screen, ani_frame, de_x, de_y, draw_reward):
+def cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart):
     ani_frame = ani_frame + 1
     vel = 380
     ang = 60
@@ -449,10 +451,17 @@ def cart_reward(screen, ani_frame, de_x, de_y, draw_reward):
     x_ani = de_x-500 - vel*math.cos(math.radians(ang))*ani_frame*0.1
     y_ani = de_y-450 - (y_ani_temp - 5*(ani_frame**2))*0.1
 
-    if y_ani == de_y-440:
+    if y_ani < de_y-440:
         screen.blit(draw_reward, (x_ani, y_ani))
+        cart_x = de_x/2-950
+        cart_y = de_y-627
     else:
-        screen.blit(draw_reward, (x_ani, y_ani))
+        # screen.blit(draw_reward, (x_ani, y_ani))
+        cart_x = de_x/2-950
+        cart_y = de_y-625
+        
+    screen.blit(draw_cart, (cart_x, cart_y))
+    
     
     return ani_frame
 
