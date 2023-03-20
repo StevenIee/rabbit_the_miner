@@ -300,10 +300,6 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                     if ani_start == True:
                         ani_start = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, reward_select, game_reward)
                         
-                    
-                    
-                    
-
                 
                 # data save
                 nf_result.append([raw_faa, cumtime, time_temp])

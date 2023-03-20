@@ -424,7 +424,7 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
     
     #miner
     miner_sprite.draw(screen)
-    
+    ani_frame = 0
     #cart & reward
     if cr_st == True:
         # reward 뭐가 나올지 지정
@@ -434,11 +434,11 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
             draw_reward = game_reward[1]
         # reward rotate
         draw_reward = pygame.transform.rotate(game_reward, random.randint(1,4)*90)
-        # ani_frame = cart_reward()
+        ani_frame = cart_reward(screen, ani_frame, de_x, de_y, draw_reward)
 
 
 
-def cart_reward(screen, ani_frame, de_x, de_y, game_reward):
+def cart_reward(screen, ani_frame, de_x, de_y, draw_reward):
     ani_frame = ani_frame + 1
     vel = 380
     ang = 60
@@ -450,9 +450,9 @@ def cart_reward(screen, ani_frame, de_x, de_y, game_reward):
     y_ani = de_y-450 - (y_ani_temp - 5*(ani_frame**2))*0.1
 
     if y_ani == de_y-440:
-        screen.blit(game_reward, (x_ani, y_ani))
+        screen.blit(draw_reward, (x_ani, y_ani))
     else:
-        screen.blit(game_reward, (x_ani, y_ani))
+        screen.blit(draw_reward, (x_ani, y_ani))
     
-
+    return ani_frame
 
