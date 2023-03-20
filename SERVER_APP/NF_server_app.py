@@ -60,7 +60,7 @@ class RecvService(rpyc.Service):
                                                                     # Game 단위에서 receive할 때의
                                                                     # timestamp는 별도로 기록 해야 할 듯.
                                                                     # ms보다 작은 단위를 버리기 위해 round함.
-        #print(round(data_list['timestamp'],3))
+        print(round(data_list['timestamp'],3))
         # 파일생성방지. 파일은 게임차원에서 받도록 바꿀예정.
         # self.file_temp.write(str(data_list).strip('{').strip('}') + '\n');
 
