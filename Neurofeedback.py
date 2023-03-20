@@ -60,6 +60,7 @@ class Neurofeedback:
         faa_mean = 0
         faa_std = 0
         ani_start = True
+        resting_num = 0
         
         # words 
         font6 = pygame.font.SysFont('arial',50, True)
@@ -79,9 +80,10 @@ class Neurofeedback:
         
 
         resting_eye = AS.resting_eye((de_x/2-800,de_y/2-220))
-        # all_sprites = pygame.sprite.Group(resting_eye)
+        # self.all_sprites = pygame.sprite.Group(resting_eye)
         miner_ani = AS.miner_animation()
-        miner_sprites = pygame.sprite.Group(miner_ani)
+        # self.miner_sprites = pygame.sprite.Group(miner_ani)
+
         
         
         eye_1 = pygame.image.load('IMAGES/picset/resting/eye1.png').convert_alpha() 
@@ -110,6 +112,9 @@ class Neurofeedback:
                     game_starter = True
                     game_status_old = "null"
                     game_status = "intro"
+                    # game_status = "game_start"
+                    # faa_mean = 0
+                    # faa_std = 0
                 
         
             
@@ -133,17 +138,20 @@ class Neurofeedback:
                 elif game_status == "rest_start":
                     # print('1111')
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times, faa_mean, faa_std)#, resting_eye )
+                    game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std, resting_num = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times, faa_mean, faa_std, resting_num)#, resting_eye )
                     pygame.display.update()
                 
                 elif game_status == "rest_result":
                     # del all_sprites
-                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std)
+                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std, resting_num)
                 
                 elif game_status == "game_start":
-                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, ani_start, miner_sprites)
-                
-                
+                    # miner_sprites = pygame.sprite.Group(miner_ani)
+                    # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, ani_start, miner_sprites)
+                    # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
+                    
+                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
+                     
                 
                 elif game_status == "game_result":
                     game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2)
