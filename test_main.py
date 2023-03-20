@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Feb 15 16:06:44 2023
+Created on Mon Mar 20 14:08:10 2023
 
 @author: JISU
 """
+
+
 
 # import pygame
 # import Neurofeedback as NF
@@ -19,5 +21,5 @@ if __name__ == "__main__":
     player_id, player_session, player_datafile = GP.player_data()
     
     #%% start game!
-
+    
     NF = Neurofeedback(player_id, player_session, player_datafile) 

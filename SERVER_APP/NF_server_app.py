@@ -9,8 +9,10 @@ class RecvService(rpyc.Service):
     
     now = datetime.now()
     current_time = now.strftime("%y-%m-%d-%H-%M-%S");
-    fn = current_time + '.txt';
-    file_temp = open(fn, 'w')
+    #fn = current_time + '.txt';
+
+    # 파일생성방지 61번줄 참고
+    # file_temp = open(fn, 'w')
     
     def __init__(self):
         print("수신 프로그램 초기화")
@@ -47,22 +49,25 @@ class RecvService(rpyc.Service):
         #     self.exposed_data_storage[2][-1] = data['ch4']
         #     self.exposed_data_storage[3][-1] = data['packet_count']
         #     self.exposed_data_storage[4][-1] = data['timestamp']
-        
+
+        # 게임으로 전송되는 데이터의 양식. 5 by 5000의 데이터가 지속적으로 전송된다.
         self.exposed_data_storage = np.roll(self.exposed_data_storage, -1)
-        self.exposed_data_storage[0][-1] = data_list['ch1']
-        self.exposed_data_storage[1][-1] = data_list['ch2']
-        self.exposed_data_storage[2][-1] = data_list['ch4']
-        self.exposed_data_storage[3][-1] = data_list['packet_count']
-        self.exposed_data_storage[4][-1] = data_list['timestamp']
-        
-        self.file_temp.write(str(data_list).strip('{').strip('}') + '\n');
-        
-        
+        self.exposed_data_storage[0][-1] = round(data_list['ch1'], 2)  # 좌측 채널 데이터 전송
+        self.exposed_data_storage[1][-1] = round(data_list['ch2'], 2)  # 우측 채널 데이터 전송
+        self.exposed_data_storage[2][-1] = round(data_list['ch4'], 2)  # PPG 데이터 전송
+        self.exposed_data_storage[3][-1] = data_list['packet_count']  # 패킷관련 데이터
+        self.exposed_data_storage[4][-1] = round(data_list['timestamp'], 3)   # 측정 timestamp 전송.
+                                                                    # Game 단위에서 receive할 때의
+                                                                    # timestamp는 별도로 기록 해야 할 듯.
+                                                                    # ms보다 작은 단위를 버리기 위해 round함.
+        #print(round(data_list['timestamp'],3))
+        # 파일생성방지. 파일은 게임차원에서 받도록 바꿀예정.
+        # self.file_temp.write(str(data_list).strip('{').strip('}') + '\n');
 
-
+# Activating Server
 if __name__ == "__main__":
     t = rpyc.utils.server.ThreadedServer(RecvService(), port=18861, protocol_config={
-    'allow_all_attrs': True, 'allow_pickle':True
+    'allow_all_attrs': True, 'allow_pickle': True
     })
     t.start()
     
