@@ -358,9 +358,9 @@ class miner_animation(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         
-        size = (1600, 560)
-        position = (560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
-        
+        size = (800, 850)
+        position = (690, 230) #(560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
+        # ani_stop = False
         images = []
         images.append(pygame.image.load('IMAGES/picset/character/miner_1.png'))
         images.append(pygame.image.load('IMAGES/picset/character/miner_2.png'))
@@ -395,11 +395,24 @@ class miner_animation(pygame.sprite.Sprite):
 
         self.image = self.images[self.index]
         
-        if self.index == 4:
-            init_rock = True
-        else:
-            init_rock = False
-        return init_rock
+        # init_rock = False
+        # ani_stop = False
+        
+        # if self.index == 4:
+        #     init_rock = True
+        #     ani_stop = False
+        # elif self.index == 6:
+        #     ani_stop = True
+        # else:
+        #     init_rock = False
+        #     ani_stop = False
+        
+        # rock_ani = [init_rock, ani_stop]
+        
+        index_num = self.index
+        return index_num
+        # return init_rock, ani_stop#rock_ani#init_rock, ani_stop
+        
             
         
     
@@ -411,37 +424,64 @@ class miner_animation(pygame.sprite.Sprite):
     
 
 
-def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, reward_select, game_reward, cart_group):
+def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame):
+    index_num = miner_sprite.update(mt)
+    
+    if index_num == 4:
+        init_rock = True
+        ani_stop = False
+    elif index_num == 6:
+        ani_stop = True
+    else:
+        init_rock = False
+        ani_stop = False
+    
     # miner_sprite.animation_control(ani_init)
-    init_rock = miner_sprite.update(mt)
+    # init_rock, ani_stop
+    # rock_ani = miner_sprite.update(mt)
+    # init_rock, ani_stop = miner_sprite.update(mt)
+    # print(rock_ani)
+    # init_rock = rock_ani[0]
+    # ani_stop = rock_ani[1]
     #rock 
     if init_rock == True:
         screen.blit(game_rock,(de_x-600, de_y-600))
         cr_st = False
+        # ani_frame = 0
     else:
         screen.blit(game_rock,(de_x-600+2, de_y-600+4))
         cr_st = True
+        # ani_frame = 0
+    
+
     
     #miner
     miner_sprite.draw(screen)
-    ani_frame = 0
+    
     #cart & reward
     if cr_st == True:
         # reward 뭐가 나올지 지정
-        if reward_select == 1:
-            draw_reward = game_reward[0]
-        elif reward_select == 2:
-            draw_reward = game_reward[1]
+        # if reward_select == 1:
+        #     draw_reward = game_reward[0]
+        # elif reward_select == 2:
+        #     draw_reward = game_reward[1]
             
-        draw_cart = cart_group[0]
+        draw_cart = cart_group[cart_num]
         # reward rotate
-        draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
-        ani_frame = cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart)
-
+        # draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
+        ani_frame = ani_frame + 1
+        # ani_frame = cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart)
+        cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart)
+        
+    if ani_stop:
+        ani_start = False    
+    # else:
+        # ani_start = True        
+    return ani_start, ani_frame
 
 
 def cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart):
-    ani_frame = ani_frame + 1
+    # ani_frame = ani_frame + 1
     vel = 380
     ang = 60
     
@@ -463,5 +503,5 @@ def cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart):
     screen.blit(draw_cart, (cart_x, cart_y))
     
     
-    return ani_frame
+    # return ani_frame
 

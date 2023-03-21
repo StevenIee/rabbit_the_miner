@@ -14,9 +14,10 @@ import time
 import EEG_Calc as EC
 import TIME_CON as T
 import pygame
-import os
+import os, random
 # class Player_data:
-    
+
+# global ani_start
     
 def player_data():
   org_path = './'
@@ -204,9 +205,10 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, ani_start, miner_sprites):
+def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites):
 # def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
+    global ani_start
     screen.blit(game_back,(0,0))
     if game_rd:
         # ready start 화면 2초씩
@@ -217,11 +219,12 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         game_rd = False
         game_st = True
         # time init
-
+        reward_num = 0
+        
         cumtime = 0; 
         curtime = time.time();
         times = [cumtime , curtime];
-        
+        ani_start = False
         
     if game_st:
         temp_curtime = time.time();
@@ -267,7 +270,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 screen.blit(game_stbar, statbar_loc)
                 
                 # reward 몇개 얻었는지 계산.. 이건 나중에하자! 일단 밑에 카트는 다 half로
-                
+                cart_num = 0
                 
                 
                 if game_bound == 0:
@@ -276,7 +279,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                     # miner
                     screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
                     # cart
-                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                    screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
                     
                 
                 elif game_bound == 1:
@@ -285,7 +288,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                     # miner
                     screen.blit(miner_set[game_bound],(de_x/2-340, de_y-850))
                     # cart
-                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                    screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
                 
                 elif game_bound == 2:
                     # rock
@@ -293,18 +296,28 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                     # miner
                     screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
                     # cart
-                    screen.blit(cart_group[1],(de_x/2-950, de_y-625))
+                    screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
                     
                 
                 
                 else:
+                    # reward_select = 1 # 1 gold 2 dia
+                    ani_start = True
+                    ani_frame = 0
                     
-                    reward_select = 1 # 1 gold 2 dia
+                reward_select = 1 #                    
+                # reward_add = 0
+                # ani_start = True
+                if reward_select == 1:
+                    draw_reward = game_reward[0]
+                elif reward_select == 2:
+                    draw_reward = game_reward[1]
+            
+                draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
+                
+                if ani_start == True:
+                    ani_start, ani_frame = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame)
                     
-                    # ani_start = True
-                    if ani_start == True:
-                        ani_start = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, reward_select, game_reward, cart_group)
-                        
                 
                 # data save
                 nf_result.append([raw_faa, cumtime, time_temp])
@@ -321,78 +334,78 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 
 
 
-def gaming2(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar):
-    # background 
-    screen.blit(game_back,(0,0))
-    if game_rd:
-        # ready start 화면 2초씩
-        # ready
-        # screen.blit(game_back,(0,0))
+# def gaming2(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar):
+#     # background 
+#     screen.blit(game_back,(0,0))
+#     if game_rd:
+#         # ready start 화면 2초씩
+#         # ready
+#         # screen.blit(game_back,(0,0))
         
-        # start
-        game_rd = False
-        game_st = True
-        # time init
+#         # start
+#         game_rd = False
+#         game_st = True
+#         # time init
 
-        cumtime = 0; 
-        curtime = time.time();
-        times = [cumtime , curtime];
+#         cumtime = 0; 
+#         curtime = time.time();
+#         times = [cumtime , curtime];
         
         
-    if game_st:
-        temp_curtime = time.time();
+#     if game_st:
+#         temp_curtime = time.time();
         
-        if game_stop:
-            # game stop 이라면
-            screen.blit(game_pauseb,(de_x*0.025,de_y*0.05))
-            screen.blit(pause_title,(de_x*0.5-275, de_y*0.2))
-            if button_resume.draw(screen):
-                game_stop = False               
-            if button_main.draw(screen):
-                game_status = "intro"
-            if button_restart.draw(screen):
-                game_status = "game_starting"
+#         if game_stop:
+#             # game stop 이라면
+#             screen.blit(game_pauseb,(de_x*0.025,de_y*0.05))
+#             screen.blit(pause_title,(de_x*0.5-275, de_y*0.2))
+#             if button_resume.draw(screen):
+#                 game_stop = False               
+#             if button_main.draw(screen):
+#                 game_status = "intro"
+#             if button_restart.draw(screen):
+#                 game_status = "game_starting"
         
-        else: # game stop이 아니라면
-            if times[1] - temp_curtime >= T.NF_update_t: # time update 
+#         else: # game stop이 아니라면
+#             if times[1] - temp_curtime >= T.NF_update_t: # time update 
                 
-                # baseline faa
-                faa_mean; faa_std;
-                # NF faa calc
-                temp_buffer = np.array(rpy.root.data_storage);
-                time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
-                # online-processing 1. epoching with the newest data
-                eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
-                # online-processing 2. preprocessing
-                eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
-                # calculate data using fft
-                raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-                faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
-                game_faa, game_bound, statbar_loc = game_faa_convert(faa_z, de_x, de_y)
+#                 # baseline faa
+#                 faa_mean; faa_std;
+#                 # NF faa calc
+#                 temp_buffer = np.array(rpy.root.data_storage);
+#                 time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
+#                 # online-processing 1. epoching with the newest data
+#                 eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
+#                 # online-processing 2. preprocessing
+#                 eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
+#                 # calculate data using fft
+#                 raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
+#                 faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
+#                 game_faa, game_bound, statbar_loc = game_faa_convert(faa_z, de_x, de_y)
                 
-                # time save
-                cumtime = times[0];
-                cumtime += temp_curtime - curtime;
-                curtime = temp_curtime;
-                times = [cumtime, curtime];
+#                 # time save
+#                 cumtime = times[0];
+#                 cumtime += temp_curtime - curtime;
+#                 curtime = temp_curtime;
+#                 times = [cumtime, curtime];
                 
                 
-                # stat_barcolor, miner, rock, cart, reward
-                screen.blit(game_stat[game_bound],(de_x*0.5-297.5, 50))
-                screen.blit(game_stbar, statbar_loc)
+#                 # stat_barcolor, miner, rock, cart, reward
+#                 screen.blit(game_stat[game_bound],(de_x*0.5-297.5, 50))
+#                 screen.blit(game_stbar, statbar_loc)
 
                 
-                # data save
-                nf_result.append([raw_faa, cumtime, time_temp])
+#                 # data save
+#                 nf_result.append([raw_faa, cumtime, time_temp])
                 
-            # game_animation(game_bound)
-            if times[0] > T.NF_T:
-                #game stop
-                game_stop = True;
+#             # game_animation(game_bound)
+#             if times[0] > T.NF_T:
+#                 #game stop
+#                 game_stop = True;
             
     
     
-    return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
+#     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
 
 
 
