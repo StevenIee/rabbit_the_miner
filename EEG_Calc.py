@@ -8,8 +8,8 @@ import numpy as np  # Module that simplifies computations on matrices
 import numpy.matlib
 from scipy.fft import fft
 from scipy.signal import find_peaks
-import mne
-import copy
+from mne import filter
+from copy import copy
 
 ##VARIABLES##
 srate = 250; #SAMPLING RATE IN Hz
@@ -42,7 +42,7 @@ def get_alpha_index(freq, freq4asymmetry):
 
 def preprocessing( eeg, filter_range, noise_thr, srate):
     # low- high- pass filter
-    eeg_filtered = mne.filter.filter_data(eeg, srate, filter_range[0], filter_range[1]);     
+    eeg_filtered = filter.filter_data(eeg, srate, filter_range[0], filter_range[1], verbose=False);
     
     # noise rejection
     pre_t = round(srate*0.2);
@@ -61,7 +61,7 @@ def preprocessing( eeg, filter_range, noise_thr, srate):
         reject_range = reject_range + list(np.arange(x-pre_t,x+post_t,1))
     reject_range = np.unique(reject_range);
     
-    eeg_rejected = copy.copy(eeg_filtered);
+    eeg_rejected = copy(eeg_filtered);
     if np.any(reject_range):  # mute if want skip rejection
         down = np.where(reject_range<0)
         reject_range = np.delete(reject_range, down)

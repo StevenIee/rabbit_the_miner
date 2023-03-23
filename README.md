@@ -30,4 +30,3 @@ repo for co-develop the rabbit mining neurofeedback program
 
 #### Alternatively, you can use "environment.yml" to recreate the required environment.
 Checkout this [link](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) for a tutorial.
-sdfsdfsdfdsfsdfwsd
