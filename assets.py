@@ -475,8 +475,8 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
         
     if ani_stop:
         ani_start = False    
-    # else:
-        # ani_start = True        
+    else:
+        ani_start = True        
     return ani_start, ani_frame
 
 
