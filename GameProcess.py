@@ -219,7 +219,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         game_rd = False
         game_st = True
         # time init
-        reward_num = 0
+        reward_num = 0 # REWARD 누적 된 거 
         
         cumtime = 0; 
         curtime = time.time();
@@ -310,8 +310,12 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # ani_start = True
                 if reward_select == 1:
                     draw_reward = game_reward[0]
+                    # draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
+                    # reward_select = 0
                 elif reward_select == 2:
                     draw_reward = game_reward[1]
+                    # draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
+                    # reward_select = 0
             
                 draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
                 
@@ -332,7 +336,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
 
 
-
+# def gaming_animations():
+    
 
 # def gaming2(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar):
 #     # background 
