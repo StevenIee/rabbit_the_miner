@@ -208,7 +208,7 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites):
 # def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
-    global ani_start
+    # global ani_start
     screen.blit(game_back,(0,0))
     if game_rd:
         # ready start 화면 2초씩
