@@ -126,10 +126,10 @@ def back_img(de_x, de_y):
 
     
     title_gold = pygame.image.load('IMAGES/picset/title_gold.png').convert_alpha() 
-    title_gold = pygame.transform.scale(title_gold, (900, 450))
+    title_gold = pygame.transform.scale(title_gold, (900, 440))
     
     title_word = pygame.image.load('IMAGES/picset/title_word.png').convert_alpha() 
-    title_word = pygame.transform.scale(title_word, (580, 290))
+    title_word = pygame.transform.scale(title_word, (580, 232))
     
     rest_title = pygame.image.load('IMAGES/picset/resting/resting_title.png').convert_alpha() 
     rest_title = pygame.transform.scale(rest_title, (1000, 250))
