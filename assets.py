@@ -7,7 +7,6 @@ Created on Fri Feb 17 16:25:44 2023
 
 import pygame, math, random
 
-
 #button class
 class Button():
 	def __init__(self, x, y, image, width, height):

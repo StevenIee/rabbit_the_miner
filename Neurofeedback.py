@@ -39,6 +39,7 @@ class Neurofeedback:
         
         
         # get screen size
+
         de_x, de_y = self.screen.get_size()
         print(de_x, de_y)
         
@@ -91,7 +92,8 @@ class Neurofeedback:
         eye_1 = pygame.transform.scale(eye_1, (1600, 560))
         
         connection_check = True;
-        
+
+        # 여기서부터 게임이 시작된다.
         while run:
             
             # processing inputs
@@ -109,6 +111,7 @@ class Neurofeedback:
                 if keys_act[pygame.K_ESCAPE]:
                     run = False
                 
+                #게임 시작 스페이스바
                 if keys_act[pygame.K_SPACE]:
                     game_starter = True
                     game_status_old = "null"
@@ -127,33 +130,42 @@ class Neurofeedback:
                     self.rpy, connection_check = self.connect.check(connection_check)
                     print('hello')
                 # Game process
+                
+                # 첫인트로 화면
                 elif game_status == "intro":
                     game_status, game_status_old = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old)
                     # print(connection_check)
+                # 게임 인스트럭션 부분
                 elif game_status == "method":
                     game_status, game_status_old = GP.method(self.screen, game_status, game_status_old, de_x, de_y, method_back, button_start2, method)
                     # print(connection_check)
+
+                # resting state 안내문
                 elif game_status == "rest_method":
                     game_status, game_status_old, connection_check = GP.rest_method(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart)
                     # print(connection_check)
+
+                # resting state 측정하는 중
                 elif game_status == "rest_start":
                     # print('1111')
                     all_sprites = pygame.sprite.Group(resting_eye)
                     game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std, resting_num = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times, faa_mean, faa_std, resting_num)#, resting_eye )
                     pygame.display.update()
-                
+
+                # resting state 다한 뒤 결과
                 elif game_status == "rest_result":
                     # del all_sprites
                     game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std, resting_num)
-                
+
+                # miner 게임 작동화면
                 elif game_status == "game_start":
                     miner_sprites = pygame.sprite.Group(miner_ani)
                     game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start , ani_frame)
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                     
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
-                     
-                
+
+                # miner 게임 작동 결과
                 elif game_status == "game_result":
                     game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2)
                     game_rd = True
