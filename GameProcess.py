@@ -15,50 +15,86 @@ import EEG_Calc as EC
 import TIME_CON as T
 import pygame
 import os, random
+import tkinter as tk
 # class Player_data:
 
 # global ani_start
-    
-def player_data():
-  org_path = './'
-  # os.chdir(org_path) 
-  data_path = org_path + '/data'
-  
-  if not os.path.isdir(data_path):
-    os.mkdir(data_path)
 
-  version_name = '2023.02.20 demo version'
-  print1 = '================================================================='
-  print(print1)
-  print(print1 + '\n')
-  
-  print('                      leelab Neurofeedback\n')
-  
-  print('                                          '+version_name +'\n')
-  print('developed by Steven Lee, Jisu Chung\n')
-  
-  print(print1+ '\n\n')
-  
-  print('Player Information')
-  player_id = input('input your id : ')
-  session_numi = input('input session number : ')
-  session_num = int(session_numi)
-  
-  player_date_temp = datetime.now()
-  player_date = player_date_temp.strftime('%Y_%m_%d_%H%M%S')
-  
-  player_filename = 'Player_' + player_id + '_Session_' + session_numi + '_' + player_date
-  
-  
-  if session_num > 1:
-      print('\n\nWelcome Back!')
-  
-  
-  print('\nloading....\n')    
-  
-  datafile_name = data_path+'/'+player_filename+'.csv'
-  
-  return player_id, session_num, player_filename 
+def player_data():
+    org_path = './'
+    # os.chdir(org_path)
+    data_path = org_path + '/data'
+
+    if not os.path.isdir(data_path):
+        os.mkdir(data_path)
+
+    version_name = '2023.02.20 demo version'
+    print1 = '================================================================='
+    print(print1)
+    print(print1 + '\n')
+    print('                      leelab Neurofeedback\n')
+    print('                                          '+version_name +'\n')
+    print('developed by Steven Lee, Jisu Chung, Minwoo Kim\n')
+    print(print1+ '\n\n')
+    print('Player Information')
+
+    root = tk.Tk()
+    root.geometry('500x350')
+    root.eval('tk::PlaceWindow . center')
+    root.title("참여자 정보")
+
+    tk.Label(root, text="참여자 정보", width=20, font=("bold", 20)).place(x=90, y=53)
+
+    tk.Label(root, text="피험자번호", width=20, font=("bold", 10)).place(x=68, y=130)
+    player_id = tk.StringVar()
+    tk.Entry(root, textvariable=player_id).place(x=240, y=130)
+
+    tk.Label(root, text="세션번호", width=20, font=("bold", 10)).place(x=68, y=180)
+    session_num = tk.StringVar()
+    tk.Entry(root, textvariable=session_num).place(x=240, y=180)
+
+    tk.Label(root, text="블록번호", width=20, font=("bold", 10)).place(x=68, y=230)
+    block_num = tk.StringVar()
+    tk.Entry(root, textvariable=block_num).place(x=240, y=230)
+
+    #
+    # label_4 = tk.Label(root, text="성별", width=20, font=("bold", 10))
+    # label_4.place(x=70, y=280)
+    # gender_var = tk.IntVar()
+    # tk.Radiobutton(root, text="남성", padx=5, variable=gender_var, value=1).place(x=235, y=280)
+    # tk.Radiobutton(root, text="여성", padx=20, variable=gender_var, value=2).place(x=290, y=280)
+    # 
+    # label_4 = tk.Label(root, text="Age:", width=20, font=("bold", 10))
+    # label_4.place(x=70, y=330)
+    # entry_2 = tk.Entry(root)
+    # entry_2.place(x=240, y=330)
+
+    tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=root.destroy).place(x=180, y=280)
+
+    # it is use for display the registration form on the window
+    root.mainloop()
+
+    player_id = int(player_id.get())
+    session_num = int(session_num.get())
+    block_num = int(block_num.get())
+    
+    print("Player_Id: ", player_id)
+    print("Session_#: ", session_num)
+    print("Block___#: ", block_num)
+
+    player_date_temp = datetime.now()
+    player_date = player_date_temp.strftime('%Y_%m_%d_%H%M%S')
+
+    player_filename = 'Player_' + str(player_id) + '_Session_' + str(session_num) + '_' + player_date
+
+    if session_num > 1:
+        print('\n\nWelcome Back!')
+
+    print('\nloading....\n')
+
+    datafile_name = data_path+'/'+player_filename+'.csv'
+
+    return player_id, session_num, block_num, player_filename
 
 
 def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi):
@@ -86,12 +122,12 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test
 
 
-def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old):        
-    screen.blit(background_img,(0,0))
-    screen.blit(title_gold,(1050,40))
-    screen.blit(title_word,(1200,50))
-    screen.blit(miner_intro,(140,250))
-    screen.blit(cart_full,(750,450))
+def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old):
+    screen.blit(background_img, (0, 0))
+    screen.blit(title_gold, (1050, 40))
+    screen.blit(title_word, (1200, 50))
+    screen.blit(miner_intro, (140, 250))
+    screen.blit(cart_full, (750, 450))
     if button_method.draw(screen):
         game_status_old = game_status
         game_status = "method"
@@ -100,6 +136,7 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
         game_status = "rest_method"
     
     return game_status, game_status_old
+
 
 def method(screen, game_status, game_status_old, de_x, de_y, method_back, button_start2, method):
     screen.blit(method_back,(0,0))
@@ -110,7 +147,7 @@ def method(screen, game_status, game_status_old, de_x, de_y, method_back, button
         
     return game_status, game_status_old
 
-    
+
 def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart):
     screen.blit(resting_back,(0,0))    
     screen.blit(rest_expl,(de_x*0.05,de_y*0.07))

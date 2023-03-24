@@ -16,8 +16,8 @@ import GameProcess as GP
 if __name__ == "__main__":
     #%% get player data
 
-    player_id, player_session, player_datafile = GP.player_data()
+    player_id, player_session, player_block, player_datafile = GP.player_data()
     
     #%% start game!
 
-    NF = Neurofeedback(player_id, player_session, player_datafile) 
+    NF = Neurofeedback(player_id, player_session, player_block, player_datafile)
