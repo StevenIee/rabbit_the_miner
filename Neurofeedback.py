@@ -13,7 +13,7 @@ import assets as AS
 import GameProcess as GP
 from Connection import Connect
 import rpyc
-
+import time
 
 class Neurofeedback:
     def __init__(self, player_id, player_session, player_block, player_datafile):
@@ -48,19 +48,19 @@ class Neurofeedback:
         curtime = 0
         times = [cumtime, curtime]
         run = True
-        game_starter = False
-        resting_start = False
+        game_starter = True  # default is True
+        game_st = False  # default is False
+        resting_start = False  # default is False
         base_result = []
         nf_result = []
         game_rd = True
-        game_st = False
         game_stop = False
         faa_mean = 0
         faa_std = 0
         ani_start = True
         ani_frame = 0
         resting_num = 0
-        
+
         # words 
         font6 = pygame.font.SysFont('arial', 50, True)
         for_start = font6.render('Press SPACE to start', False, 'White')
@@ -87,7 +87,8 @@ class Neurofeedback:
         
         connection_check = True
 
-
+        # just some counters for text display.
+        print_counter_starter = False
         print_counter_intro = False
         print_counter_method = False
         print_counter_rest_method = False
@@ -96,9 +97,11 @@ class Neurofeedback:
         print_counter_game_start = False
         print_counter_game_result = False
 
+        game_status_old = "null"
+        game_status = "intro"
         # 여기서부터 게임이 시작된다.
+
         while run:
-            
             # processing inputs
             for event in pygame.event.get():
         
@@ -114,15 +117,16 @@ class Neurofeedback:
                     run = False
                 
                 # 게임 시작 스페이스바
-                if keys_act[pygame.K_SPACE]:
-                    game_starter = True
-                    game_status_old = "null"
-                    game_status = "intro"
-                    # game_status = "game_start"
-                    # faa_mean = 0
-                    # faa_std = 0
+                #if keys_act[pygame.K_SPACE]:
+
+                # game_status = "game_start"
+                # faa_mean = 0
+                # faa_std = 0
 
             if game_starter:
+                if print_counter_starter == False:
+                    print("게임 시작합니다. 서버 접속 중")
+                    print_counter_starter = True
                 # Connection check
                 # 1) before baseline, 2) before main_game
                 # print(connection_check)
@@ -139,13 +143,6 @@ class Neurofeedback:
 
                     game_status, game_status_old = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old)
                     # print(connection_check)
-                # 게임 인스트럭션 부분
-                elif game_status == "method":
-                    if print_counter_method == False:
-                        print("게임 설명 시작")
-                        print_counter_method = True
-                    game_status, game_status_old = GP.method(self.screen, game_status, game_status_old, de_x, de_y, method_back, button_start2, method)
-                    # print(connection_check)
 
                 # resting state 안내문
                 elif game_status == "rest_method":
@@ -159,9 +156,14 @@ class Neurofeedback:
                 elif game_status == "rest_start":
                     if print_counter_rest_start == False:
                         print("휴지기 뇌파 측정 시작")
+                        times[1] = time.time()
                         print_counter_rest_start = True
+
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result, times, faa_mean, faa_std, resting_num = GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy, times, faa_mean, faa_std, resting_num)#, resting_eye )
+                    game_status, game_status_old, resting_start, base_result, faa_mean, faa_std, resting_num = \
+                        GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins,
+                                   all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy,
+                                   times, faa_mean, faa_std, resting_num)#, resting_eye )
                     pygame.display.update()
 
                 # resting state 다한 뒤 결과
@@ -170,15 +172,32 @@ class Neurofeedback:
                         print("휴지기 뇌파 측정 결과 제시")
                         print_counter_rest_result = True
                     # del all_sprites
-                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std, resting_num)
+                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
+                                                                  resting_back, rest_rep, base_result, button_start3,
+                                                                  button_rerest, faa_mean, faa_std, resting_num)
+
+                # 게임 인스트럭션 부분
+                elif game_status == "method":
+                    if print_counter_method == False:
+                        print("게임 설명 시작")
+                        print_counter_method = True
+                    game_status, game_status_old = GP.method(self.screen, game_status, game_status_old, de_x, de_y,
+                                                             method_back, button_start2, method)
+                    # print(connection_check)
 
                 # miner 게임 작동화면
                 elif game_status == "game_start":
                     if print_counter_game_start == False:
                         print("뉴로피드백 블록 시작")
+                        times[1] = time.time()
                         print_counter_game_start = True
                     miner_sprites = pygame.sprite.Group(miner_ani)
-                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start , ani_frame)
+                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\
+                    ani_frame = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std,
+                                          game_back, game_rd, game_st, game_stop, game_pauseb, pause_title,
+                                          button_resume, button_main, button_restart, times, nf_result, self.rpy,
+                                          game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt,
+                                          miner_sprites, ani_start , ani_frame)
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                     
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
@@ -190,12 +209,14 @@ class Neurofeedback:
                         print_counter_game_result = True
                     game_status, game_status_old = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2)
                     game_rd = True
-
+                    game_st = False
+                    game_stop = False
             # 인트로 이전 PRESS SPACE TO START 화면
             else:
-                self.screen.fill((100, 100, 110))
-                self.screen.blit(for_start, ((de_x-font_x)/2, 500))
-        
+                pass
+                # self.screen.fill((100, 100, 110))
+                # self.screen.blit(for_start, ((de_x-font_x)/2, 500))
+                #
             pygame.display.update()
             
             # 60 fps로 유지

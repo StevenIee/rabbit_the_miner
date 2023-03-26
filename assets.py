@@ -5,40 +5,40 @@ Created on Fri Feb 17 16:25:44 2023
 @author: JISU
 """
 
-import pygame, math, random
+import pygame
+import math
+import random
 
-#button class
-class Button():
-	def __init__(self, x, y, image, width, height):
-		self.image = pygame.transform.scale(image, (width, height))
-		self.rect = self.image.get_rect()
-		self.rect.topleft = (x, y)
-		self.clicked = False
 
-	def draw(self, surface):
-		action = False
-		#get mouse position
-		pos = pygame.mouse.get_pos()
-		touch = False
-		#check mouseover and clicked conditions
-		if self.rect.collidepoint(pos):
-			touch = True
-			if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-				self.clicked = True
-				action = True
+class Button:  # button class
+    def __init__(self, x, y, image, width, height):
+        self.image = pygame.transform.scale(image, (width, height))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.clicked = False
 
-		if pygame.mouse.get_pressed()[0] == 0:
-			self.clicked = False
+    def draw(self, surface):
+        action = False
+        # get mouse position
+        pos = pygame.mouse.get_pos()
+        touch = False
+        # check mouseover and clicked conditions
+        if self.rect.collidepoint(pos):
+            touch = True
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+                action = True
 
-		#draw button on screen
-        
-		if touch:
-			surface.blit(self.image, (self.rect.x, self.rect.y+2))
-		else:
-			surface.blit(self.image, (self.rect.x, self.rect.y))
-                
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
 
-		return action
+        # draw button on screen
+        if touch:
+            surface.blit(self.image, (self.rect.x, self.rect.y+2))
+        else:
+            surface.blit(self.image, (self.rect.x, self.rect.y))
+
+        return action
 
 
 class resting_eye(pygame.sprite.Sprite):
@@ -61,9 +61,7 @@ class resting_eye(pygame.sprite.Sprite):
         
         self.animation_time = round(100 / len(self.images * 100), 2)
         self.current_time = 0
-        
-        
-                      
+
     def update(self, mt):
         # self.index += 1
         self.current_time += mt
@@ -96,8 +94,6 @@ def resting_eye_play(screen, all_sprites, mt):
     all_sprites.draw(screen)
 
 
-
-
 def button_img():
     button_starti = pygame.image.load('IMAGES/picset/button/game_start2.png').convert_alpha() 
     button_methodi = pygame.image.load('IMAGES/picset/button/method2.png').convert_alpha() 
@@ -107,23 +103,17 @@ def button_img():
     button_jstarti = pygame.image.load('IMAGES/picset/button/start2.png').convert_alpha() 
     button_maini = pygame.image.load('IMAGES/picset/button/main2.png').convert_alpha() 
     button_pausei = pygame.image.load('IMAGES/picset/button/pause2.png').convert_alpha() 
-    button_testi = pygame.image.load('IMAGES/picset/button/test_start.png').convert_alpha() 
-    return button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi
+    button_testi = pygame.image.load('IMAGES/picset/button/test_start.png').convert_alpha()
+
+    return button_starti, button_methodi, button_reresti,\
+           button_restarti, button_resumei, button_jstarti, \
+           button_maini, button_pausei, button_testi
+
 
 def back_img(de_x, de_y):
     background_img = pygame.image.load('IMAGES/picset/background.jpg').convert_alpha() 
-    background_img = pygame.transform.scale(background_img, (de_x, de_y))
-    
-    method_back = pygame.image.load('IMAGES/picset/method/background.jpg').convert_alpha() 
-    method_back = pygame.transform.scale(method_back, (de_x, de_y))
+    game_back = pygame.image.load('IMAGES/picset/background_22.jpg').convert_alpha()
 
-    resting_back = pygame.image.load('IMAGES/picset/resting/resting_back.jpg').convert_alpha() 
-    resting_back = pygame.transform.scale(resting_back, (de_x, de_y))
-    
-    game_back = pygame.image.load('IMAGES/picset/background_22.jpg').convert_alpha() 
-    game_back = pygame.transform.scale(game_back, (de_x, de_y))
-
-    
     title_gold = pygame.image.load('IMAGES/picset/title_gold.png').convert_alpha() 
     title_gold = pygame.transform.scale(title_gold, (900, 440))
     
@@ -136,11 +126,11 @@ def back_img(de_x, de_y):
     pause_title = pygame.image.load('IMAGES/picset/object/pause.png').convert_alpha() 
     pause_title = pygame.transform.scale(pause_title, (550, 150))
     
-    
-    method = pygame.image.load('IMAGES/picset/method/method.jpg').convert_alpha() 
-    method = pygame.transform.scale(method, (1500, 750))
-    
-    rest_ins = pygame.image.load('IMAGES/picset/resting/resting_start.png').convert_alpha() 
+    method = pygame.image.load('IMAGES/picset/method/method.jpg').convert_alpha()
+    method_back = pygame.image.load('IMAGES/picset/method/background.jpg').convert_alpha()
+
+    resting_back = pygame.image.load('IMAGES/picset/resting/resting_back.jpg').convert_alpha()
+    rest_ins = pygame.image.load('IMAGES/picset/resting/resting_start.png').convert_alpha()
     rest_ins = pygame.transform.scale(rest_ins, (1600, 400))
     
     rest_expl = pygame.image.load('IMAGES/picset/resting/expl.png')
@@ -160,54 +150,38 @@ def back_img(de_x, de_y):
     
     game_clear = pygame.image.load('IMAGES/picset/object/clear.png').convert_alpha() 
     game_clear = pygame.transform.scale(game_clear, (1100, 200))
-    
-    
-
-
 
     return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear
+
 
 def miner_img():
     miner_intro = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
     miner_intro = pygame.transform.scale(miner_intro, (700, 800))
     return miner_intro
 
+
 def cart_img():
     cart_full = pygame.image.load('IMAGES/picset/cart/cart_2.png').convert_alpha() 
     cart_full = pygame.transform.scale(cart_full, (600, 600))
     return cart_full
 
-def gaming_img():
-    game_stat1 = pygame.image.load('IMAGES/picset/status/bar1.png').convert_alpha() 
-    game_stat1 = pygame.transform.scale(game_stat1, (595, 70))
 
-    game_stat2 = pygame.image.load('IMAGES/picset/status/bar2.png').convert_alpha() 
-    game_stat2 = pygame.transform.scale(game_stat2, (595, 70))
+def gaming_img():
     
-    game_stat3 = pygame.image.load('IMAGES/picset/status/bar3.png').convert_alpha() 
-    game_stat3 = pygame.transform.scale(game_stat3, (595, 70))
-    
-    game_stat4 = pygame.image.load('IMAGES/picset/status/bar4.png').convert_alpha() 
-    game_stat4 = pygame.transform.scale(game_stat4, (595, 70))
-    
-    game_stat5 = pygame.image.load('IMAGES/picset/status/bar5.png').convert_alpha() 
-    game_stat5 = pygame.transform.scale(game_stat5, (595, 70))
-    
-    game_stbar = pygame.image.load('IMAGES/picset/status/bar_stat.png').convert_alpha() 
-    game_stbar = pygame.transform.scale(game_stbar, (15, 90))
+    # 상태바 이미지 지정 
+    game_stat1 = pygame.image.load('IMAGES/picset/status/bar1.png').convert_alpha()  # 상태바1
+    game_stat2 = pygame.image.load('IMAGES/picset/status/bar2.png').convert_alpha()  # 상태바2
+    game_stat3 = pygame.image.load('IMAGES/picset/status/bar3.png').convert_alpha()  # 상태바3
+    game_stat4 = pygame.image.load('IMAGES/picset/status/bar4.png').convert_alpha()  # 상태바4
+    game_stat5 = pygame.image.load('IMAGES/picset/status/bar5.png').convert_alpha()  # 상태바5
+    game_stbar = pygame.image.load('IMAGES/picset/status/bar_stat.png').convert_alpha()  # 상태 세로 게이지 바
 
     game_stat = [game_stat1, game_stat2, game_stat3, game_stat4, game_stat5]
     
-    
-    cart_full = pygame.image.load('IMAGES/picset/cart/cart_2.png').convert_alpha() 
-    cart_full = pygame.transform.scale(cart_full, (600, 600))
-    
-    cart_half = pygame.image.load('IMAGES/picset/cart/cart_1.png').convert_alpha() 
-    cart_half = pygame.transform.scale(cart_half, (600, 600))
-    
-    cart_empty = pygame.image.load('IMAGES/picset/cart/cart_0.png').convert_alpha() 
-    cart_empty = pygame.transform.scale(cart_empty, (600, 600))
-    
+    cart_full = pygame.image.load('IMAGES/picset/cart/cart_2.png').convert_alpha()   # full cart
+    cart_half = pygame.image.load('IMAGES/picset/cart/cart_1.png').convert_alpha()   # half_full cart
+    cart_empty = pygame.image.load('IMAGES/picset/cart/cart_0.png').convert_alpha()  # emtpy cart
+
     cart_group = [cart_empty, cart_half, cart_full]
     
     miner_rest = pygame.image.load('IMAGES/picset/character/miner_rest.png').convert_alpha() 
@@ -348,17 +322,15 @@ def gaming_img():
 
 #     def stat_color(self, game_bound):
 #         self.stat_image = self.stat_images[game_bound]
-        
-        
-        
-        
+
+
 
 class miner_animation(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         
         size = (800, 850)
-        position = (690, 230) #(560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
+        position = (690, 230)  # (560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
         # ani_stop = False
         images = []
         images.append(pygame.image.load('IMAGES/picset/character/miner_1.png'))
@@ -420,7 +392,6 @@ class miner_animation(pygame.sprite.Sprite):
     #         self.animation_time = self.animation_time = round(100 / len(self.images * 100), 2)
     #     elif ani_init == 4:
     #         self.animation_time = self.animation_time = round(100 / len(self.images * 150), 2)
-    
 
 
 def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame):
