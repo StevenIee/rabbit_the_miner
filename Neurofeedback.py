@@ -189,7 +189,11 @@ class Neurofeedback:
                 elif game_status == "game_start":
                     if print_counter_game_start == False:
                         print("뉴로피드백 블록 시작")
-                        times[1] = time.time()
+                        # times[1] = time.time()
+                        # reset the timer 
+                        # -> times[0] : timer for FAA calc.
+                        # -> times[1] : timer for animation update.
+                        times = [[cumtime, curtime], [cumtime, curtime]];
                         print_counter_game_start = True
                     miner_sprites = pygame.sprite.Group(miner_ani)
                     game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\

@@ -10,6 +10,7 @@ NF_T = 6  # 10 분은 600  # sec 단위
 
 # FAA 업데이트 시간
 NF_update_t = 0.1
+anim_update_t = 0.5
 
 # neuro feedback range
 max_faa_std = 2  # 최대와 최소 faa range. 변동 가능.

@@ -271,22 +271,26 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         game_st = True
         cumtime = 0
         curtime = time.time()
+        times = [[round(cumtime, 3), round(curtime, 3)], [round(cumtime, 3), round(curtime, 3)]];
         print(game_st)
-    elif game_st is True:
-        cumtime = times[0]
-        curtime = times[1]
-        temp_curtime = time.time()
-        cumtime += temp_curtime - curtime
-        curtime = temp_curtime
-
-    times = [round(cumtime, 3), round(curtime, 3)]
-    # print("times: ", times)
-
+    # elif game_st is True:
+    #     cumtime = times[0]
+    #     curtime = times[1]
+    #     temp_curtime = time.time()
+    #     cumtime += temp_curtime - curtime
+    #     curtime = temp_curtime
+    # # -> not necessary to update [times] every loop
+    
+    elif time.time() - times[0][1] > 2:
+        cumtime = time.time() - times[0][1]
+        curtime = time.time();
+        times = [[round(cumtime, 3), round(curtime, 3)], [round(cumtime, 3), round(curtime, 3)]];
+    
     screen.blit(game_back, (0, 0))
 
     # there's a blank screen for 2 seconds
     # finally let's start the game!!!
-    if cumtime > 2 and game_st is True:
+    if times[0][0] > 2 and game_st is True:
         # REWARD 누적 된 거
         ani_start = False
 
@@ -303,28 +307,53 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
             #     game_status = "game_starting"
 
         else: # game stop이 아니라면
-            # if times[1] - temp_curtime <= T.NF_update_t:  # time update
-            # baseline faa
-            faa_mean; faa_std;
-            # NF faa calc
-            temp_buffer = np.array(rpy.root.data_storage);
-            time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
-            # online-processing 1. epoching with the newest data
-            eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
-            # online-processing 2. preprocessing
-            eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
-            # calculate data using fft
-            raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-            faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
-            game_faa, game_bound, statbar_loc = game_faa_convert(faa_z, de_x, de_y)
+            # [UPDATE FOR FAA]
+            # -> add new faa data into nf_result
+            # -> return new statbar_loc
+            temp_curtime = time.time();
+            if times[0][1] - temp_curtime <= T.NF_update_t:  
+                # baseline faa
+                faa_mean; faa_std;
+                # NF faa calc
+                temp_buffer = np.array(rpy.root.data_storage);
+                time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
+                # online-processing 1. epoching with the newest data
+                eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
+                # online-processing 2. preprocessing
+                eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
+                # calculate FAA using fft
+                raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
+                faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
+                game_faa, statbar_loc = statbar_loc_convert(faa_z, de_x, de_y)
+                
+                # FAA save
+                nf_result.append([raw_faa, cumtime, time_temp])
+                
+                # time save
+                cumtime = times[0][0];
+                curtime = times[0][1];
+                cumtime += temp_curtime - curtime;
+                curtime = temp_curtime;
+                
+                times[0][0] = cumtime;
+                times[0][1] = curtime;
 
-            # # time save
-            # cumtime = times[0];
-            # curtime = times[1];
-            # cumtime += temp_curtime - curtime;
-            # curtime = temp_curtime;
-            # times = [cumtime, curtime];
-            # print(curtime)
+
+            # [UPDATE FOR ANIMATION]
+            # -> return new game_bound
+            temp_curtime = time.time();
+            if times[1][1] - temp_curtime <= T.anim_update_t:  # time update for anim_update
+                n_avgfaa = round(T.anim_update_t / T.NF_update_t);
+                
+                if len(nf_result) <n_avgfaa:
+                    temp_faas = np.array(nf_result)[:, 0] 
+                else:
+                    temp_faas = np.array(nf_result[-1*n_avgfaa:])[:, 0] 
+                avgfaa = np.nanmean(temp_faas)
+            
+                faa_z = (avgfaa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
+                game_faa, game_bound = game_faa_convert(faa_z, de_x, de_y)
+
 
             # stat_barcolor, miner, rock, cart, reward
             screen.blit(game_stat[game_bound],(de_x*0.5-297.5, 50))
@@ -381,8 +410,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
             if ani_start == True:
                 ani_start, ani_frame = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame)
 
-            # data save
-            nf_result.append([raw_faa, cumtime, time_temp])
+            
 
             # game_animation(game_bound)
             if times[0] > T.NF_T:
@@ -470,14 +498,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 #     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
 
 
-
-
-
-def game_faa_convert(faa_z, de_x, de_y):
-    #game_faa_range = [-1, 1]
-    #game_unit = game_faa_range/5
-    #bound_range = [game_unit*(-5), game_unit*(-3), game_unit*(-1), game_unit*(1), game_unit*(3), game_unit*(5)]
-
+def statbar_loc_convert(faa_z, de_x, de_y):
     max_faa_std = T.max_faa_std; # = 2
     game_unit = np.linspace((-1)*max_faa_std, max_faa_std, T.faa_steps); # [-2 -1.2 -0.4 0.4 1.2 2];
     bound_range = list(game_unit);
@@ -493,6 +514,31 @@ def game_faa_convert(faa_z, de_x, de_y):
     else:
         game_faa = faa_z
         statbar_loc = (de_x*0.5-297.5-15+(595*(0.5+0.2*game_faa)), 50-7.5) # range에 따라 계속 다시 계산해야 지금은 -2 ~ 2 기준
+    
+    
+    return game_faa, statbar_loc
+
+
+def game_faa_convert(faa_z, de_x, de_y):
+    #game_faa_range = [-1, 1]
+    #game_unit = game_faa_range/5
+    #bound_range = [game_unit*(-5), game_unit*(-3), game_unit*(-1), game_unit*(1), game_unit*(3), game_unit*(5)]
+
+    max_faa_std = T.max_faa_std; # = 2
+    game_unit = np.linspace((-1)*max_faa_std, max_faa_std, T.faa_steps); # [-2 -1.2 -0.4 0.4 1.2 2];
+    bound_range = list(game_unit);
+    
+    if faa_z > max_faa_std:
+        game_faa = max_faa_std
+        # statbar_loc = (de_x*0.5-297.5-15+(595*.9), 50-7.5)
+    
+    elif faa_z < (-1)*max_faa_std:
+        game_faa = (-1)*max_faa_std
+        # statbar_loc = (de_x*0.5-297.5-15+(595*.1), 50-7.5)
+    
+    else:
+        game_faa = faa_z
+        # statbar_loc = (de_x*0.5-297.5-15+(595*(0.5+0.2*game_faa)), 50-7.5) # range에 따라 계속 다시 계산해야 지금은 -2 ~ 2 기준
     
     
     if game_faa >= bound_range[0] and game_faa < bound_range[1]:
@@ -511,7 +557,7 @@ def game_faa_convert(faa_z, de_x, de_y):
         game_bound = 4
     
     
-    return game_faa, game_bound, statbar_loc
+    return game_faa, game_bound#, statbar_loc
 
 
 
