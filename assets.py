@@ -329,7 +329,7 @@ class miner_animation(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         
-        size = (800, 850)
+        size = (780, 840)
         position = (690, 230)  # (560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
         # ani_stop = False
         images = []
