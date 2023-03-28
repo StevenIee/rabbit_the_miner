@@ -168,36 +168,31 @@ def cart_img():
 
 def gaming_img():
     
-    # 상태바 이미지 지정 
+    # Status Bar Images
     game_stat1 = pygame.image.load('IMAGES/picset/status/bar1.png').convert_alpha()  # 상태바1
     game_stat2 = pygame.image.load('IMAGES/picset/status/bar2.png').convert_alpha()  # 상태바2
     game_stat3 = pygame.image.load('IMAGES/picset/status/bar3.png').convert_alpha()  # 상태바3
     game_stat4 = pygame.image.load('IMAGES/picset/status/bar4.png').convert_alpha()  # 상태바4
     game_stat5 = pygame.image.load('IMAGES/picset/status/bar5.png').convert_alpha()  # 상태바5
     game_stbar = pygame.image.load('IMAGES/picset/status/bar_stat.png').convert_alpha()  # 상태 세로 게이지 바
-
     game_stat = [game_stat1, game_stat2, game_stat3, game_stat4, game_stat5]
-    
+
+    # Cart images
     cart_full = pygame.image.load('IMAGES/picset/cart/cart_2.png').convert_alpha()   # full cart
     cart_half = pygame.image.load('IMAGES/picset/cart/cart_1.png').convert_alpha()   # half_full cart
     cart_empty = pygame.image.load('IMAGES/picset/cart/cart_0.png').convert_alpha()  # emtpy cart
-
     cart_group = [cart_empty, cart_half, cart_full]
-    
-    miner_rest = pygame.image.load('IMAGES/picset/character/miner_rest.png').convert_alpha() 
-    miner_rest = pygame.transform.scale(miner_rest, (780, 850))
-    
-    miner_tired = pygame.image.load('IMAGES/picset/character/miner_tired2.png').convert_alpha() 
-    miner_tired = pygame.transform.scale(miner_tired, (780, 850))
-    
-    miner_very = pygame.image.load('IMAGES/picset/character/miner_very.png').convert_alpha() 
-    miner_very = pygame.transform.scale(miner_very, (780, 850))
-    
+
+    # Miners
+    miner_rest = pygame.image.load('IMAGES/picset/character/miner_rest.png').convert_alpha()  # miner size는 780 X 840
+    miner_tired = pygame.image.load('IMAGES/picset/character/miner_tired2.png').convert_alpha()
+    miner_very = pygame.image.load('IMAGES/picset/character/miner_very.png').convert_alpha()
     miner_set = [miner_very, miner_tired, miner_rest]
 
+    # Minerals
     game_rock = pygame.image.load('IMAGES/picset/object/rock2.png').convert_alpha() 
     game_rock = pygame.transform.scale(game_rock, (900, 800))
-    
+
     game_dia = pygame.image.load('IMAGES/picset/object/diamond.png').convert_alpha() 
     game_dia = pygame.transform.scale(game_dia, (200, 200))
     
@@ -342,8 +337,10 @@ class miner_animation(pygame.sprite.Sprite):
         images.append(pygame.image.load('IMAGES/picset/character/miner_1.png'))
         
         self.rect = pygame.Rect(position, size)
-        
-        self.images = [pygame.transform.scale(image, size) for image in images]
+
+        # rect size is same as picture image size
+        self.images = images
+        # self.images = [pygame.transform.scale(image, size) for image in images]
         
         self.index = 0
         self.image = images[self.index]
