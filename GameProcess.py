@@ -367,7 +367,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # rock
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 # miner
-                screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
+                screen.blit(miner_set[game_bound],(560, 205))
                 # cart
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
 
@@ -376,7 +376,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # rock
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 # miner
-                screen.blit(miner_set[game_bound],(de_x/2-340, de_y-850))
+                screen.blit(miner_set[game_bound], (560, 205))
                 # cart
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
 
@@ -384,7 +384,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # rock
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 # miner
-                screen.blit(miner_set[game_bound],(de_x/2-400, de_y-875))
+                screen.blit(miner_set[game_bound],(560, 205))
                 # cart
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
 

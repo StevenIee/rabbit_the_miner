@@ -325,8 +325,8 @@ class miner_animation(pygame.sprite.Sprite):
         super().__init__()
         
         size = (780, 840)
-        position = (690, 230)  # (560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
-        # ani_stop = False
+        position = (560, 205)  # (560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
+        # ani_stop = False                    # 해상도 바꾸지마. 항상 1920 X 1080 !!
         images = []
         images.append(pygame.image.load('IMAGES/picset/character/miner_1.png'))
         images.append(pygame.image.load('IMAGES/picset/character/miner_2.png'))
