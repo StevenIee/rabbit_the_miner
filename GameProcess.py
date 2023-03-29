@@ -187,7 +187,7 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
 
 
     times = [round(cumtime, 3), round(curtime, 3)]
-    print("times: ", times)
+    # print("times: ", times)
 
     # 3초 (RESTING_EYE 디폴트 값) 이전:
     # print("eye animation duration: ", T.RESTING_EYE)
@@ -325,9 +325,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
                 faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
                 game_faa, statbar_loc = statbar_loc_convert(faa_z, de_x, de_y)
-                
-                # FAA save
-                nf_result.append([raw_faa, cumtime, time_temp])
+
                 
                 # time save
                 cumtime = times[0][0];
@@ -337,6 +335,9 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 
                 times[0][0] = cumtime;
                 times[0][1] = curtime;
+
+                # FAA save
+                nf_result.append([raw_faa, cumtime, time_temp])
 
 
             # [UPDATE FOR ANIMATION]
@@ -413,7 +414,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
             
 
             # game_animation(game_bound)
-            if times[0] > T.NF_T:
+            if times[0][0] > T.NF_T:
                 # game stop
                 game_stop = True
                 game_status = "game_result"
