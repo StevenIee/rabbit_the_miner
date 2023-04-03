@@ -20,7 +20,7 @@ if __name__ == "__main__":
     
     #%% start game!
     
-    # test_mode = True
-    test_mode = False
+    test_mode = True
+    # test_mode = False
     
     NF = Neurofeedback(player_id, player_session, player_block, player_datafile, test_mode)
