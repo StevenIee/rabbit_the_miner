@@ -97,10 +97,11 @@ class Neurofeedback:
         print_counter_game_start = False
         print_counter_game_result = False
 
+
         game_status_old = "null"
         game_status = "intro"
-        # 여기서부터 게임이 시작된다.
 
+            
         while run:
             # processing inputs
             for event in pygame.event.get():
@@ -124,9 +125,9 @@ class Neurofeedback:
                 # faa_std = 0
 
             if game_starter:
-                if print_counter_starter == False:
-                    print("게임 시작합니다. 서버 접속 중")
-                    print_counter_starter = True
+                # if print_counter_starter == False:
+                #     print("게임 시작합니다. 서버 접속 중")
+                #     print_counter_starter = True
                 # Connection check
                 # 1) before baseline, 2) before main_game
                 # print(connection_check)

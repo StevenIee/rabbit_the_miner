@@ -28,7 +28,7 @@ def player_data():
     if not os.path.isdir(data_path):
         os.mkdir(data_path)
 
-    version_name = '2023.02.20 demo version'
+    version_name = '2023.04.03 demo version'
     print1 = '================================================================='
     print(print1)
     print(print1 + '\n')
@@ -98,7 +98,9 @@ def player_data():
 
 
 def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi):
-    button_start = AS.Button(1400, 700, button_starti, 370, 120)
+    # button_start = AS.Button(1400, 700, button_starti, 370, 120) method 버튼 없어져서 위치 안맞음
+    button_start = AS.Button(1400, 770, button_starti, 370, 120)
+    
     button_start2 = AS.Button(de_x/2-165,900, button_starti, 370, 120)
     button_start3 = AS.Button(de_x/2-(165*3),900, button_starti, 370, 120)
     button_method = AS.Button(1400, 840, button_methodi, 370, 120)
@@ -198,7 +200,7 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
             print(faa_mean, faa_std)
 
     elif cumtime > T.RESTING_EYE and cumtime < (T.RESTING_EYE + T.RESTING):
-
+        
         resting_cumtime = cumtime - T.RESTING_EYE
 
         # resting 돌아가고
@@ -409,8 +411,14 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
             draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
 
             if ani_start == True:
+                
+                
                 ani_start, ani_frame = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame)
-
+                
+                # if still_ani:
+                    
+                # else:
+                    # ani_start = False
             
 
             # game_animation(game_bound)
@@ -421,82 +429,6 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 
     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame
 
-
-# def gaming_animations():
-    
-
-# def gaming2(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar):
-#     # background 
-#     screen.blit(game_back,(0,0))
-#     if game_rd:
-#         # ready start 화면 2초씩
-#         # ready
-#         # screen.blit(game_back,(0,0))
-        
-#         # start
-#         game_rd = False
-#         game_st = True
-#         # time init
-
-#         cumtime = 0; 
-#         curtime = time.time();
-#         times = [cumtime , curtime];
-        
-        
-#     if game_st:
-#         temp_curtime = time.time();
-        
-#         if game_stop:
-#             # game stop 이라면
-#             screen.blit(game_pauseb,(de_x*0.025,de_y*0.05))
-#             screen.blit(pause_title,(de_x*0.5-275, de_y*0.2))
-#             if button_resume.draw(screen):
-#                 game_stop = False               
-#             if button_main.draw(screen):
-#                 game_status = "intro"
-#             if button_restart.draw(screen):
-#                 game_status = "game_starting"
-        
-#         else: # game stop이 아니라면
-#             if times[1] - temp_curtime >= T.NF_update_t: # time update 
-                
-#                 # baseline faa
-#                 faa_mean; faa_std;
-#                 # NF faa calc
-#                 temp_buffer = np.array(rpy.root.data_storage);
-#                 time_temp = temp_buffer[4,-int(EC.fft_win_len/2)];
-#                 # online-processing 1. epoching with the newest data
-#                 eeg_temp = temp_buffer[:2,-EC.fft_win_len:];
-#                 # online-processing 2. preprocessing
-#                 eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
-#                 # calculate data using fft
-#                 raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-#                 faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
-#                 game_faa, game_bound, statbar_loc = game_faa_convert(faa_z, de_x, de_y)
-                
-#                 # time save
-#                 cumtime = times[0];
-#                 cumtime += temp_curtime - curtime;
-#                 curtime = temp_curtime;
-#                 times = [cumtime, curtime];
-                
-                
-#                 # stat_barcolor, miner, rock, cart, reward
-#                 screen.blit(game_stat[game_bound],(de_x*0.5-297.5, 50))
-#                 screen.blit(game_stbar, statbar_loc)
-
-                
-#                 # data save
-#                 nf_result.append([raw_faa, cumtime, time_temp])
-                
-#             # game_animation(game_bound)
-#             if times[0] > T.NF_T:
-#                 #game stop
-#                 game_stop = True;
-            
-    
-    
-#     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result
 
 
 def statbar_loc_convert(faa_z, de_x, de_y):
