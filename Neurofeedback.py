@@ -16,7 +16,7 @@ import rpyc
 import time
 
 class Neurofeedback:
-    def __init__(self, player_id, player_session, player_block, player_datafile, test_mode):
+    def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
 
         self.player_id = player_id
         self.player_session = player_session

@@ -15,13 +15,41 @@ import EEG_Calc as EC
 import TIME_CON as T
 import pygame
 import os, random
+import sys
 import tkinter as tk
 # class Player_data:
 
 # global ani_start
+from tkinter import messagebox
 
-def player_data():
+
+def is_number(string):
+    try:
+        float(string)
+        return True
+    except ValueError:
+        return False
+
+
+def player_data(player_info_is_good, tests, ):
+    global root
+    """
+    :param player_info_is_good: False로 놓고 while 구문안에 넣은 뒤 조건을 충족하면 True로 전환하여 loop을 깨는 구조로 사용하면 됨.
+    :param tests: 일곱가지 테스트에 대한 list. 처음에는 [0,0,0,0,0,0,0] 혹은 [False, False, False, False, False, False, False]로 설정.
+                  이 리스트에 따라 그 다음에 나오는 info창의 문구가 결정된다. 오류가 있는 입력창의 문구가 변환됨.
+    :return:
+    player_id : 플레이어 식별 변호
+    session_num : 몇 번째 방문한 것인지 기록.
+    stage_num : 스테이지를 수동으로 입력해야할 때 입력. 기본은 1부터 시작함. 스테이지 2부터 수동 faa값 필요.
+    manual_faa_mean : 수동으로 입력하는 FAA 평균값, stage2부터 필요함.
+    manual_faa_std : 수동으로 입력하는 FAA 표준편차값, stage2부터 필요함.
+    player_filename : 플레이어 파일명
+    player_info_is_good : param과 동일
+    tests: param의 tests와 동일.
+    """
+
     org_path = './'
+
     # os.chdir(org_path)
     data_path = org_path + '/data'
 
@@ -39,62 +67,138 @@ def player_data():
     print('Player Information')
 
     root = tk.Tk()
-    root.geometry('500x350')
+    root.geometry('500x450')
     root.eval('tk::PlaceWindow . center')
     root.title("참여자 정보")
+
+    def on_closing():
+        sys.exit()
+
+    if tests[0] is False:
+        player_id_default_text = "type integer"
+    else:
+        player_id_default_text = "999"
+
+    if tests[1] is False:
+        session_default_text = "type integer"
+    else:
+        session_default_text = "999"
+
+    if tests[2] is False or tests[5] is False:
+        stage_num_default_text = "type integers 1 to 5"
+    else:
+        stage_num_default_text = "1"
+
+    if tests[3] is False:
+        manual_mfm_default_text = "enter faa mean in float"
+    else:
+        manual_mfm_default_text = "0"
+
+    if tests[4] is False:
+        manual_mfs_default_text = "enter faa std in float"
+    else:
+        manual_mfs_default_text = "0"
+
+    if tests[6] is False:
+        stage_num_default_text = "faa is 0 for stage 1"
+        manual_mfs_default_text = "0"
+        manual_mfm_default_text = "0"
+    else:
+        pass
 
     tk.Label(root, text="참여자 정보", width=20, font=("bold", 20)).place(x=90, y=53)
 
     tk.Label(root, text="피험자번호", width=20, font=("bold", 10)).place(x=68, y=130)
     player_id = tk.StringVar()
+    player_id.set(player_id_default_text)
     tk.Entry(root, textvariable=player_id).place(x=240, y=130)
 
     tk.Label(root, text="세션번호", width=20, font=("bold", 10)).place(x=68, y=180)
     session_num = tk.StringVar()
+    session_num.set(session_default_text)
     tk.Entry(root, textvariable=session_num).place(x=240, y=180)
 
     tk.Label(root, text="블록번호", width=20, font=("bold", 10)).place(x=68, y=230)
-    block_num = tk.StringVar()
-    tk.Entry(root, textvariable=block_num).place(x=240, y=230)
+    stage_num = tk.StringVar()
+    stage_num.set(stage_num_default_text)
+    tk.Entry(root, textvariable=stage_num).place(x=240, y=230)
 
-    #
-    # label_4 = tk.Label(root, text="성별", width=20, font=("bold", 10))
-    # label_4.place(x=70, y=280)
-    # gender_var = tk.IntVar()
-    # tk.Radiobutton(root, text="남성", padx=5, variable=gender_var, value=1).place(x=235, y=280)
-    # tk.Radiobutton(root, text="여성", padx=20, variable=gender_var, value=2).place(x=290, y=280)
-    # 
-    # label_4 = tk.Label(root, text="Age:", width=20, font=("bold", 10))
-    # label_4.place(x=70, y=330)
-    # entry_2 = tk.Entry(root)
-    # entry_2.place(x=240, y=330)
+    tk.Label(root, text="휴지기 FAA 평균", width=20, font=("bold", 10)).place(x=68, y=280)
+    manual_faa_mean = tk.StringVar()
+    manual_faa_mean.set(manual_mfm_default_text)
+    tk.Entry(root, textvariable=manual_faa_mean).place(x=240, y=280)
 
-    tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=root.destroy).place(x=180, y=280)
+    tk.Label(root, text="휴지기 FAA std", width=20, font=("bold", 10)).place(x=68, y=320)
+    manual_faa_std = tk.StringVar()
+    manual_faa_std.set(manual_mfs_default_text)
+    tk.Entry(root, textvariable=manual_faa_std).place(x=240, y=320)
+
+    tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=root.destroy).place(x=180, y=360)
+
+    # root.overrideredirect(True)
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
 
     # it is use for display the registration form on the window
     root.mainloop()
 
-    player_id = int(player_id.get())
-    session_num = int(session_num.get())
-    block_num = int(block_num.get())
-    
-    print("Player_Id: ", player_id)
-    print("Session_#: ", session_num)
-    print("Block___#: ", block_num)
+    # check if the input is all numeric
+    check_id = is_number(str(player_id.get()))
+    check_session = is_number(str(session_num.get()))
+    check_stage = is_number(str(stage_num.get()))
+    check_mfm = is_number(str(manual_faa_mean.get()))
+    check_mfs = is_number(str(manual_faa_std.get()))
 
-    player_date_temp = datetime.now()
-    player_date = player_date_temp.strftime('%Y_%m_%d_%H%M%S')
+    # check if the stage input is less than or equal to five stages
+    stage_less_than_six = False
+    stage_faa_check = False
 
-    player_filename = 'Player_' + str(player_id) + '_Session_' + str(session_num) + '_' + player_date
+    if check_stage is True:
+        if int(stage_num.get()) < 6:
+            stage_less_than_six = True
+            if int(stage_num.get()) == 1:
+                if float(manual_faa_mean.get()) == 0 and float(manual_faa_std.get()) == 0:
+                    stage_faa_check = True
+                elif float(manual_faa_mean.get()) != 0 or float(manual_faa_std.get()) != 0:
+                    stage_faa_check = False
+            elif int(stage_num.get()) in [2, 3, 4, 5]:
+                stage_faa_check = True
+        elif int(stage_num.get()) >= 6:
+            stage_less_than_six = False
 
-    if session_num > 1:
-        print('\n\nWelcome Back!')
+    tests = [check_id, check_session, check_stage, check_mfm, check_mfs, stage_less_than_six, stage_faa_check]
+    # check if all the tests have been good. If good say player_info_is_good is good and move on.
+    if all(tests):  # all() tests if list contains False. Returns True when all is True.
+        player_info_is_good = True
 
-    print('\nloading....\n')
+        player_id = int(player_id.get())
+        session_num = int(session_num.get())
+        stage_num = int(stage_num.get())
+        manual_faa_mean = float(manual_faa_mean.get())
+        manual_faa_std = float(manual_faa_std.get())
 
-    datafile_name = data_path+'/'+player_filename+'.csv'
+        print("Player_Id: ", player_id)
+        print("Session_#: ", session_num)
+        print("Block___#: ", stage_num)
+        print("manual_faa_mean: ", manual_faa_mean)
+        print("manual_faa_std: ", manual_faa_std)
 
-    return player_id, session_num, block_num, player_filename
+        player_date_temp = datetime.now()
+        player_date = player_date_temp.strftime('%Y_%m_%d_%H%M%S')
+
+        player_filename = 'Player_' + str(player_id) + '_Session_' + str(session_num) + '_' + player_date
+
+        if session_num > 1:
+            print('\n\nWelcome Back!')
+
+        print('\nloading....\n')
+
+        datafile_name = data_path + '/' + player_filename + '.csv'
+    else:
+        player_info_is_good = False
+        player_filename = ""
+
+    return player_id, session_num, stage_num, manual_faa_mean, manual_faa_std, player_filename, player_info_is_good, tests
 
 
 def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi):
