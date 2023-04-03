@@ -150,6 +150,8 @@ def back_img(de_x, de_y):
     
     game_clear = pygame.image.load('IMAGES/picset/object/clear.png').convert_alpha() 
     game_clear = pygame.transform.scale(game_clear, (1100, 200))
+    
+    
 
     return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear
 
@@ -212,7 +214,9 @@ class miner_animation(pygame.sprite.Sprite):
         super().__init__()
         
         size = (780, 840)
-        position = (560, 205)  # (560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
+        # position = (560, 205)  # (560.0, 205) # de_x, de_y로 안해서 나중에 만약 해상도 바꾸면 건드려야 함 (de_x/2-400,de_y-875)
+        position = (690, 205)
+        
         # ani_stop = False                    # 해상도 바꾸지마. 항상 1920 X 1080 !!
         images = []
         images.append(pygame.image.load('IMAGES/picset/character/miner_1.png'))
@@ -329,6 +333,7 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
         
     if ani_stop:
         ani_start = False    
+        ani_frame = 0
     else:
         ani_start = True        
     return ani_start, ani_frame

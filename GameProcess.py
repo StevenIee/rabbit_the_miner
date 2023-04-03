@@ -261,8 +261,8 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 
 def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop,
-           game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
-           game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame):
+           game_pauseb, pause_title, button_pause, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
+           game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode):
 # def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
     # global ani_start
@@ -282,6 +282,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
     #     cumtime += temp_curtime - curtime
     #     curtime = temp_curtime
     # # -> not necessary to update [times] every loop
+
     
     elif time.time() - times[0][1] > 2:
         cumtime = time.time() - times[0][1]
@@ -297,16 +298,19 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         ani_start = False
 
         if game_stop:
-            pass
-            # # game stop 이라면
-            # screen.blit(game_pauseb, (de_x*0.025, de_y*0.05))
-            # screen.blit(pause_title, (de_x*0.5-275, de_y*0.2))
-            # if button_resume.draw(screen):
-            #     game_stop = False
-            # if button_main.draw(screen):
-            #     game_status = "intro"
-            # if button_restart.draw(screen):
-            #     game_status = "game_starting"
+            # pass
+            # game stop 이라면
+            screen.blit(game_pauseb, (de_x*0.025, de_y*0.05))
+            screen.blit(pause_title, (de_x*0.5-275, de_y*0.2))
+            if button_resume.draw(screen):
+                game_stop = False
+            if button_main.draw(screen):
+                game_status = "intro"
+                game_stop = False
+            if button_restart.draw(screen):
+                game_status = "game_start"
+                game_st = False
+                game_stop = False
 
         else: # game stop이 아니라면
             # [UPDATE FOR FAA]
@@ -356,6 +360,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
             
                 faa_z = (avgfaa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
                 game_faa, game_bound = game_faa_convert(faa_z, de_x, de_y)
+                if test_mode:
+                    game_bound = 3
 
 
             # stat_barcolor, miner, rock, cart, reward
@@ -364,13 +370,14 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 
             # reward 몇개 얻었는지 계산.. 이건 나중에하자! 일단 밑에 카트는 다 half로
             cart_num = 0
+            
 
 
             if game_bound == 0:
                 # rock
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 # miner
-                screen.blit(miner_set[game_bound],(560, 205))
+                screen.blit(miner_set[game_bound],(690, 205))
                 # cart
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
 
@@ -379,7 +386,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # rock
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 # miner
-                screen.blit(miner_set[game_bound], (560, 205))
+                screen.blit(miner_set[game_bound], (690, 205))
                 # cart
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
 
@@ -387,7 +394,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # rock
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 # miner
-                screen.blit(miner_set[game_bound],(560, 205))
+                screen.blit(miner_set[game_bound],(690, 205))
                 # cart
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
 
@@ -396,18 +403,14 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 ani_start = True
                 ani_frame = 0
 
-            reward_select = 1 #
+            reward_select = 1 # reward - faa positive 하게 유지되는 시간 재서 결정해야함 (지금은 일단 ㄱㄱ)
             # reward_add = 0
             # ani_start = True
+            
             if reward_select == 1:
                 draw_reward = game_reward[0]
-                # draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
-                # reward_select = 0
             elif reward_select == 2:
                 draw_reward = game_reward[1]
-                # draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
-                # reward_select = 0
-
             draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
 
             if ani_start == True:
@@ -426,9 +429,40 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # game stop
                 game_stop = True
                 game_status = "game_result"
+            
+            if button_pause.draw(screen):
+                game_stop = True    
+            
+        
+    elif times[0][0] > 1 and game_st is True:
+        screen.blit(game_rock,(de_x-600, de_y-600))
+        # miner
+        screen.blit(miner_set[3],(560, 205))
+        # cart
+        screen.blit(cart_group[0],(de_x/2-950, de_y-625))
+            
+    elif times[0][0] > 0 and game_st is True:
+        screen.blit(game_rock,(de_x-600, de_y-600))
+        # miner
+        screen.blit(miner_set[3],(560, 205))
+        # cart
+        screen.blit(cart_group[0],(de_x/2-950, de_y-625))
+            
 
     return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame
 
+
+# def miner_animate(draw_reward, game_bound)
+
+#     # AS.miner_ani_starter
+    
+#     if animation_end:
+#         miner_wait = False
+#     else:
+#         miner_wait = True
+    
+
+# return miner_wait
 
 
 def statbar_loc_convert(faa_z, de_x, de_y):
@@ -503,9 +537,9 @@ def game_result(screen, game_status, game_status_old, game_result, de_x, de_y, g
     screen.blit(miner_intro, (de_x-750, de_y-900))
     screen.blit(game_clear, (de_x*0.05, 120))
     
-    # if button_main2.draw(screen):
-    #     game_status_old = game_status
-    #     game_status = "intro"
+    if button_main2.draw(screen):
+        game_status_old = game_status
+        game_status = "intro"
     if button_restart2.draw(screen):
         game_status_old = game_status
         game_status = "game_start"

@@ -16,7 +16,7 @@ import rpyc
 import time
 
 class Neurofeedback:
-    def __init__(self, player_id, player_session, player_block, player_datafile):
+    def __init__(self, player_id, player_session, player_block, player_datafile, test_mode):
 
         self.player_id = player_id
         self.player_session = player_session
@@ -24,6 +24,7 @@ class Neurofeedback:
         self.player_datafile = player_datafile
         self.connect = Connect()
         self.rpy = None
+        self.test_mode = test_mode
         
         # start pygame
         pygame.init()
@@ -199,10 +200,10 @@ class Neurofeedback:
                     miner_sprites = pygame.sprite.Group(miner_ani)
                     game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\
                     ani_frame = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std,
-                                          game_back, game_rd, game_st, game_stop, game_pauseb, pause_title,
+                                          game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_pause, 
                                           button_resume, button_main, button_restart, times, nf_result, self.rpy,
                                           game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt,
-                                          miner_sprites, ani_start , ani_frame)
+                                          miner_sprites, ani_start , ani_frame, self.test_mode)
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                     
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
