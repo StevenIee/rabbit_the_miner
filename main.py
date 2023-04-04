@@ -24,8 +24,8 @@ if __name__ == "__main__":
             player_data_is_good, tests = GP.player_data(player_data_is_good, tests)
 
     # %% start game!
-    # test_mode = True
-    test_mode = False
+    test_mode = True
+    # test_mode = False
     NF = Neurofeedback(player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode)
 
     print("ending NF game")
