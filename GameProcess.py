@@ -367,11 +367,12 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 
 def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop,
            game_pauseb, pause_title, button_pause, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
-           game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode, block_num, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num):
+           game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode, block_num,
+           game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num):
 # def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
     # global ani_start
-    reward_num = 0
+    # reward_num = 0
     starting_time = 4
     # game_bound = 0
     # game_bound_old = 0
@@ -480,6 +481,15 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 
             # reward 몇개 얻었는지 계산.. 이건 나중에하자! 일단 밑에 카트는 다 half로
             cart_num = 0
+            
+            
+            if stage_result[0] + stage_result[1] > 20:
+                cart_num = 2
+            elif stage_result[0] + stage_result[1] > 10:
+                cart_num = 1
+            else:
+                cart_num = 0
+            
             # if game_bound > 2:
     
 #     if game_bound_old != 3 or game_bound_old != 4 :
@@ -502,18 +512,19 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
     
 #     draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
     
-            print(ani_start)
+            # print(ani_start)
             if ani_start:
                 
-                ani_start, ani_frame, index_num = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame, index_num)
-                
+                ani_start, ani_frame, index_num, reward_frame, stage_result = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result)
+                # print(reward_num)
                 
             elif game_bound == 3 or game_bound == 4:
                 ani_start = True
                 ani_frame = 0
+                reward_frame = 0
                 
-                draw_reward, bound_time = miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time)
-                
+                draw_reward, bound_time, reward_num = miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time, reward_num)
+                # print(reward_num)
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 screen.blit(miner_set[3],(690, 205))
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
@@ -614,10 +625,10 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         
     
 
-    return game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num
+    return game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num 
 
 
-def miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time):
+def miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time, reward_num):
     
     if game_bound_old < 3 :
         bound_time[0] = temp_curtime
@@ -629,31 +640,35 @@ def miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_re
 
         # bound_now = temp_curtime
         # bound_sum = bound_now - bound_st
-
         # print(bound_time[2])
         draw_reward = game_reward[0]
+        reward_num = 1
         
         if bound_time[2] >= 10:
             # reward_select = 2
             # print('1')
             draw_reward = game_reward[1]
             draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
+            bound_time[0] = temp_curtime
+            reward_num = 2
         elif draw_reward != game_reward[1] and bound_time[2] < 10: # reward_select !=2 and bound_time[2] < 10: #bound_sum < 10:
             # reward_select = 1
             # print('2')
             draw_reward = game_reward[0]
             draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
+            reward_num = 1
             
     # AS.miner_ani_starter
     
-    animation_end = False
-    if animation_end:
-        miner_wait = False
-    else:
-        miner_wait = True
+    # animation_end = False
+    # if animation_end:
+    #     miner_wait = False
+    # else:
+    #     miner_wait = True
     
-
-    return draw_reward, bound_time #miner_wait
+    # print(reward_num)
+    # print(bound_time[2])
+    return draw_reward, bound_time, reward_num #miner_wait
 
 
 def statbar_loc_convert(faa_z, de_x, de_y):
@@ -719,7 +734,7 @@ def game_faa_convert(faa_z, de_x, de_y):
 
 
 
-def game_result(screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, block_num):
+def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, block_num):
     
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
@@ -727,6 +742,20 @@ def game_result(screen, game_status, game_status_old, game_result, de_x, de_y, g
     screen.blit(cart_result, (de_x-930, de_y-750))
     screen.blit(miner_intro, (de_x-750, de_y-900))
     screen.blit(game_clear, (de_x*0.05, 120))
+    
+    # stage_result 보여주기
+        
+    gold_word = '  :  ' + str(stage_result[0])
+    dia_word ='  :  ' + str(stage_result[1])
+    
+    font6 = pygame.font.SysFont('arial', 100, True)
+    for_gold = font6.render(gold_word, False, 'White')
+    for_dia = font6.render(dia_word, False, 'White')
+    gold_x, gold_y = for_gold.get_size()
+    dia_x, dia_y = for_dia.get_size()
+    
+    screen.blit(for_gold, ((de_x-500-gold_x)/2, 500-(gold_y/1.3)))
+    screen.blit(for_dia, ((de_x-500-dia_x)/2, 500+(dia_y/1.5)))
     
     if button_main2.draw(screen):
         game_status_old = game_status

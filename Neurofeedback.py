@@ -62,11 +62,14 @@ class Neurofeedback:
         faa_std = 0
         ani_start = False
         ani_frame = 0
+        reward_frame = 0
         resting_num = 0
         game_bound = 0
         game_bound_old = 0
         bound_time = [0,0,0]
         index_num = 0
+        stage_result = [0, 0]
+        reward_num = 1
 
         # words 
         font6 = pygame.font.SysFont('arial', 50, True)
@@ -197,6 +200,7 @@ class Neurofeedback:
                 # miner 게임 작동화면
                 elif game_status == "game_start":
                     if print_counter_game_start == False:
+                        # stage_result = [0, 0]
                         print("뉴로피드백 블록 시작")
                         # times[1] = time.time()
                         # reset the timer 
@@ -205,12 +209,13 @@ class Neurofeedback:
                         times = [[cumtime, curtime], [cumtime, curtime]];
                         print_counter_game_start = True
                     miner_sprites = pygame.sprite.Group(miner_ani)
-                    game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\
-                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std,
+                    game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\
+                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num = GP.gaming(self.screen,
+                                          game_status, game_status_old, de_x, de_y, faa_mean, faa_std,
                                           game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_pause, 
                                           button_resume, button_main, button_restart, times, nf_result, self.rpy,
                                           game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt,
-                                          miner_sprites, ani_start , ani_frame, self.test_mode, block_num, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num)
+                                          miner_sprites, ani_start , ani_frame, self.test_mode, block_num, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num)
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                     
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
@@ -219,11 +224,13 @@ class Neurofeedback:
                 elif game_status == "game_result":
                     if print_counter_game_result == False:
                         print("뉴로피드백 블록 결과 제시")
+                        print(stage_result)
                         print_counter_game_result = True
-                    game_status, game_status_old, block_num = GP.game_result(self.screen, game_status, game_status_old, game_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, block_num)
+                    game_status, game_status_old, block_num = GP.game_result(self.screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, block_num)
                     game_rd = True
                     game_st = False
                     game_stop = False
+                    
             # 인트로 이전 PRESS SPACE TO START 화면
             else:
                 pass

@@ -298,12 +298,13 @@ class miner_animation(pygame.sprite.Sprite):
     #         self.animation_time = self.animation_time = round(100 / len(self.images * 150), 2)
 
 
-def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame, index_num):
+def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result):
     # index_num = 0
     # miner_sprite.update(mt, ani_start)
     
     animation_time = round(100 / 600, 2)
     ani_frame += mt
+    # reward_frame = reward_frame + 1
     
     if ani_frame > animation_time:
         index_num += 1
@@ -314,19 +315,24 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
     # print(index_num)
     if index_num == 3:
         screen.blit(game_rock,(de_x-600+2, de_y-600+4))
+        # cart_reward(screen, reward_frame, de_x, de_y, draw_reward, draw_cart)
         # cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart)
         # screen.blit(game_rock,(de_x-600, de_y-600))
     #     init_rock = True
     #     ani_stop = False
-    elif index_num == 6:
-        screen.blit(game_rock,(de_x-600, de_y-600))
-    #     ani_stop = True
+    # elif index_num == 6:
+    #     screen.blit(game_rock,(de_x-600, de_y-600))
+    # #     ani_stop = True
     else:
         screen.blit(game_rock,(de_x-600, de_y-600))
     #     init_rock = False
     #     ani_stop = False
     
-    
+    if index_num >= 3:
+        reward_frame = reward_frame + 1.5
+        cart_reward(screen, reward_frame, de_x, de_y, draw_reward, draw_cart)
+    else:
+        screen.blit(draw_cart,(de_x/2-950, de_y-625))
     
     # # miner_sprite.animation_control(ani_init)
     # # init_rock, ani_stop
@@ -371,33 +377,53 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
     # else:
     #     ani_start = True        
     
-    if index_num == 8:
+    if index_num == 9:
+        # print(reward_num)
+        if reward_num == 1:
+            stage_result[0] += 1
+        elif reward_num == 2:
+            stage_result[1] += 1
+        
         ani_start = False
         index_num = 0
         miner_sprite.update(mt, ani_start)
+        
         
     else:
         ani_start = True
         miner_sprite.update(mt, ani_start)
         
-    return ani_start, ani_frame, index_num
+    return ani_start, ani_frame, index_num, reward_frame, stage_result
 
 
-def cart_reward(screen, ani_frame, de_x, de_y, draw_reward, draw_cart):
+def cart_reward(screen, reward_frame, de_x, de_y, draw_reward, draw_cart):
     # ani_frame = ani_frame + 1
     vel = 380
     ang = 60
     
-    y_ani_temp = vel*math.sin(math.radians(ang))*ani_frame
+    y_ani_temp = vel*math.sin(math.radians(ang))*reward_frame
 
     
-    x_ani = de_x-500 - vel*math.cos(math.radians(ang))*ani_frame*0.1
-    y_ani = de_y-450 - (y_ani_temp - 5*(ani_frame**2))*0.1
+    x_ani = de_x-500 - vel*math.cos(math.radians(ang))*reward_frame*0.1
+    y_ani = de_y-450 - (y_ani_temp - 5*(reward_frame**2))*0.1
+    # print(y_ani)
+
 
     if y_ani < de_y-440:
+        # print(reward_frame)
+        # print(x_ani)
         screen.blit(draw_reward, (x_ani, y_ani))
+        
+
+    # if x_ani < de_x - 800:
+    #     cart_x = de_x/2-950
+    #     cart_y = de_y-625
+        
+    if x_ani < de_x - 1800 and x_ani > de_x - 1920:
         cart_x = de_x/2-950
-        cart_y = de_y-627
+        cart_y = de_y-623
+            
+        
     else:
         # screen.blit(draw_reward, (x_ani, y_ani))
         cart_x = de_x/2-950
