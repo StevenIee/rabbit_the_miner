@@ -242,10 +242,19 @@ class miner_animation(pygame.sprite.Sprite):
         
         # self.animation_time = round(100 / len(self.images * 100), 2)
         self.current_time = 0
-        self.animation_time = self.animation_time = round(100 / len(self.images * 100), 2)
+        # self.animation_time = 
+        self.animation_time = round(100 / len(self.images * 100), 2)
+        self.animation_time1 = round(100 / len(self.images * 100), 2)
+        self.animation_time2 = round(100 / len(self.images * 200), 2)
         
                       
-    def update(self, mt, noreset):
+    def update(self, mt, noreset, game_bound):
+        
+        if game_bound == 3:
+            self.animation_time = self.animation_time1
+        elif game_bound == 4:
+            self.animation_time = self.animation_time2
+        
         if noreset == False:
             self.index = 0
             
@@ -298,7 +307,7 @@ class miner_animation(pygame.sprite.Sprite):
     #         self.animation_time = self.animation_time = round(100 / len(self.images * 150), 2)
 
 
-def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result):
+def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result, game_bound):
     # index_num = 0
     # miner_sprite.update(mt, ani_start)
     
@@ -327,9 +336,16 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
         screen.blit(game_rock,(de_x-600, de_y-600))
     #     init_rock = False
     #     ani_stop = False
-    
+    # reward_frame = reward_frame + 1.5
+    if game_bound == 3:
+        add_frame = 1.5
+    elif game_bound == 4:
+        add_frame = 2
+        
     if index_num >= 3:
-        reward_frame = reward_frame + 1.5
+        
+        reward_frame = reward_frame + add_frame
+        
         cart_reward(screen, reward_frame, de_x, de_y, draw_reward, draw_cart)
     else:
         screen.blit(draw_cart,(de_x/2-950, de_y-625))
@@ -386,12 +402,13 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
         
         ani_start = False
         index_num = 0
-        miner_sprite.update(mt, ani_start)
+        miner_sprite.update(mt, ani_start, game_bound)
         
+    
         
     else:
         ani_start = True
-        miner_sprite.update(mt, ani_start)
+        miner_sprite.update(mt, ani_start, game_bound)
         
     return ani_start, ani_frame, index_num, reward_frame, stage_result
 

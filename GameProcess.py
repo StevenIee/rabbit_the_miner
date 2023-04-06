@@ -475,7 +475,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # game_bound_old = game_bound
                 game_faa, game_bound = game_faa_convert(faa_z, de_x, de_y)
                 if test_mode:
-                    game_bound = 3
+                    game_bound = 4
                     # game_bound = random.randrange(0,4)
 
 
@@ -519,7 +519,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
             # print(ani_start)
             if ani_start:
                 
-                ani_start, ani_frame, index_num, reward_frame, stage_result = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result)
+                ani_start, ani_frame, index_num, reward_frame, stage_result = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result, game_bound)
                 # print(reward_num)
                 
             elif game_bound == 3 or game_bound == 4:

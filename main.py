@@ -29,3 +29,4 @@ if __name__ == "__main__":
     NF = Neurofeedback(player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode)
 
     print("ending NF game")
+
