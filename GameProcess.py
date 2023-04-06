@@ -273,7 +273,7 @@ def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, 
     return game_status, game_status_old, connection_check
 
 
-def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times, faa_mean, faa_std, resting_num):# resting_eye):
+def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times, faa_mean, faa_std, resting_num, test_mode):# resting_eye):
 
     # print("resting_start is ", resting_start)
 
@@ -329,6 +329,10 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
     else:
         faa_mean = np.mean(np.array(base_result)[:, 0])
         faa_std = np.std(np.array(base_result)[:, 0])
+        if test_mode:
+            faa_mean = -0.7
+            faa_std = 0
+        
         resting_num = resting_num + 1
         game_status_old = game_status
         # 결과 페이지 상태 설정
@@ -713,6 +717,7 @@ def game_faa_convert(faa_z, de_x, de_y):
         game_faa = faa_z
         # statbar_loc = (de_x*0.5-297.5-15+(595*(0.5+0.2*game_faa)), 50-7.5) # range에 따라 계속 다시 계산해야 지금은 -2 ~ 2 기준
     
+    game_bound = 0
     
     if game_faa >= bound_range[0] and game_faa < bound_range[1]:
         game_bound = 0
@@ -730,7 +735,7 @@ def game_faa_convert(faa_z, de_x, de_y):
         game_bound = 4
     
     
-    return game_faa, game_bound#, statbar_loc
+    return game_faa, game_bound #, statbar_loc
 
 
 

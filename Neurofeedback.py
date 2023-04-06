@@ -175,7 +175,7 @@ class Neurofeedback:
                     game_status, game_status_old, resting_start, base_result, faa_mean, faa_std, resting_num = \
                         GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins,
                                    all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy,
-                                   times, faa_mean, faa_std, resting_num)#, resting_eye )
+                                   times, faa_mean, faa_std, resting_num, test_mode)#, resting_eye )
                     pygame.display.update()
 
                 # resting state 다한 뒤 결과
