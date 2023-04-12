@@ -14,15 +14,17 @@ import GameProcess as GP
 from Connection import Connect
 import rpyc
 import time
-
+from DataInfo import DataInfo
+import pickle
 class Neurofeedback:
-    def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
+    # def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
+    def __init__(self, datainfo, test_mode):
 
-        self.player_id = player_id
-        self.player_session = player_session
-        self.player_block = player_block
-        self.player_datafile = player_datafile
-        self.connect = Connect()
+        # self.player_id = datainfo.player_id
+        # self.player_session = datainfo.session_num
+        # self.player_block = datainfo.stagenum
+        self.datainfo = datainfo
+        self.connect = Connect() 
         self.rpy = None
         self.test_mode = test_mode
         
@@ -49,7 +51,7 @@ class Neurofeedback:
         curtime = 0
         times = [cumtime, curtime]
         run = True
-        block_num = 1 # 나중에는 시작하는 block number 받아서 하기
+        # block_num = 1 # -> datainfo.stagenum
         
         game_starter = True  # default is True
         game_st = False  # default is False
@@ -58,12 +60,12 @@ class Neurofeedback:
         nf_result = []
         game_rd = True
         game_stop = False
-        faa_mean = 0
-        faa_std = 0
+        # faa_mean = 0 # -> datainfo.baseline_FAA[0]
+        # faa_std = 0 # -> datainfo.baseline_FAA[1]
         ani_start = False
         ani_frame = 0
         reward_frame = 0
-        resting_num = 0
+        # resting_num = 0 #  -> datainfo.session_num
         game_bound = 0
         game_bound_old = 0
         bound_time = [0,0,0]
@@ -153,7 +155,7 @@ class Neurofeedback:
                         print("게임 인트로 시작")
                         print_counter_intro = True
 
-                    game_status, game_status_old = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old)
+                    game_status, game_status_old, self.datainfo = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, self.datainfo)
                     # print(connection_check)
 
                 # resting state 안내문
@@ -172,65 +174,89 @@ class Neurofeedback:
                         print_counter_rest_start = True
 
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result, faa_mean, faa_std, resting_num = \
+                    game_status, game_status_old, resting_start, base_result,  self.datainfo = \
                         GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins,
                                    all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy,
-                                   times, faa_mean, faa_std, resting_num, test_mode)#, resting_eye )
+                                   times,  test_mode, self.datainfo)#, resting_eye )
                     pygame.display.update()
 
                 # resting state 다한 뒤 결과
                 elif game_status == "rest_result":
                     if print_counter_rest_result == False:
                         print("휴지기 뇌파 측정 결과 제시")
+                        
+                        # resting 후 결과 저장 (save datainfo in pickle) 
+                        with open(file= self.datainfo.save_path, mode='wb') as f:
+                            pickle.dump(self.datainfo, f)
+                        base_result_fname = self.datainfo.save_path+'base_result.pickle';
+                        with open(file= base_result_fname, mode='wb') as f:
+                            pickle.dump(base_result, f)
                         print_counter_rest_result = True
                     # del all_sprites
-                    game_status, game_status_old = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
-                                                                  resting_back, rest_rep, base_result, button_start3,
-                                                                  button_rerest, faa_mean, faa_std, resting_num)
+                    game_status, game_status_old, self.datainfo = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
+                                                                  resting_back, rest_rep, button_start3,
+                                                                  button_rerest, self.datainfo)
 
                 # 게임 인스트럭션 부분
                 elif game_status == "method":
                     if print_counter_method == False:
                         print("게임 설명 시작")
                         print_counter_method = True
-                    game_status, game_status_old = GP.method(self.screen, game_status, game_status_old, de_x, de_y,
+                    game_status, game_status_old, connection_check = GP.method(self.screen, game_status, game_status_old, de_x, de_y,
                                                              method_back, button_start2, method)
                     # print(connection_check)
-
+                    print_counter_game_start = False;
                 # miner 게임 작동화면
                 elif game_status == "game_start":
                     if print_counter_game_start == False:
-                        # stage_result = [0, 0]
+                        stage_result = [0, 0]
                         print("뉴로피드백 블록 시작")
                         # times[1] = time.time()
                         # reset the timer 
                         # -> times[0] : timer for FAA calc.
                         # -> times[1] : timer for animation update.
                         times = [[cumtime, curtime], [cumtime, curtime]];
-                        print_counter_game_start = True
+                        print_counter_game_start = True;
                     miner_sprites = pygame.sprite.Group(miner_ani)
                     game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\
-                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num = GP.gaming(self.screen,
-                                          game_status, game_status_old, de_x, de_y, faa_mean, faa_std,
+                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, self.datainfo = GP.gaming(self.screen,
+                                          game_status, game_status_old, de_x, de_y, 
                                           game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_pause, 
                                           button_resume, button_main, button_restart, times, nf_result, self.rpy,
                                           game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt,
-                                          miner_sprites, ani_start , ani_frame, self.test_mode, block_num, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num)
+                                          miner_sprites, ani_start , ani_frame, self.test_mode, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, self.datainfo)
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                     
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
-
+                    print_counter_game_result = False;
                 # miner 게임 작동 결과
                 elif game_status == "game_result":
                     if print_counter_game_result == False:
                         print("뉴로피드백 블록 결과 제시")
                         print(stage_result)
                         print_counter_game_result = True
-                    game_status, game_status_old, block_num = GP.game_result(self.screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, block_num)
+
+                        # NF 후 결과 저장 (save datainfo in pickle) 
+                        
+                        nf_result_fname = self.datainfo.save_path+'nf_result_'+str(self.datainfo.stagenum) +'.pickle';
+                        self.datainfo.NF_FAA_fname[self.datainfo.stagenum-1] = nf_result_fname;
+                        self.datainfo.stage_result[0][self.datainfo.stagenum-1] = stage_result[0];
+                        self.datainfo.stage_result[1][self.datainfo.stagenum-1] = stage_result[1];
+                        self.datainfo.stagenum = self.datainfo.stagenum+1;
+                        with open(file= self.datainfo.save_path, mode='wb') as f:
+                            pickle.dump(self.datainfo, f)
+                        with open(file= nf_result_fname, mode='wb') as f:
+                            pickle.dump(nf_result, f)
+                        
+                    game_status, game_status_old, print_counter_game_start, self.datainfo = GP.game_result(self.screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, self.datainfo)
                     game_rd = True
                     game_st = False
                     game_stop = False
-                    
+            
+                elif game_status == "GameEnd":
+                    print("겜끝!")
+                    pygame.quit()
+            
             # 인트로 이전 PRESS SPACE TO START 화면
             else:
                 pass

@@ -17,6 +17,9 @@ import pygame
 import os, random
 import sys
 import tkinter as tk
+import pickle
+from DataInfo import DataInfo
+
 # class Player_data:
 
 # global ani_start
@@ -48,29 +51,14 @@ def player_data(player_info_is_good, tests, ):
     tests: param의 tests와 동일.
     """
 
-    org_path = './'
-
-    # os.chdir(org_path)
-    data_path = org_path + '/data'
-
-    if not os.path.isdir(data_path):
-        os.mkdir(data_path)
-
-    version_name = '2023.04.03 demo version'
-    print1 = '================================================================='
-    print(print1)
-    print(print1 + '\n')
-    print('                      leelab Neurofeedback\n')
-    print('                                          '+version_name +'\n')
-    print('developed by Steven Lee, Jisu Chung, Minwoo Kim\n')
-    print(print1+ '\n\n')
-    print('Player Information')
-
+    
+    datainfo = None;
+    
     root = tk.Tk()
     root.geometry('500x450')
     root.eval('tk::PlaceWindow . center')
     root.title("참여자 정보")
-
+    
     def on_closing():
         sys.exit()
 
@@ -170,7 +158,7 @@ def player_data(player_info_is_good, tests, ):
     # check if all the tests have been good. If good say player_info_is_good is good and move on.
     if all(tests):  # all() tests if list contains False. Returns True when all is True.
         player_info_is_good = True
-
+        
         player_id = int(player_id.get())
         session_num = int(session_num.get())
         stage_num = int(stage_num.get())
@@ -185,20 +173,49 @@ def player_data(player_info_is_good, tests, ):
 
         player_date_temp = datetime.now()
         player_date = player_date_temp.strftime('%Y_%m_%d_%H%M%S')
+        
+        # data saving path
+        org_path = './'
+        if not os.path.isdir(org_path+'data/'):
+            os.mkdir(org_path+'data/')
+            
+        data_path = org_path + 'data/' + str(player_id) 
+        if not os.path.isdir(data_path):
+            os.mkdir(data_path)
+        player_filename = 'Player_' + str(player_id) + '_Session_' + str(session_num)
+        datafile_name = data_path + '/' + player_filename + '.pickle'
+        
+        # which block?
+        if stage_num == 1: # make new dir and save data
+            datainfo = DataInfo(player_id, session_num);
+            # save data in
+            with open(file= datafile_name, mode='wb') as f:
+                pickle.dump(datainfo, f)
+            
+        else: # load data
+            with open(file=datafile_name, mode='rb') as f:
+                datainfo=pickle.load(f)
+                if datainfo.stagenum == stage_num:
+                    pass
 
-        player_filename = 'Player_' + str(player_id) + '_Session_' + str(session_num) + '_' + player_date
+                else:
+                    print('please check the block number')
+                    print('last block was ' + str(datainfo.stagenum-1))
+                    print('please put block number ' + str(datainfo.stagenum))
+                    player_info_is_good = False
 
         if session_num > 1:
             print('\n\nWelcome Back!')
 
-        print('\nloading....\n')
-
-        datafile_name = data_path + '/' + player_filename + '.csv'
+        #print('\nloading....\n')
+        #print(player_info_is_good)
+        
     else:
         player_info_is_good = False
-        player_filename = ""
+        datafile_name = ""
 
-    return player_id, session_num, stage_num, manual_faa_mean, manual_faa_std, player_filename, player_info_is_good, tests
+    #return player_id, session_num, stage_num, manual_faa_mean, manual_faa_std, player_filename, player_info_is_good, tests
+    return datainfo, datafile_name, player_info_is_good, tests
 
 
 def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi):
@@ -229,7 +246,7 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test
 
 
-def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old):
+def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, datainfo):
     screen.blit(background_img, (0, 0))
     screen.blit(title_gold, (1100, 70)) # 1050,40
     screen.blit(title_word, (1200, 50))
@@ -244,19 +261,23 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
     # 게임 시작 버튼을 그리면서 버튼이 눌릴때 게인 status의 변화를 유발 한다.
     if button_start.draw(screen):
         game_status_old = game_status
-        game_status = "rest_method"
+        if datainfo.restEver == False:
+            game_status = "rest_method"
+        else:
+            game_status = "method";
     
-    return game_status, game_status_old
+    return game_status, game_status_old, datainfo
 
 
 def method(screen, game_status, game_status_old, de_x, de_y, method_back, button_start2, method):
     screen.blit(method_back, (0, 0))
     screen.blit(method, ((de_x-1400)/2, 100))
+    connection_check = True
     if button_start2.draw(screen):
         game_status_old = game_status
         game_status = "game_start"
-        
-    return game_status, game_status_old
+        connection_check = False;
+    return game_status, game_status_old, connection_check
 
 
 def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart):
@@ -273,7 +294,7 @@ def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, 
     return game_status, game_status_old, connection_check
 
 
-def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times, faa_mean, faa_std, resting_num, test_mode):# resting_eye):
+def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times,  test_mode, datainfo):# resting_eye):
 
     # print("resting_start is ", resting_start)
 
@@ -302,7 +323,7 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
     if cumtime < T.RESTING_EYE:
         AS.resting_eye_play(screen, all_sprites, mt)
         if button_jstart.draw(screen):
-            print(faa_mean, faa_std)
+            print(datainfo.baseline_FAA[0], datainfo.baseline_FAA[1])
 
     elif cumtime > T.RESTING_EYE and cumtime < (T.RESTING_EYE + T.RESTING):
         
@@ -329,24 +350,33 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
     else:
         faa_mean = np.mean(np.array(base_result)[:, 0])
         faa_std = np.std(np.array(base_result)[:, 0])
+        datainfo.baseline_FAA[0] = faa_mean;
+        datainfo.baseline_FAA[1] = faa_std;
+        datainfo.restEver = True;
+        
         if test_mode:
             faa_mean = -0.7
-            faa_std = 0
+            faa_std = 0.1
+            datainfo.baseline_FAA[0] = faa_mean;
+            datainfo.baseline_FAA[1] = faa_std;
+            datainfo.restEver = True;
         
-        resting_num = resting_num + 1
+        # resting_num = resting_num + 1
         game_status_old = game_status
         # 결과 페이지 상태 설정
         game_status = "rest_result"
+        
+        
 
-    return game_status, game_status_old, resting_start, base_result, faa_mean, faa_std, resting_num
+    return game_status, game_status_old, resting_start, base_result, datainfo
 
 
-def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std, resting_num):
+def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, button_start3, button_rerest, datainfo):
     screen.blit(resting_back, (0, 0))
     screen.blit(rest_rep, ((de_x-1000)/2, 70))
     
-    mean_word = 'Mean : ' + str(round(faa_mean, 2))
-    std_word ='Std : ' + str(round(faa_std, 2))
+    mean_word = 'Mean : ' + str(round(datainfo.baseline_FAA[0], 2))
+    std_word ='Std : ' + str(round(datainfo.baseline_FAA[1], 2))
     
     font6 = pygame.font.SysFont('arial', 100, True)
     for_mean = font6.render(mean_word, False, 'White')
@@ -366,13 +396,13 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
         game_status = "rest_method"
         # game_rest_did
         
-    return game_status, game_status_old
+    return game_status, game_status_old, datainfo
 
 
-def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop,
+def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd, game_st, game_stop,
            game_pauseb, pause_title, button_pause, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
-           game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode, block_num,
-           game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num):
+           game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode,
+           game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, datainfo):
 # def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
     # global ani_start
@@ -380,22 +410,18 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
     starting_time = 4
     # game_bound = 0
     # game_bound_old = 0
+    
+    faa_mean  = datainfo.baseline_FAA[0];
+    faa_std =  datainfo.baseline_FAA[1];
+    block_num = datainfo.stagenum;
+    
     # setting timers
     if game_st is False:
         game_st = True
-
         cumtime = 0
         curtime = time.time()
         times = [[round(cumtime, 3), round(curtime, 3)], [round(cumtime, 3), round(curtime, 3)]];
-        print(game_st)
-    # elif game_st is True:
-    #     cumtime = times[0]
-    #     curtime = times[1]
-    #     temp_curtime = time.time()
-    #     cumtime += temp_curtime - curtime
-    #     curtime = temp_curtime
-    # # -> not necessary to update [times] every loop
-    
+        #print(game_st)
        
     elif time.time() - times[0][1] > starting_time:
         cumtime = time.time() - times[0][1]
@@ -405,6 +431,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
     screen.blit(game_back, (0, 0))
     # print(times)
     # print(times[0][0] - times[1][0])
+    
+    
     # there's a blank screen for 2 seconds
     # finally let's start the game!!!
     if times[0][0] > starting_time and game_st is True:
@@ -424,6 +452,10 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 game_status = "game_start"
                 game_st = False
                 game_stop = False
+                
+            # neurofeedback FAA 저장
+            nf_faa_mean = np.mean(np.array(nf_result)[:, 0])
+            datainfo.NF_FAA_mean[datainfo.stagenum-1] = nf_faa_mean;
 
         else: # game stop이 아니라면
             # [UPDATE FOR FAA]
@@ -457,7 +489,6 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
 
                 # FAA save
                 nf_result.append([raw_faa, cumtime, time_temp])
-
 
             # [UPDATE FOR ANIMATION]
             # -> return new game_bound
@@ -597,7 +628,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
                 # game stop
                 game_stop = True
                 game_status = "game_result"
-            
+                
             if button_pause.draw(screen):
                 game_stop = True    
             
@@ -627,9 +658,9 @@ def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, 
         # ready
         screen.blit(game_ready, (de_x/2-900,de_y-800))
         
-    
+        
 
-    return game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num 
+    return game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, datainfo
 
 
 def miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time, reward_num):
@@ -739,8 +770,8 @@ def game_faa_convert(faa_z, de_x, de_y):
 
 
 
-def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, block_num):
-    
+def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, datainfo):
+    block_num = datainfo.stagenum;
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     screen.blit(game_cl_res, (de_x*0.025, de_y*0.5-200))
@@ -762,15 +793,19 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     screen.blit(for_gold, ((de_x-500-gold_x)/2, 500-(gold_y/1.3)))
     screen.blit(for_dia, ((de_x-500-dia_x)/2, 500+(dia_y/1.5)))
     
+    print_counter_game_start = None;
     if button_main2.draw(screen):
         game_status_old = game_status
         game_status = "intro"
     if button_restart2.draw(screen):
-        block_num = block_num + 1
         game_status_old = game_status
         game_status = "game_start"
+        print_counter_game_start = False;
+    if datainfo.stagenum > 5:
+        game_status_old = game_status
+        game_status = "GameEnd"
     
-    return game_status, game_status_old, block_num
+    return game_status, game_status_old, print_counter_game_start, datainfo
 
 
 
