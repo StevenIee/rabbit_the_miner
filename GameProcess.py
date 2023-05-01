@@ -402,7 +402,7 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd, game_st, game_stop,
            game_pauseb, pause_title, button_pause, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
            game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode,
-           game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, datainfo):
+           game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, datainfo, add_frame):
 # def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
     # global ani_start
@@ -550,7 +550,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
             # print(ani_start)
             if ani_start:
                 
-                ani_start, ani_frame, index_num, reward_frame, stage_result = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result, game_bound)
+                ani_start, ani_frame, index_num, reward_frame, stage_result, add_frame = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result, game_bound, add_frame)
                 # print(reward_num)
                 
             elif game_bound == 3 or game_bound == 4:
@@ -660,7 +660,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
         
         
 
-    return game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, datainfo
+    return game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, datainfo, add_frame
 
 
 def miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time, reward_num):

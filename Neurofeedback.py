@@ -72,6 +72,7 @@ class Neurofeedback:
         index_num = 0
         stage_result = [0, 0]
         reward_num = 1
+        add_frame = 0
 
         # words 
         font6 = pygame.font.SysFont('arial', 50, True)
@@ -219,12 +220,12 @@ class Neurofeedback:
                         print_counter_game_start = True;
                     miner_sprites = pygame.sprite.Group(miner_ani)
                     game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\
-                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, self.datainfo = GP.gaming(self.screen,
+                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, self.datainfo, add_frame = GP.gaming(self.screen,
                                           game_status, game_status_old, de_x, de_y, 
                                           game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_pause, 
                                           button_resume, button_main, button_restart, times, nf_result, self.rpy,
                                           game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt,
-                                          miner_sprites, ani_start , ani_frame, self.test_mode, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, self.datainfo)
+                                          miner_sprites, ani_start , ani_frame, self.test_mode, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, self.datainfo, add_frame)
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                     
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)

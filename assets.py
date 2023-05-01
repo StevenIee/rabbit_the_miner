@@ -307,13 +307,14 @@ class miner_animation(pygame.sprite.Sprite):
     #         self.animation_time = self.animation_time = round(100 / len(self.images * 150), 2)
 
 
-def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result, game_bound):
+def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result, game_bound, add_frame):
     # index_num = 0
     # miner_sprite.update(mt, ani_start)
     
     animation_time = round(100 / 600, 2)
     ani_frame += mt
     # reward_frame = reward_frame + 1
+    add_frame = 0
     
     if ani_frame > animation_time:
         index_num += 1
@@ -410,7 +411,7 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
         ani_start = True
         miner_sprite.update(mt, ani_start, game_bound)
         
-    return ani_start, ani_frame, index_num, reward_frame, stage_result
+    return ani_start, ani_frame, index_num, reward_frame, stage_result, add_frame
 
 
 def cart_reward(screen, reward_frame, de_x, de_y, draw_reward, draw_cart):
