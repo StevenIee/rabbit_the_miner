@@ -182,30 +182,44 @@ def player_data(player_info_is_good, tests, ):
         data_path = org_path + 'data/' + str(player_id) 
         if not os.path.isdir(data_path):
             os.mkdir(data_path)
-        player_filename = 'Player_' + str(player_id) + '_Session_' + str(session_num)
-        datafile_name = data_path + '/' + player_filename + '.pickle'
-        
-        # which block?
-        if stage_num == 1: # make new dir and save data
-            datainfo = DataInfo(player_id, session_num);
-            # save data in
+            os.mkdir(data_path+'/fig')
+            player_filename = 'Player_' + str(player_id) ##
+            datafile_name = data_path + '/' + player_filename + '_data.pickle' ##
+            
+            # init data
+            datainfo = DataInfo(player_id);
+            datainfo.folder_path = data_path;
             with open(file= datafile_name, mode='wb') as f:
                 pickle.dump(datainfo, f)
-            
-        else: # load data
+                
+        if not session_num == 1:
+            print('\n\nWelcome Back!')
             with open(file=datafile_name, mode='rb') as f:
                 datainfo=pickle.load(f)
-                if datainfo.stagenum == stage_num:
-                    pass
+            if datainfo.session_num == session_num:
+                pass
+            else:
+                print('please check the session number')
+                print('last session was ' + str(datainfo.session_num-1))
+                print('please put session number ' + str(datainfo.session))
+                player_info_is_good = False  
+        
+        
+        if datainfo.stagenum == stage_num: # game_result
+            if datainfo.stagenum == 1:
+                datainfo.session_date = player_date;
+            
+        else:
+            print('please check the block number')
+            print('last block was ' + str(datainfo.stagenum-1))
+            print('please put block number ' + str(datainfo.stagenum))
+            player_info_is_good = False    
+        
+        
+                
 
-                else:
-                    print('please check the block number')
-                    print('last block was ' + str(datainfo.stagenum-1))
-                    print('please put block number ' + str(datainfo.stagenum))
-                    player_info_is_good = False
 
-        if session_num > 1:
-            print('\n\nWelcome Back!')
+            
 
         #print('\nloading....\n')
         #print(player_info_is_good)
@@ -261,7 +275,7 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
     # 게임 시작 버튼을 그리면서 버튼이 눌릴때 게인 status의 변화를 유발 한다.
     if button_start.draw(screen):
         game_status_old = game_status
-        if datainfo.restEver == False:
+        if datainfo.restEver[datainfo.session_num-1] == False:
             game_status = "rest_method"
         else:
             game_status = "method";
@@ -294,7 +308,7 @@ def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, 
     return game_status, game_status_old, connection_check
 
 
-def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times,  test_mode, datainfo):# resting_eye):
+def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times,  test_mode, datainfo, temp_EEG):# resting_eye):
 
     # print("resting_start is ", resting_start)
 
@@ -347,19 +361,32 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
 
         base_result.append([round(faa, 3), round(cumtime, 3), time_temp])
         # print(faa)
+        
+        # EEG saving
+        # temp_EEG;eeg_temp;
+        time_temp2 = temp_buffer[4, -EC.fft_win_len:];
+        
+        temp_EEG = EC.eeg_datasaving(temp_EEG, eeg_temp, time_temp2);
+        
+        
+        
+        
+        
     else:
         faa_mean = np.mean(np.array(base_result)[:, 0])
         faa_std = np.std(np.array(base_result)[:, 0])
-        datainfo.baseline_FAA[0] = faa_mean;
-        datainfo.baseline_FAA[1] = faa_std;
-        datainfo.restEver = True;
+        session_num = datainfo.session_num;
+        datainfo.baseline_FAA[session_num-1][0] = faa_mean;
+        datainfo.baseline_FAA[session_num-1][1] = faa_std;
+        datainfo.restEver[session_num-1] = True;
         
         if test_mode:
             faa_mean = -0.7
             faa_std = 0.1
-            datainfo.baseline_FAA[0] = faa_mean;
-            datainfo.baseline_FAA[1] = faa_std;
-            datainfo.restEver = True;
+            session_num = datainfo.session_num;
+            datainfo.baseline_FAA[session_num-1][0] = faa_mean;
+            datainfo.baseline_FAA[session_num-1][1] = faa_std;
+            datainfo.restEver[session_num-1] = True;
         
         # resting_num = resting_num + 1
         game_status_old = game_status
@@ -368,15 +395,15 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
         
         
 
-    return game_status, game_status_old, resting_start, base_result, datainfo
+    return game_status, game_status_old, resting_start, base_result, datainfo, temp_EEG
 
 
 def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, button_start3, button_rerest, datainfo):
     screen.blit(resting_back, (0, 0))
     screen.blit(rest_rep, ((de_x-1000)/2, 70))
-    
-    mean_word = 'Mean : ' + str(round(datainfo.baseline_FAA[0], 2))
-    std_word ='Std : ' + str(round(datainfo.baseline_FAA[1], 2))
+    session_num = datainfo.session_num;
+    mean_word = 'Mean : ' + str(round(datainfo.baseline_FAA[session_num-1][0], 2))
+    std_word ='Std : ' + str(round(datainfo.baseline_FAA[session_num-1][1], 2))
     
     font6 = pygame.font.SysFont('arial', 100, True)
     for_mean = font6.render(mean_word, False, 'White')
@@ -402,7 +429,7 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
 def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd, game_st, game_stop,
            game_pauseb, pause_title, button_pause, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
            game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode,
-           game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, datainfo, add_frame):
+           game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, datainfo, add_frame, stage_bounds, temp_EEG):
 # def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
     # background 
     # global ani_start
@@ -410,9 +437,9 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
     starting_time = 4
     # game_bound = 0
     # game_bound_old = 0
-    
-    faa_mean  = datainfo.baseline_FAA[0];
-    faa_std =  datainfo.baseline_FAA[1];
+    session_num = datainfo.session_num;
+    faa_mean  = datainfo.baseline_FAA[session_num-1][0];
+    faa_std =  datainfo.baseline_FAA[session_num-2][1];
     block_num = datainfo.stagenum;
     
     # setting timers
@@ -443,6 +470,12 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
             # game stop 이라면
             screen.blit(game_pauseb, (de_x*0.025, de_y*0.05))
             screen.blit(pause_title, (de_x*0.5-275, de_y*0.2))
+            
+            # bound plot 저장
+            bound_savefname = datainfo.folder_path + '/stage_summary_s' + str(datainfo.session_num) + '_b' +str(datainfo.stage_num) +'.png'
+            print('save line plot ...')
+            EC.bound_line_plot_save(stage_bounds, bound_savefname)
+            
             if button_resume.draw(screen):
                 game_stop = False
             if button_main.draw(screen):
@@ -455,7 +488,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 
             # neurofeedback FAA 저장
             nf_faa_mean = np.mean(np.array(nf_result)[:, 0])
-            datainfo.NF_FAA_mean[datainfo.stagenum-1] = nf_faa_mean;
+            datainfo.NF_FAA_mean[session_num-1][block_num-1] = nf_faa_mean;
 
         else: # game stop이 아니라면
             # [UPDATE FOR FAA]
@@ -489,7 +522,15 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
 
                 # FAA save
                 nf_result.append([raw_faa, cumtime, time_temp])
-
+                
+                # EEG saving
+                # temp_EEG;eeg_temp;
+                time_temp2 = temp_buffer[4, -EC.fft_win_len:];
+                
+                temp_EEG = EC.eeg_datasaving(temp_EEG, eeg_temp, time_temp2);
+                
+                
+                
             # [UPDATE FOR ANIMATION]
             # -> return new game_bound
             temp_curtime = time.time();
@@ -505,6 +546,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 faa_z = (avgfaa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
                 # game_bound_old = game_bound
                 game_faa, game_bound = game_faa_convert(faa_z, de_x, de_y)
+                stage_bounds.append([stage_bounds, cumtime])
                 if test_mode:
                     game_bound = 4
                     # game_bound = random.randrange(0,4)
@@ -660,7 +702,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
         
         
 
-    return game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, datainfo, add_frame
+    return game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start, ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, datainfo, add_frame, stage_bounds, temp_EEG
 
 
 def miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time, reward_num):

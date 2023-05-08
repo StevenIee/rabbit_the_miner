@@ -15,6 +15,7 @@ from Connection import Connect
 import rpyc
 import time
 from DataInfo import DataInfo
+import numpy as np
 import pickle
 class Neurofeedback:
     # def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
@@ -58,6 +59,7 @@ class Neurofeedback:
         resting_start = False  # default is False
         base_result = []
         nf_result = []
+        temp_EEG = np.array([]);
         game_rd = True
         game_stop = False
         # faa_mean = 0 # -> datainfo.baseline_FAA[0]
@@ -164,6 +166,7 @@ class Neurofeedback:
                     if print_counter_rest_method == False:
                         print("휴지기 뇌파 측정 설명 시작")
                         print_counter_rest_method = True
+                        
                     game_status, game_status_old, connection_check = GP.rest_method(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart)
                     # print(connection_check)
 
@@ -172,13 +175,14 @@ class Neurofeedback:
                     if print_counter_rest_start == False:
                         print("휴지기 뇌파 측정 시작")
                         times[1] = time.time()
+                        temp_EEG = np.array([]);
                         print_counter_rest_start = True
 
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result,  self.datainfo = \
+                    game_status, game_status_old, resting_start, base_result,  self.datainfo, temp_EEG = \
                         GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins,
                                    all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy,
-                                   times,  test_mode, self.datainfo)#, resting_eye )
+                                   times,  test_mode, self.datainfo, temp_EEG)#, resting_eye )
                     pygame.display.update()
 
                 # resting state 다한 뒤 결과
@@ -187,11 +191,18 @@ class Neurofeedback:
                         print("휴지기 뇌파 측정 결과 제시")
                         
                         # resting 후 결과 저장 (save datainfo in pickle) 
+                        session_num = self.datainfo.session_num;
+                        self.datainfo.base_FAA_result[session_num-1] = base_result;
                         with open(file= self.datainfo.save_path, mode='wb') as f:
                             pickle.dump(self.datainfo, f)
-                        base_result_fname = self.datainfo.save_path+'base_result.pickle';
-                        with open(file= base_result_fname, mode='wb') as f:
-                            pickle.dump(base_result, f)
+                        
+                        
+                        base_result_fname = self.datainfo.save_path+'baseEEG_s', str(session_num),'.pickle';
+                        with open(file= base_result_fname, mode='wb') as ee:
+                            # raw EEG 저장 
+                            EEG=temp_EEG;
+                            pickle.dump(EEG, ee)
+                            
                         print_counter_rest_result = True
                     # del all_sprites
                     game_status, game_status_old, self.datainfo = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
@@ -211,6 +222,8 @@ class Neurofeedback:
                 elif game_status == "game_start":
                     if print_counter_game_start == False:
                         stage_result = [0, 0]
+                        stage_bounds = [];
+                        temp_EEG = np.array([]);
                         print("뉴로피드백 블록 시작")
                         # times[1] = time.time()
                         # reset the timer 
@@ -220,12 +233,12 @@ class Neurofeedback:
                         print_counter_game_start = True;
                     miner_sprites = pygame.sprite.Group(miner_ani)
                     game_status, game_status_old, stage_result, game_rd, game_st, game_stop, times, nf_result, ani_start,\
-                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, self.datainfo, add_frame = GP.gaming(self.screen,
+                    ani_frame, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, reward_num, self.datainfo, add_frame, stage_bounds,temp_EEG = GP.gaming(self.screen,
                                           game_status, game_status_old, de_x, de_y, 
                                           game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_pause, 
                                           button_resume, button_main, button_restart, times, nf_result, self.rpy,
                                           game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt,
-                                          miner_sprites, ani_start , ani_frame, self.test_mode, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, self.datainfo, add_frame)
+                                          miner_sprites, ani_start , ani_frame, self.test_mode, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, self.datainfo, add_frame, stage_bounds,temp_EEG)
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
                     
                     # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
@@ -238,17 +251,29 @@ class Neurofeedback:
                         print_counter_game_result = True
 
                         # NF 후 결과 저장 (save datainfo in pickle) 
+                        session_num = self.datainfo.session_num;
+                        stagenum = self.datainfo.stagenum;
+                        # self.datainfo.NF_FAA_fname[self.datainfo.stagenum-1] = nf_result_fname;
+                        self.datainfo.stage_result[session_num-1][stagenum-1][0] = stage_result[0];
+                        self.datainfo.stage_result[session_num-1][stagenum-1][1] = stage_result[1];
+                        self.datainfo.stage_bounds[session_num-1][stagenum-1] = stage_bounds;
+                        self.datainfo.NF_FAA_fname[session_num-1][stagenum-1] = nf_result;
                         
-                        nf_result_fname = self.datainfo.save_path+'nf_result_'+str(self.datainfo.stagenum) +'.pickle';
-                        self.datainfo.NF_FAA_fname[self.datainfo.stagenum-1] = nf_result_fname;
-                        self.datainfo.stage_result[0][self.datainfo.stagenum-1] = stage_result[0];
-                        self.datainfo.stage_result[1][self.datainfo.stagenum-1] = stage_result[1];
-                        self.datainfo.stagenum = self.datainfo.stagenum+1;
+                        # Block number update
+                        self.datainfo.stagenum = self.datainfo.stagenum+1; 
+                        # save
                         with open(file= self.datainfo.save_path, mode='wb') as f:
                             pickle.dump(self.datainfo, f)
-                        with open(file= nf_result_fname, mode='wb') as f:
-                            pickle.dump(nf_result, f)
-                        
+                            
+                            
+                        nf_result_fname = self.datainfo.save_path+'nfEEG_s'+str(session_num)+'_b'+str(stagenum-1) +'.pickle';
+
+                        with open(file= nf_result_fname, mode='wb') as ee2:
+                            # raw EEG 저장 
+                            EEG=temp_EEG;
+                            pickle.dump(EEG, ee)
+                            
+                            
                     game_status, game_status_old, print_counter_game_start, self.datainfo = GP.game_result(self.screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, self.datainfo)
                     game_rd = True
                     game_st = False
@@ -256,6 +281,11 @@ class Neurofeedback:
             
                 elif game_status == "GameEnd":
                     print("겜끝!")
+                    # session num and block num edit
+                    self.datainfo.stagenum = 1;
+                    self.datainfo.session_num =self.datainfo.session_num + 1;
+                    
+                    
                     pygame.quit()
             
             # 인트로 이전 PRESS SPACE TO START 화면
