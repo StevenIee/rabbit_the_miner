@@ -7,7 +7,7 @@ Created on Wed Feb 15 16:06:44 2023
 
 
 from Neurofeedback import Neurofeedback
-import GameProcess as GP
+import GameProcess_org as GP
 
 
 valid_inputs = False

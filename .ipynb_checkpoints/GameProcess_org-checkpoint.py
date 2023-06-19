@@ -212,7 +212,9 @@ def create_navigation_buttons(de_x, de_y, button_pausei):
     button_main = AS.Button(de_x * 0.5 - 185, de_y * 0.51, button_maini, 370, 120)
     button_main2 = AS.Button(130, 830, button_maini, 370, 120)
     button_pause = AS.Button(de_x * 0.94, 40, button_pausei, 70, 70)
-    return button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause
+    button_rerest = AS.Button(de_x/2+165,900, button_reresti, 370, 120)
+    button_method = AS.Button(1400, 840, button_methodi, 370, 120)
+    return button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_rerest, button_method
 
 def create_direction_buttons(de_x, de_y, button_pausei):
     button_right = AS.Button(de_x * 0.94, de_y - 200, button_pausei, 70, 70)
