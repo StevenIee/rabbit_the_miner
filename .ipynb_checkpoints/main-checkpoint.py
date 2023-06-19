@@ -18,6 +18,7 @@ tests = [0, 0, 0, 0, 0, 0, 0]
 
 if __name__ == "__main__":
     # %% get player data
+    
 
     while player_data_is_good is False:
         player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, \
@@ -29,4 +30,3 @@ if __name__ == "__main__":
     NF = Neurofeedback(player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode)
 
     print("ending NF game")
-
