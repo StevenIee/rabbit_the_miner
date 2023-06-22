@@ -8,7 +8,7 @@ Created on Wed Feb 15 16:06:44 2023
 # import pygame
 # import Neurofeedback as NF
 from Neurofeedback import Neurofeedback
-import GameProcess as GP
+import GameProcess_org as GP
 
 # import pygame
 

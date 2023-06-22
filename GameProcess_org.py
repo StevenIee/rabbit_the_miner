@@ -50,7 +50,7 @@ class PlayerInfoForm(tk.Tk):
     def __init__(self, default_values, tests):
         super().__init__()
 
-        self.default_values = default_values
+        self.default_values = ["999", "999", "1", "0", "0"]
         
         self.player_id = tk.StringVar()
         self.session_num = tk.StringVar()
@@ -58,42 +58,15 @@ class PlayerInfoForm(tk.Tk):
         self.manual_faa_mean = tk.StringVar()
         self.manual_faa_std = tk.StringVar()
 
-        self.player_id.set(default_values[0])
-        self.session_num.set(default_values[1])
-        self.stage_num.set(default_values[2])
-        self.manual_faa_mean.set(default_values[3])
-        self.manual_faa_std.set(default_values[4])
-
+        
         self.tests = tests
-
-        create_gui()
+        
         self.create_widgets()
-
+        #create_gui()
+        
     def create_widgets(self):
         tests = [False, False, False, False, False, False, False] 
         
-        default_values = [
-            "type integer" if not tests[0] else "999",
-            "type integer" if not tests[1] else "999",
-            "type integers 1 to 5" if not tests[2] or not tests[5] else "1",
-            "enter faa mean in float" if not tests[3] else "0",
-            "enter faa std in float" if not tests[4] else "0"
-        ]
-        
-        if not tests[6]:
-            default_values[2] = "faa is 0 for stage 1"
-            default_values[4] = "0"
-            default_values[3] = "0"
-
-        self.player_id.set(default_values[0] if not self.default_values[0] else self.default_values[0])
-        self.session_num.set(default_values[1] if not self.default_values[1] else self.default_values[1])
-        self.stage_num.set(default_values[2] if not self.default_values[2] else self.default_values[2])
-        self.manual_faa_mean.set(default_values[3] if not self.default_values[3] else self.default_values[3])
-        self.manual_faa_std.set(default_values[4] if not self.default_values[4] else self.default_values[4])
-
-
-        
-        '''
         player_id_default_text = "type integer" if not tests[0] else "999"
         session_default_text = "type integer" if not tests[1] else "999"
         stage_num_default_text = "type integers 1 to 5" if not tests[2] or not tests[5] else "1"
@@ -104,14 +77,12 @@ class PlayerInfoForm(tk.Tk):
             manual_mfs_default_text = "0"
             manual_mfm_default_text = "0"
         
-
+        player_id = tk.StringVar()
+        session_num = tk.StringVar()
+        stage_num = tk.StringVar()
+        manual_faa_mean = tk.StringVar()
+        manual_faa_std = tk.StringVar()
         
-        player_id.set(player_id_default_text)
-        session_num.set(session_default_text)
-        stage_num.set(stage_num_default_text)
-        manual_faa_mean.set(manual_mfm_default_text)
-        manual_faa_std.set(manual_mfs_default_text)
-        '''
         
         tk.Label(root, text="참여자 정보", width=20, font=("bold", 20)).place(x=90, y=53)
         
@@ -131,6 +102,12 @@ class PlayerInfoForm(tk.Tk):
         tk.Entry(root, textvariable=self.manual_faa_std).place(x=240, y=320)
 
         tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=self.submit_player_info).place(x=180, y=360)
+        
+        player_id.set(player_id_default_text)
+        session_num.set(session_default_text)
+        stage_num.set(stage_num_default_text)
+        manual_faa_mean.set(manual_mfm_default_text)
+        manual_faa_std.set(manual_mfs_default_text)
         
     def validate_inputs(self):
         player_id = self.player_id.get()
@@ -175,7 +152,8 @@ class PlayerInfoForm(tk.Tk):
     def submit_player_info(self):
         if self.validate_inputs():
             self.print_player_info()
-            self.destroy()
+            if root is not None and root.winfo_exists():
+                self.destroy()
         else:
             messagebox.showerror("Invalid Input", "Please enter valid player information.")
 
@@ -238,7 +216,7 @@ def create_start_buttons(de_x, de_y, button_starti):
     button_start3 = AS.Button(de_x / 2 - (165 * 3), 900, button_starti, 370, 120)
     return button_start, button_start2, button_start3
 
-def create_navigation_buttons(de_x, de_y, button_pausei):
+def create_navigation_buttons(de_x, de_y, button_pausei, button_maini, button_restarti, button_resumei, button_jstarti, button_reresti, button_methodi):
     button_restart = AS.Button(de_x * 0.5 - 185, de_y * 0.64, button_restarti, 370, 120)
     button_restart2 = AS.Button(580, 830, button_resumei, 370, 120)
     button_resume = AS.Button(de_x * 0.5 - 185, de_y * 0.77, button_resumei, 370, 120)
@@ -298,7 +276,6 @@ class IntroScreen:
 
     def handle_event(self):
         if self.button_start.draw(self.screen):
-            game_status_old = game_status  # Update game_status_old
             return "rest_method"
         #Resting 측정 후 Methods가 나오도록 변경 예정이라고 적혀있어서, 코드만 옮기고 comment out 했습니다.
         #elif self.button_method.draw(self.screen):
@@ -315,7 +292,7 @@ class MethodScreen:
         self.de_x = de_x
 
 
-    def draw(self):
+    def draw(self, de_x):
         self.screen.blit(self.method_back, (0, 0))
         self.screen.blit(self.method, ((de_x - 1400) / 2, 100))
 
@@ -337,7 +314,7 @@ class RestMethodScreen:
         self.de_x = de_x
         self.de_y = de_y
         
-    def draw(self):
+    def draw(self, de_x, de_y):
         self.screen.blit(self.resting_back, (0, 0))
         self.screen.blit(self.rest_expl, (de_x * 0.05, de_y * 0.07))
         self.screen.blit(self.rest_title, ((de_x - 1000) / 2, 50))
@@ -371,11 +348,11 @@ class RestingScreen:
         self.de_x = de_x
         self.de_y = de_y
 
-    def draw(self):
+    def draw(self, de_x, de_y):
         self.screen.blit(self.resting_back, (0, 0))
         self.screen.blit(self.rest_ins, ((de_x-1600)/2, 50))
 
-    def handle_event(self):
+    def handle_event(self, game_status):
         if not self.resting_start:
             self.resting_start = True
             cumtime = 0
@@ -431,7 +408,7 @@ class RestResultScreen:
         self.de_x = de_x
         self.de_y = de_y
 
-    def draw(self):
+    def draw(self, de_x, de_y):
         self.screen.blit(self.resting_back, (0, 0))
         self.screen.blit(self.rest_rep, ((de_x-1000)/2, 70))
 
@@ -447,7 +424,7 @@ class RestResultScreen:
         self.screen.blit(for_mean, ((de_x-mean_x)/2, 500-(mean_y/1.5)))
         self.screen.blit(for_std, ((de_x-std_x)/2, 500+(std_y/1.5)))
 
-    def handle_event(self):
+    def handle_event(self, game_status):
         game_status_old = game_status
         if self.button_start3.draw(self.screen):
             game_status = "method"
