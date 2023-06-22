@@ -64,7 +64,7 @@ class PlayerInfoForm(tk.Tk):
 
         self.tests = tests
 
-        create_gui()
+        self.create_gui()
         self.create_widgets()
 
     def create_widgets(self):
@@ -167,7 +167,7 @@ class PlayerInfoForm(tk.Tk):
         datafile_name = data_path + '/' + player_filename + '.csv'
     
 
-        return player_filename, tests
+        return player_filename
 
     #class ends
     
