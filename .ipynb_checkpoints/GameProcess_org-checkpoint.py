@@ -50,6 +50,8 @@ class PlayerInfoForm(tk.Tk):
     def __init__(self, default_values, tests):
         super().__init__()
 
+        default_values = ["999", "999", "1", "0", "0"]
+        
         self.player_id = tk.StringVar()
         self.session_num = tk.StringVar()
         self.stage_num = tk.StringVar()
@@ -68,7 +70,8 @@ class PlayerInfoForm(tk.Tk):
         self.create_widgets()
 
     def create_widgets(self):
-            
+        tests = [False, False, False, False, False, False, False]    
+        
         player_id_default_text = "type integer" if not tests[0] else "999"
         session_default_text = "type integer" if not tests[1] else "999"
         stage_num_default_text = "type integers 1 to 5" if not tests[2] or not tests[5] else "1"
@@ -80,20 +83,25 @@ class PlayerInfoForm(tk.Tk):
             manual_mfm_default_text = "0"
     
         tk.Label(root, text="참여자 정보", width=20, font=("bold", 20)).place(x=90, y=53)
-
+        
         tk.Label(root, text="피험자번호", width=20, font=("bold", 10)).place(x=68, y=130)
+        player_id.set(player_id_default_text)
         tk.Entry(root, textvariable=self.player_id).place(x=240, y=130)
 
         tk.Label(root, text="세션번호", width=20, font=("bold", 10)).place(x=68, y=180)
+        session_num.set(session_default_text)
         tk.Entry(root, textvariable=self.session_num).place(x=240, y=180)
 
         tk.Label(root, text="블록번호", width=20, font=("bold", 10)).place(x=68, y=230)
+        stage_num.set(stage_num_default_text)
         tk.Entry(root, textvariable=self.stage_num).place(x=240, y=230)
 
         tk.Label(root, text="휴지기 FAA 평균", width=20, font=("bold", 10)).place(x=68, y=280)
+        manual_faa_mean.set(manual_mfm_default_text)
         tk.Entry(root, textvariable=self.manual_faa_mean).place(x=240, y=280)
 
         tk.Label(root, text="휴지기 FAA std", width=20, font=("bold", 10)).place(x=68, y=320)
+        manual_faa_std.set(manual_mfs_default_text)
         tk.Entry(root, textvariable=self.manual_faa_std).place(x=240, y=320)
 
         tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=self.submit_player_info).place(x=180, y=360)
@@ -167,7 +175,7 @@ class PlayerInfoForm(tk.Tk):
         datafile_name = data_path + '/' + player_filename + '.csv'
     
 
-        return player_filename, tests
+        return player_filename
 
     #class ends
     
