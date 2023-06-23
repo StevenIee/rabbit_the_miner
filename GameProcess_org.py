@@ -65,6 +65,7 @@ class PlayerInfoForm(tk.Tk):
         #create_gui()
         
     def create_widgets(self):
+        
         tests = [False, False, False, False, False, False, False] 
         
         player_id_default_text = "type integer" if not tests[0] else "999"
@@ -76,12 +77,6 @@ class PlayerInfoForm(tk.Tk):
             stage_num_default_text = "faa is 0 for stage 1"
             manual_mfs_default_text = "0"
             manual_mfm_default_text = "0"
-        
-        player_id = tk.StringVar()
-        session_num = tk.StringVar()
-        stage_num = tk.StringVar()
-        manual_faa_mean = tk.StringVar()
-        manual_faa_std = tk.StringVar()
         
         
         tk.Label(root, text="참여자 정보", width=20, font=("bold", 20)).place(x=90, y=53)
@@ -103,11 +98,12 @@ class PlayerInfoForm(tk.Tk):
 
         tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=self.submit_player_info).place(x=180, y=360)
         
-        player_id.set(player_id_default_text)
-        session_num.set(session_default_text)
-        stage_num.set(stage_num_default_text)
-        manual_faa_mean.set(manual_mfm_default_text)
-        manual_faa_std.set(manual_mfs_default_text)
+        self.player_id.set(player_id_default_text)
+        self.session_num.set(session_default_text)
+        self.stage_num.set(stage_num_default_text)
+        self.manual_faa_mean.set(manual_mfm_default_text)
+        self.manual_faa_std.set(manual_mfs_default_text)
+
         
     def validate_inputs(self):
         player_id = self.player_id.get()
