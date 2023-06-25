@@ -105,7 +105,7 @@ class PlayerInfoForm(tk.Tk):
         self.manual_faa_std.set(manual_mfs_default_text)
 
         
-    def validate_inputs(self):
+    def validate_inputs(self, default_values, tests):
         player_id = self.player_id.get()
         session_num = self.session_num.get()
         stage_num = self.stage_num.get()
@@ -113,24 +113,25 @@ class PlayerInfoForm(tk.Tk):
         manual_faa_std = self.manual_faa_std.get()
 
         if not is_number(player_id):
-            return False
+            return None
         if not is_number(session_num):
-            return False
+            return None
         if not is_number(stage_num):
-            return False
+            return None
         if not is_number(manual_faa_mean):
-            return False
+            return None
         if not is_number(manual_faa_std):
-            return False
-    
+            return None
+
         stage_num = int(stage_num)
-        
+
         if stage_num < 1 or stage_num > 5:
-            return False
+            return None
         elif stage_num != 1 and (float(manual_faa_mean) == 0 or float(manual_faa_std) == 0):
-            return False
-    
-        return True
+            return None
+
+        player_datafile = data_path
+        return player_id, session_num, stage_num, manual_faa_mean, manual_faa_std, player_datafile
 
     def print_player_info(self):
         player_id = self.player_id.get()
@@ -146,7 +147,8 @@ class PlayerInfoForm(tk.Tk):
         print("manual_faa_std: ", manual_faa_std)
     
     def submit_player_info(self):
-        if self.validate_inputs():
+        validation_result = self.validate_inputs()
+        if validation_result is not None:
             self.print_player_info()
             if root is not None and root.winfo_exists():
                 self.destroy()
