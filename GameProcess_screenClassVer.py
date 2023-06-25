@@ -1,8 +1,9 @@
 '''
 
 Organized version of GameProcess.py
+Made Game Screens into class
 
-@ 2023.06.15
+@ 2023.06.25
 
 @ jeonghwan7191@gmail.com
 
@@ -241,137 +242,195 @@ def create_buttons(de_x, de_y, button_starti, button_methodi, button_reresti, bu
     direction_buttons = create_direction_buttons(de_x, de_y, button_pausei)
    
 
-#여기서부터 안바꿈 (comment만 날림)
+#Game Screen classes
+# Classified function for game screen to separate responsibilities for each function.
+#                                         --> easier to modify or maintain
+# Can rollback to the previous code if not working
+# Should modify Neurofeedback.py to use
+# @ IntroScreen
+# @ MethodScreen
+# @ RestMethodScreen
+# @ RestingScreen
+# @ RestResultScreen
 
 #Intro Class
-def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old):
-    screen.blit(background_img, (0, 0))
-    screen.blit(title_gold, (1100, 70)) # 1050,40
-    screen.blit(title_word, (1200, 50))
-    screen.blit(miner_intro, (140, 250))
-    screen.blit(cart_full, (750, 450))
+class IntroScreen:
+    def __init__(self, screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start):
+        self.screen = screen
+        self.background_img = background_img
+        self.title_gold = title_gold
+        self.title_word = title_word
+        self.miner_intro = miner_intro
+        self.cart_full = cart_full
+        self.button_method = button_method
+        self.button_start = button_start
 
-    if button_start.draw(screen):
-        game_status_old = game_status
-        game_status = "rest_method"
+    def draw(self):
+        self.screen.blit(self.background_img, (0, 0))
+        self.screen.blit(self.title_gold, (1100, 70))
+        self.screen.blit(self.title_word, (1200, 50))
+        self.screen.blit(self.miner_intro, (140, 250))
+        self.screen.blit(self.cart_full, (750, 450))
+
+    def handle_event(self):
+        if self.button_start.draw(self.screen):
+            return "rest_method"
+        #Resting 측정 후 Methods가 나오도록 변경 예정이라고 적혀있어서, 코드만 옮기고 comment out 했습니다.
+        #elif self.button_method.draw(self.screen):
+        #    return "method"
+        else:
+            return None
+#Method Class
+class MethodScreen:
+    def __init__(self, screen, method_back, button_start2, method, de_x):
+        self.screen = screen
+        self.method_back = method_back
+        self.button_start2 = button_start2
+        self.method = method
+        self.de_x = de_x
+
+
+    def draw(self, de_x):
+        self.screen.blit(self.method_back, (0, 0))
+        self.screen.blit(self.method, ((de_x - 1400) / 2, 100))
+
+    def handle_event(self, game_status, game_status_old):
+        if self.button_start2.draw(self.screen):
+            game_status_old = game_status  # Update game_status_old
+            game_status = "game_start"
+
+        return game_status, game_status_old
     
-    return game_status, game_status_old
-
-
-def method(screen, game_status, game_status_old, de_x, de_y, method_back, button_start2, method):
-    screen.blit(method_back, (0, 0))
-    screen.blit(method, ((de_x-1400)/2, 100))
-    if button_start2.draw(screen):
-        game_status_old = game_status
-        game_status = "game_start"
+#Rest Method Class
+class RestMethodScreen:
+    def __init__(self, screen, resting_back, rest_expl, rest_title, button_jstart, de_x, de_y):
+        self.screen = screen
+        self.resting_back = resting_back
+        self.rest_expl = rest_expl
+        self.rest_title = rest_title
+        self.button_jstart = button_jstart
+        self.de_x = de_x
+        self.de_y = de_y
         
-    return game_status, game_status_old
+    def draw(self, de_x, de_y):
+        self.screen.blit(self.resting_back, (0, 0))
+        self.screen.blit(self.rest_expl, (de_x * 0.05, de_y * 0.07))
+        self.screen.blit(self.rest_title, ((de_x - 1000) / 2, 50))
 
-
-def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart):
-    screen.blit(resting_back, (0, 0))
-    screen.blit(rest_expl, (de_x*0.05, de_y*0.07))
-    screen.blit(rest_title, ((de_x-1000)/2, 50))
-    connection_check = True
-
-    # rest start를 유발한하는 버튼.
-    if button_jstart.draw(screen): 
-        game_status_old = game_status
-        game_status = "rest_start"
-        connection_check = False
-    return game_status, game_status_old, connection_check
-
-
-def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times, faa_mean, faa_std, resting_num, test_mode):
-
-    screen.blit(resting_back, (0, 0))
-    screen.blit(rest_ins, ((de_x-1600)/2, 50))
-
-    if resting_start is False:
-        resting_start = True
-        cumtime = 0
-        curtime = time.time()
-
-    elif resting_start is True:
-        cumtime = times[0]
-        curtime = times[1]
-        temp_curtime = time.time()
-        cumtime += temp_curtime - curtime
-        curtime = temp_curtime
-
-
-    times = [round(cumtime, 3), round(curtime, 3)]
-
-    if cumtime < T.RESTING_EYE:
-        AS.resting_eye_play(screen, all_sprites, mt)
-        if button_jstart.draw(screen):
-            print(faa_mean, faa_std)
-
-    elif cumtime > T.RESTING_EYE and cumtime < (T.RESTING_EYE + T.RESTING):
-        
-        resting_cumtime = cumtime - T.RESTING_EYE
-
-        # resting 돌아가고
-        # baseline FAA calculator
-        temp_buffer = np.array(rpy.root.data_storage)
-
-        # print(temp_buffer)
-        time_temp = temp_buffer[4, -int(EC.fft_win_len/2)]
-
-        # online-processing 1. epoching with the newest data
-        eeg_temp = temp_buffer[:2, -EC.fft_win_len:]
-
-        # online-processing 2. preprocessing
-        eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr, EC.srate)
-
-        # calculate data using fft
-        faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-
-        base_result.append([round(faa, 3), round(cumtime, 3), time_temp])
-        # print(faa)
-    else:
-        faa_mean = np.mean(np.array(base_result)[:, 0])
-        faa_std = np.std(np.array(base_result)[:, 0])
-        if test_mode:
-            faa_mean = -0.7
-            faa_std = 0
-        
-        resting_num = resting_num + 1
-        game_status_old = game_status
-        # 결과 페이지 상태 설정
-        game_status = "rest_result"
-
-    return game_status, game_status_old, resting_start, base_result, faa_mean, faa_std, resting_num
-
-
-def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std, resting_num):
-    screen.blit(resting_back, (0, 0))
-    screen.blit(rest_rep, ((de_x-1000)/2, 70))
+    def handle_event(self, game_status, game_status_old):
+        connection_check = True
+        if self.button_jstart.draw(self.screen):
+            game_status_old = game_status
+            game_status = "rest_start"
+            connection_check = False
+        return game_status, game_status_old, connection_check
     
-    mean_word = 'Mean : ' + str(round(faa_mean, 2))
-    std_word ='Std : ' + str(round(faa_std, 2))
-    
-    font6 = pygame.font.SysFont('arial', 100, True)
-    for_mean = font6.render(mean_word, False, 'White')
-    for_std = font6.render(std_word, False, 'White')
-    mean_x, mean_y = for_mean.get_size()
-    std_x, std_y = for_std.get_size()
-    
-    screen.blit(for_mean, ((de_x-mean_x)/2, 500-(mean_y/1.5)))
-    screen.blit(for_std, ((de_x-std_x)/2, 500+(std_y/1.5)))
-    
-    if button_start3.draw(screen):
-        game_status_old = game_status
-        game_status = "method"
-        
-    if button_rerest.draw(screen):
-        game_status_old = game_status
-        game_status = "rest_method"
-        # game_rest_did
-        
-    return game_status, game_status_old
+#Resting Class
+class RestingScreen:
+    def __init__(self, screen, resting_back, rest_ins, all_sprites, button_jstart, resting_start, eye_1, mt, base_result, rpy, times, faa_mean, faa_std, resting_num, test_mode, de_x, de_y):
+        self.screen = screen
+        self.resting_back = resting_back
+        self.rest_ins = rest_ins
+        self.all_sprites = all_sprites
+        self.button_jstart = button_jstart
+        self.resting_start = resting_start
+        self.eye_1 = eye_1
+        self.mt = mt
+        self.base_result = base_result
+        self.rpy = rpy
+        self.times = times
+        self.faa_mean = faa_mean
+        self.faa_std = faa_std
+        self.resting_num = resting_num
+        self.test_mode = test_mode
+        self.de_x = de_x
+        self.de_y = de_y
 
+    def draw(self, de_x, de_y):
+        self.screen.blit(self.resting_back, (0, 0))
+        self.screen.blit(self.rest_ins, ((de_x-1600)/2, 50))
 
+    def handle_event(self, game_status):
+        if not self.resting_start:
+            self.resting_start = True
+            cumtime = 0
+            curtime = time.time()
+        else:
+            cumtime = self.times[0]
+            curtime = self.times[1]
+            temp_curtime = time.time()
+            cumtime += temp_curtime - curtime
+            curtime = temp_curtime
+
+        self.times = [round(cumtime, 3), round(curtime, 3)]
+
+        if cumtime < T.RESTING_EYE:
+            AS.resting_eye_play(self.screen, self.all_sprites, self.mt)
+            if self.button_jstart.draw(self.screen):
+                print(self.faa_mean, self.faa_std)
+
+        elif cumtime > T.RESTING_EYE and cumtime < (T.RESTING_EYE + T.RESTING):
+            resting_cumtime = cumtime - T.RESTING_EYE
+
+            temp_buffer = np.array(self.rpy.root.data_storage)
+            time_temp = temp_buffer[4, -int(EC.fft_win_len/2)]
+            eeg_temp = temp_buffer[:2, -EC.fft_win_len:]
+            eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr, EC.srate)
+            faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range)
+            self.base_result.append([round(faa, 3), round(cumtime, 3), time_temp])
+
+        else:
+            self.faa_mean = np.mean(np.array(self.base_result)[:, 0])
+            self.faa_std = np.std(np.array(self.base_result)[:, 0])
+            if self.test_mode:
+                self.faa_mean = -0.7
+                self.faa_std = 0
+            
+            self.resting_num += 1
+            game_status_old = game_status
+            game_status = "rest_result"
+
+        return game_status, game_status_old, self.resting_start, self.base_result, self.faa_mean, self.faa_std, self.resting_num
+
+#Resting Result Class
+class RestResultScreen:
+    def __init__(self, screen, resting_back, rest_rep, base_result, button_start3, button_rerest, faa_mean, faa_std, de_x, de_y):
+        self.screen = screen
+        self.resting_back = resting_back
+        self.rest_rep = rest_rep
+        self.base_result = base_result
+        self.button_start3 = button_start3
+        self.button_rerest = button_rerest
+        self.faa_mean = faa_mean
+        self.faa_std = faa_std
+        self.de_x = de_x
+        self.de_y = de_y
+
+    def draw(self, de_x, de_y):
+        self.screen.blit(self.resting_back, (0, 0))
+        self.screen.blit(self.rest_rep, ((de_x-1000)/2, 70))
+
+        mean_word = 'Mean : ' + str(round(self.faa_mean, 2))
+        std_word ='Std : ' + str(round(self.faa_std, 2))
+
+        font6 = pygame.font.SysFont('arial', 100, True)
+        for_mean = font6.render(mean_word, False, 'White')
+        for_std = font6.render(std_word, False, 'White')
+        mean_x, mean_y = for_mean.get_size()
+        std_x, std_y = for_std.get_size()
+
+        self.screen.blit(for_mean, ((de_x-mean_x)/2, 500-(mean_y/1.5)))
+        self.screen.blit(for_std, ((de_x-std_x)/2, 500+(std_y/1.5)))
+
+    def handle_event(self, game_status):
+        game_status_old = game_status
+        if self.button_start3.draw(self.screen):
+            game_status = "method"
+        elif self.button_rerest.draw(self.screen):
+            game_status = "rest_method"
+        return game_status, game_status_old
+    
+#여기서부터 안바꿈 (comment만 날림)
 
 def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop,
            game_pauseb, pause_title, button_pause, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
