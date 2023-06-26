@@ -201,7 +201,7 @@ def player_data(player_info_is_good, tests, ):
     return player_id, session_num, stage_num, manual_faa_mean, manual_faa_std, player_filename, player_info_is_good, tests
 
 
-def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi):
+def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni):
     # button_start = AS.Button(1400, 700, button_starti, 370, 120) method 버튼 없어져서 위치 안맞음
     button_start = AS.Button(1400, 770, button_starti, 370, 120)
     
@@ -226,10 +226,12 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     button_down = AS.Button(de_x*0.94-50, de_y-150, button_pausei, 70, 70)
     button_test = AS.Button(de_x*0.94, de_y-350, button_testi, 70, 70)
     
-    return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test
+    button_return = AS.Button(de_x*0.94, de_y-350, button_returni, 70, 70)
+    
+    return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return
 
 
-def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old):
+def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, player_session):
     screen.blit(background_img, (0, 0))
     screen.blit(title_gold, (1100, 70)) # 1050,40
     screen.blit(title_word, (1200, 50))
@@ -245,6 +247,15 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
     if button_start.draw(screen):
         game_status_old = game_status
         game_status = "rest_method"
+    
+    # 230626 added ===========================================================================================================
+    # 귀찮아서 일단 추가되어있던 button_method 사용함, 나중에 얘를 위해서 바꿔야함!!
+    if player_session > 1:
+        if button_method.draw(screen):
+            game_status_old = game_status
+            game_status = "all_session"
+    
+    # =========================================================================================================================
     
     return game_status, game_status_old
 
@@ -739,7 +750,7 @@ def game_faa_convert(faa_z, de_x, de_y):
 
 
 
-def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, block_num):
+def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, block_num, stage_temp_result):
     
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
@@ -747,6 +758,8 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     screen.blit(cart_result, (de_x-930, de_y-750))
     screen.blit(miner_intro, (de_x-750, de_y-900))
     screen.blit(game_clear, (de_x*0.05, 120))
+    # result graph example
+    screen.blit(stage_temp_result, (de_x*0.05, 120))
     
     # stage_result 보여주기
         
@@ -766,12 +779,68 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
         game_status_old = game_status
         game_status = "intro"
     if button_restart2.draw(screen):
-        block_num = block_num + 1
-        game_status_old = game_status
-        game_status = "game_start"
+        if block_num == 5:
+            game_status_old = game_status
+            game_status = "session_result"
+        else:
+            block_num = block_num + 1
+            game_status_old = game_status
+            game_status = "game_start"
     
     return game_status, game_status_old, block_num
 
 
+# 230626 added ================================================================================================================
+def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, session_result1, session_result2, player_session ):
+
+    screen.blit(game_back, (0, 0))
+    screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
+    screen.blit(session_word, (de_x*0.025, de_y*0.5-200)) # text 이용해서? session n clear 로 만들어도 되니까 player_session도 대려옴
+    screen.blit(session_result1, (de_x, de_y))
+    screen.blit(session_result2, (de_x, de_y))
+    
+    
+    if button_main2.draw(screen):
+        game_status_old = game_status
+        game_status = "intro"
+        
+    return game_status, game_status_old
 
 
+
+def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return, session_word, session_result1, session_result2, player_session, current_session, button_right, button_left ):
+    
+    # session result 원래는 이전 결과 불러와야하는데, 일단은 예시용으로 같은 result graph
+    screen.blit(game_back, (0, 0))
+    screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
+    
+    
+    # session 몇 이라는 제목
+    screen.blit(session_word, (de_x*0.025, de_y*0.5-200))
+    # session 결과들 
+    screen.blit(session_result1, (de_x, de_y))
+    screen.blit(session_result2, (de_x, de_y))
+    
+    # 오른쪽 위?에 언제든 메인으로 돌아갈 수 있는 버튼
+    if button_return.draw(screen):
+        game_status_old = game_status
+        game_status = "intro"
+    
+    if current_session == 1:
+        if button_right.draw(screen):
+            current_session = current_session + 1
+    elif  current_session == player_session:
+        if button_left.draw(screen):
+            current_session = current_session - 1
+    elif (current_session >= 2) & (current_session < player_session):
+        if button_right.draw(screen):
+            current_session = current_session + 1
+        if button_left.draw(screen):
+            current_session = current_session - 1
+
+
+        
+    
+    return game_status, game_status_old, current_session
+
+# ================================================================================================================================

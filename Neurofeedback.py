@@ -70,6 +70,7 @@ class Neurofeedback:
         index_num = 0
         stage_result = [0, 0]
         reward_num = 1
+        current_session = 1
 
         # words 
         font6 = pygame.font.SysFont('arial', 50, True)
@@ -77,18 +78,24 @@ class Neurofeedback:
         font_x, font_y = for_start.get_size()
         
         # buttons
-        button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi = AS.button_img()
+        button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni = AS.button_img()
         '''
         button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test = GP.buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi)
         '''
         #GameProcess_org 기반 buttons
-        button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test = GP.create_buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi)
+        button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return = GP.create_buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni)
         
         # images
-        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear = AS.back_img(de_x, de_y)
+        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word = AS.back_img(de_x, de_y)
         # object(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi)
         miner_intro = AS.miner_img()
         cart_full = AS.cart_img()
+        
+        
+        # 230626 added ================================================================================================================
+        #result example images
+        stage_temp_result, session_result1, session_result2 = AS.graph_img()
+        # ========================================================================================================================    
         
         game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, game_ready = AS.gaming_img()
         
@@ -106,12 +113,14 @@ class Neurofeedback:
         # just some counters for text display.
         print_counter_starter = False
         print_counter_intro = False
+        print_counter_all_session = False
         print_counter_method = False
         print_counter_rest_method = False
         print_counter_rest_start = False
         print_counter_rest_result = False
         print_counter_game_start = False
         print_counter_game_result = False
+        print_counter_session_result = False
 
 
         game_status_old = "null"
@@ -158,8 +167,20 @@ class Neurofeedback:
                         print("게임 인트로 시작")
                         print_counter_intro = True
 
-                    game_status, game_status_old = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old)
+                    game_status, game_status_old = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, self.player_session)
                     # print(connection_check)
+                
+                    
+                # 230626 added screen (all session results) ==========================================================================
+                elif game_status == "all_session":
+                    if print_counter_all_session == False:
+                        print("이전 세션 결과")
+                        print_counter_all_session = True
+
+                    game_status, game_status_old = GP.all_session(self.screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return, session_word, session_result1, session_result2, self.player_session, current_session, button_right, button_left)
+
+                #==================================================================================================================
+                
 
                 # resting state 안내문
                 elif game_status == "rest_method":
@@ -231,10 +252,25 @@ class Neurofeedback:
                         print("뉴로피드백 블록 결과 제시")
                         print(stage_result)
                         print_counter_game_result = True
-                    game_status, game_status_old, block_num = GP.game_result(self.screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, block_num)
+                    game_status, game_status_old, block_num = GP.game_result(self.screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, block_num, stage_temp_result)
                     game_rd = True
                     game_st = False
                     game_stop = False
+                    
+                
+                
+                    
+                # 230626 added screen ===========================================================================================
+                elif game_status == "session_result":
+                    if print_counter_session_result == False:
+                        print("이번 세션 결과")
+                        print_counter_session_result = True
+                    
+                    # 마지막에 session_result1, session_result2는 data이용해서 만들어야 함 *일단 이렇게 대충 아무사진이나 넣어서 배치만!
+                    game_status, game_status_old = GP.session_result(self.screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, session_result1, session_result2)
+  
+               #==================================================================================================================     
+                        
                     
             # 인트로 이전 PRESS SPACE TO START 화면
             else:
