@@ -66,7 +66,7 @@ class PlayerInfoForm(tk.Tk):
         
     def create_widgets(self):
         
-        tests = [False, False, False, False, False, False, False] 
+        tests = [0, 0, 0, 0, 0, 0] 
         
         player_id_default_text = "type integer" if not tests[0] else "999"
         session_default_text = "type integer" if not tests[1] else "999"
@@ -105,7 +105,8 @@ class PlayerInfoForm(tk.Tk):
         self.manual_faa_std.set(manual_mfs_default_text)
 
         
-    def validate_inputs(self, default_values, tests):
+    def validate_inputs(self, default_values, tests, player_datafile):
+        
         player_id = self.player_id.get()
         session_num = self.session_num.get()
         stage_num = self.stage_num.get()
@@ -129,9 +130,8 @@ class PlayerInfoForm(tk.Tk):
             return None
         elif stage_num != 1 and (float(manual_faa_mean) == 0 or float(manual_faa_std) == 0):
             return None
-
-        player_datafile = data_path
-        return player_id, session_num, stage_num, manual_faa_mean, manual_faa_std, player_datafile
+        
+        return player_id, session_num, stage_num, manual_faa_mean, manual_faa_std, player_datafile, tests
 
     def print_player_info(self):
         player_id = self.player_id.get()

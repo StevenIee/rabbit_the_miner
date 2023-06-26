@@ -22,8 +22,9 @@ if __name__ == "__main__":
     while not valid_inputs:
         player_info = game_process.validate_inputs(default_values, tests)
         if player_info is not None:
-            player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile = player_info
+            player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, tests = player_info
             valid_inputs = True
+            game_process.save_player_data(player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile)
     
 
     # %% start game!
