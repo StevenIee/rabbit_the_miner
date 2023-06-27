@@ -51,7 +51,7 @@ def player_data(player_info_is_good):
 
     
     datainfo = None;
-    
+    datafile_name = None;
     root = tk.Tk()
     root.geometry('500x450')
     root.eval('tk::PlaceWindow . center')
@@ -145,43 +145,40 @@ def player_data(player_info_is_good):
         if not os.path.isdir(data_path):
             os.mkdir(data_path)
             os.mkdir(data_path+'/fig')
-            player_filename = 'Player_' + str(player_id) ##
-            datafile_name = data_path + '/' + player_filename + '_data.pickle' ##
+
+        player_filename = 'Player_' + str(player_id) ##
+        datafile_name = data_path + '/' + player_filename + '_data.pickle' ##
             
             # init data
-            datainfo = DataInfo(player_id);
-            datainfo.folder_path = data_path;
-            with open(file= datafile_name, mode='wb') as f:
-                pickle.dump(datainfo, f)
-                
-        if not session_num == 1:
+        datainfo = DataInfo(player_id);
+        datainfo.folder_path = data_path;
+        with open(file= datafile_name, mode='wb') as f:
+            pickle.dump(datainfo, f)
+
+
+        if session_num > 1:
             print('\n\nWelcome Back!')
             with open(file=datafile_name, mode='rb') as f:
                 datainfo=pickle.load(f)
-            if datainfo.session_num == session_num:
-                pass
+            # checking if stored last session matches the current session number
+            if datainfo.session_num == int(session_num):
+                print('session number matches')
             else:
                 print('please check the session number')
                 print('last session was ' + str(datainfo.session_num-1))
-                print('please put session number ' + str(datainfo.session))
-                player_info_is_good = False  
+                print('please put session number ' + str(datainfo.session_num))
+                player_info_is_good = False
         
-        
-        if datainfo.stagenum == stage_num: # game_result
-            if datainfo.stagenum == 1:
-                datainfo.session_date = player_date;
+            if datainfo.stagenum == int(stage_num):  # game_result
+                if datainfo.stagenum == 1:
+                    datainfo.session_date = player_date;
             
-        else:
-            print('please check the block number')
-            print('last block was ' + str(datainfo.stagenum-1))
-            print('please put block number ' + str(datainfo.stagenum))
-            player_info_is_good = False    
-        
-        
-                
+            else:
+                print('please check the block number')
+                print('last block was ' + str(datainfo.stagenum-1))
+                print('please put block number ' + str(datainfo.stagenum))
+                player_info_is_good = False
 
-
-            
 
         #print('\nloading....\n')
         #print(player_info_is_good)
@@ -190,7 +187,7 @@ def player_data(player_info_is_good):
         player_info_is_good = False
         datafile_name = ""
 
-    return player_id, session_num, stage_num, player_filename, player_info_is_good, tests
+    return datainfo, datafile_name, player_info_is_good, tests
 
 
 def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni):
@@ -224,7 +221,7 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return
 
 
-def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, datainfo, player_session):
+def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, datainfo):
     screen.blit(background_img, (0, 0))
     screen.blit(title_gold, (1100, 70)) # 1050,40
     screen.blit(title_word, (1200, 50))
@@ -233,7 +230,7 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
 
     # Resting 측정 후 Methods가 나오도록 변경 예정.
     # if button_method.draw(screen):
-    #     game_status_old = game_status
+    #     game_status_old = game_statusdatainfo.session_num
     #     game_status = "method"
 
     # 게임 시작 버튼을 그리면서 버튼이 눌릴때 게인 status의 변화를 유발 한다.
@@ -246,7 +243,7 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
     
     # 230626 added ===========================================================================================================
     # 귀찮아서 일단 추가되어있던 button_method 사용함, 나중에 얘를 위해서 바꿔야함!!
-    if player_session > 1:
+    if int(datainfo.session_num) > 1:
         if button_method.draw(screen):
             game_status_old = game_status
             game_status = "all_session"

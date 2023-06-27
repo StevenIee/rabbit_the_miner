@@ -22,7 +22,7 @@ class Neurofeedback:
     # def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
 
         # self.player_id = datainfo.player_id
-        # self.player_session = datainfo.session_num
+        #self.player_session = datainfo.session_num
         # self.player_block = datainfo.stagenum
         self.datainfo = datainfo
         self.connect = Connect() 
@@ -88,7 +88,7 @@ class Neurofeedback:
         button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni = AS.button_img()
         button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return = GP.buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni)
         # images
-        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear = AS.back_img(de_x, de_y)
+        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word = AS.back_img(de_x, de_y)
         # objects
         miner_intro = AS.miner_img()
         cart_full = AS.cart_img()
@@ -172,7 +172,7 @@ class Neurofeedback:
                         print("게임 인트로 시작")
                         print_counter_intro = True
 
-                    game_status, game_status_old, self.datainfo = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, self.datainfo, self.player_session)
+                    game_status, game_status_old, self.datainfo = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, self.datainfo)
                     # print(connection_check)
                     
                     

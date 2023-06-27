@@ -29,17 +29,13 @@ if __name__ == "__main__":
     print('Player Information')
     
     while player_data_is_good is False:
-        player_id, player_session, player_block, player_datafile, player_data_is_good, tests = GP.player_data(player_data_is_good)
+        datainfo, player_datafile, player_data_is_good, tests = GP.player_data(player_data_is_good)
 
-        # player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, \
-        #     player_data_is_good, tests = GP.player_data(player_data_is_good, tests)
-        datainfo, datafile_name, player_data_is_good, tests = GP.player_data(player_data_is_good, tests)
+
     # %% start game!
     test_mode = True
     # test_mode = False
-    NF = Neurofeedback(player_id, player_session, player_block, player_datafile, test_mode)
-    #NF = Neurofeedback(player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode)
-    datainfo.save_path = datafile_name; 
+    # datainfo.save_path = player_datafile;
     NF = Neurofeedback(datainfo, test_mode)
 
     print("ending NF game")

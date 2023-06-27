@@ -157,7 +157,8 @@ def back_img(de_x, de_y):
     session_word = pygame.transform.scale(session_word, (1100, 200))
     
 
-    return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word
+    return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method,\
+           rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word
 
 
 def miner_img():
@@ -175,7 +176,7 @@ def cart_img():
 
 def graph_img():
     # graph 사진 사이즈 조절 해서 넣어야 함
-    stage_temp_result = pygame.image.load('IMAGES/picset/c.png').convert_alpha() 
+    stage_temp_result = pygame.image.load('IMAGES/picset/stage_result_ex.png').convert_alpha()
     stage_temp_result = pygame.transform.scale(stage_temp_result, (600, 600))
     
     session_result1 = pygame.image.load('IMAGES/picset/session_result_ex1.png').convert_alpha() 

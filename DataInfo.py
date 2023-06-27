@@ -37,9 +37,9 @@ class DataInfo():
                             [None, None, None, None, None]];
         self.NF_FAA_fname = [None, None, None, None, None];
         self.stage_result = [[[None, None], [None, None], [None, None], [None, None], [None, None]],
-                             [[None, None], [None, None], [None, None], [None, None], [None, None]]
-                             [[None, None], [None, None], [None, None], [None, None], [None, None]]
-                             [[None, None], [None, None], [None, None], [None, None], [None, None]]
+                             [[None, None], [None, None], [None, None], [None, None], [None, None]],
+                             [[None, None], [None, None], [None, None], [None, None], [None, None]],
+                             [[None, None], [None, None], [None, None], [None, None], [None, None]],
                              [[None, None], [None, None], [None, None], [None, None], [None, None]]];
         self.stage_bounds = [[None, None, None, None, None],
                             [None, None, None, None, None],
