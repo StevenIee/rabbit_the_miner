@@ -18,8 +18,8 @@ from DataInfo import DataInfo
 import numpy as np
 import pickle
 class Neurofeedback:
-    # def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
     def __init__(self, datainfo, test_mode):
+    # def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
 
         # self.player_id = datainfo.player_id
         # self.player_session = datainfo.session_num
