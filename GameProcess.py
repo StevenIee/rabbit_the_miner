@@ -94,7 +94,7 @@ def player_data(player_info_is_good):
     opts = ["choose", "#", "@"]
     group_cond = tk.StringVar()
     max_len = max([len(opt) for opt in opts])
-    padded_opts = [opt.ljus.t(max_len) for opt in opts]
+    padded_opts = [opt.ljust(max_len) for opt in opts]
     group_cond.set(padded_opts[0])
     tk.OptionMenu(root, group_cond, *padded_opts).place(x=240, y=275)
 

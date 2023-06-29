@@ -590,6 +590,9 @@ def session_result():
 def all_session():
     screen.blit(game_back,(0,0))
     screen.blit(game_cl_b,(de_x*0.025,de_y*0.05))
+    screen.blit(result_graph2, (de_x*0.25-230, de_y-750))
+    screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
+    
     
 
 #%% start function
