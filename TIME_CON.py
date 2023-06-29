@@ -6,7 +6,7 @@ RESTING_EYE = 1
 RESTING = 1
 
 # 뉴로 피드백 진행 시간
-NF_T = 50  # 10 분은 600  # sec 단위
+NF_T = 5  # 10 분은 600  # sec 단위
 
 # FAA 업데이트 시간
 NF_update_t = 0.1

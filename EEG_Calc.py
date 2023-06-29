@@ -41,7 +41,7 @@ def get_alpha_index(freq, freq4asymmetry):
     return alpha_idx_range
 
 
-def preprocessing( eeg, filter_range, noise_thr, srate):
+def preprocessing(eeg, filter_range, noise_thr, srate):
     # low- high- pass filter
     eeg_filtered = filter.filter_data(eeg, srate, filter_range[0], filter_range[1], verbose=False);
     
@@ -97,6 +97,7 @@ def eeg_datasaving(temp_EEG, eegdata, timedata):
     if temp_EEG.shape[0] ==0:
         temp_EEG = np.concatenate((eegdata, timedata));
     else:
+
         temp_EEG2 = np.concatenate((eegdata, timedata));
         last_t = temp_EEG[2,-1];
         last_t_ind = np.where(timedata == last_t)[0]

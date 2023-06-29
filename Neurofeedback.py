@@ -6,7 +6,7 @@ Created on Wed Feb 15 16:06:59 2023
 """
 import pygame
 from datetime import datetime
-
+import os
 # import assets as button
 # from assets import Button
 import assets as AS
@@ -212,6 +212,7 @@ class Neurofeedback:
                         GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins,
                                    all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy,
                                    times,  test_mode, self.datainfo, temp_EEG)#, resting_eye )
+
                     pygame.display.update()
 
                 # resting state 다한 뒤 결과
@@ -224,9 +225,10 @@ class Neurofeedback:
                         self.datainfo.base_FAA_result[session_num-1] = base_result;
                         with open(file= self.datainfo.save_path, mode='wb') as f:
                             pickle.dump(self.datainfo, f)
-                        
-                        
-                        base_result_fname = self.datainfo.save_path+'baseEEG_s', str(session_num),'.pickle';
+
+                        file_name_without_ext, ext = os.path.splitext(self.datainfo.save_path)
+                        base_result_fname = file_name_without_ext + '_baseEEG_s' + str(session_num)+'.pickle';
+
                         with open(file= base_result_fname, mode='wb') as ee:
                             # raw EEG 저장 
                             EEG=temp_EEG;
@@ -286,7 +288,7 @@ class Neurofeedback:
                         self.datainfo.stage_result[session_num-1][stagenum-1][0] = stage_result[0];
                         self.datainfo.stage_result[session_num-1][stagenum-1][1] = stage_result[1];
                         self.datainfo.stage_bounds[session_num-1][stagenum-1] = stage_bounds;
-                        self.datainfo.NF_FAA_fname[session_num-1][stagenum-1] = nf_result;
+                        self.datainfo.NF_FAA_result[session_num-1][stagenum-1] = nf_result;
                         
                         # Block number update
                         self.datainfo.stagenum = self.datainfo.stagenum+1; 
@@ -294,21 +296,25 @@ class Neurofeedback:
                         with open(file= self.datainfo.save_path, mode='wb') as f:
                             pickle.dump(self.datainfo, f)
                             
-                            
-                        nf_result_fname = self.datainfo.save_path+'nfEEG_s'+str(session_num)+'_b'+str(stagenum-1) +'.pickle';
+                        file_name_without_ext, ext = os.path.splitext(self.datainfo.save_path)
+                        nf_result_fname = file_name_without_ext+'_nfEEG_s'+str(session_num)+'_b'+str(stagenum-1) +'.pickle';
 
                         with open(file= nf_result_fname, mode='wb') as ee2:
                             # raw EEG 저장 
                             EEG=temp_EEG;
-                            pickle.dump(EEG, ee)
+                            pickle.dump(EEG, ee2)
                             
                             
-                    game_status, game_status_old, print_counter_game_start, self.datainfo = GP.game_result(self.screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_full, miner_intro, game_clear, button_main2, button_restart2, self.datainfo)
+                    game_status, game_status_old, \
+                    print_counter_game_start, self.datainfo = GP.game_result(self.screen,game_status, game_status_old,
+                                                                             stage_result, de_x, de_y, game_back, game_cl_b,
+                                                                             game_cl_res, cart_full, miner_intro, game_clear,
+                                                                             button_main2, button_restart2, stage_temp_result, self.datainfo)
                     game_rd = True
                     game_st = False
                     game_stop = False
-            
-            
+
+
                     
                 # 230626 added screen ===========================================================================================
                 elif game_status == "session_result":
@@ -317,9 +323,12 @@ class Neurofeedback:
                         print_counter_session_result = True
                     
                     # 마지막에 session_result1, session_result2는 data이용해서 만들어야 함 *일단 이렇게 대충 아무사진이나 넣어서 배치만!
-                    game_status, game_status_old = GP.session_result(self.screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, session_result1, session_result2)
-                    
-               #==================================================================================================================     
+                    game_status, game_status_old = GP.session_result(self.screen, game_status, game_status_old, de_x, de_y,
+                                                                     game_back, game_cl_b, button_main2, session_word,
+                                                                     self.datainfo.session_num, game_clear, session_result1, session_result2)
+
+
+                #==================================================================================================================
                    
                 
                 # 이거 연결된 것도 없구...나중에 다른 버튼이랑 연결시켜서 해야할듯

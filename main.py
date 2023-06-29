@@ -35,7 +35,9 @@ if __name__ == "__main__":
     # %% start game!
     test_mode = True
     # test_mode = False
-    # datainfo.save_path = player_datafile;
+
+    datainfo.save_path = player_datafile;
+
     NF = Neurofeedback(datainfo, test_mode)
 
     print("ending NF game")

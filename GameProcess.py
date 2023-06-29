@@ -148,6 +148,8 @@ def player_data(player_info_is_good):
             os.mkdir(data_path+'/fig')
 
         player_filename = 'Player_' + str(player_id) ##
+
+
         datafile_name = data_path + '/' + player_filename + '_data.pickle' ##
             
             # init data
@@ -336,8 +338,9 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
         
         # EEG saving
         # temp_EEG;eeg_temp;
-        time_temp2 = temp_buffer[4, -EC.fft_win_len:];
-        
+        time_temp2 = [temp_buffer[4, -EC.fft_win_len:]];
+
+
         temp_EEG = EC.eeg_datasaving(temp_EEG, eeg_temp, time_temp2);
         
         
@@ -411,7 +414,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
     # game_bound_old = 0
     session_num = datainfo.session_num;
     faa_mean  = datainfo.baseline_FAA[session_num-1][0];
-    faa_std =  datainfo.baseline_FAA[session_num-2][1];
+    faa_std =  datainfo.baseline_FAA[session_num-1][1];
     block_num = datainfo.stagenum;
     
     # setting timers
@@ -479,7 +482,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
                 # calculate FAA using fft
                 raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-                faa_z = (raw_faa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
+
+                faa_z = (raw_faa - faa_mean) / faa_std  # z-score the raw faa by baseline faa
                 game_faa, statbar_loc = statbar_loc_convert(faa_z, de_x, de_y)
 
                 
@@ -497,8 +501,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 
                 # EEG saving
                 # temp_EEG;eeg_temp;
-                time_temp2 = temp_buffer[4, -EC.fft_win_len:];
-                
+                time_temp2 = [temp_buffer[4, -EC.fft_win_len:]];
+
                 temp_EEG = EC.eeg_datasaving(temp_EEG, eeg_temp, time_temp2);
                 
                 
@@ -784,7 +788,8 @@ def game_faa_convert(faa_z, de_x, de_y):
 
 
 
-def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, result_graph, datainfo):
+def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res,
+                cart_result, miner_intro, game_clear, button_main2, button_restart2, result_graph, datainfo):
     block_num = datainfo.stagenum;
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
@@ -820,7 +825,7 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
         print_counter_game_start = False;
     if datainfo.stagenum > 5:
         game_status_old = game_status
-        game_status = "GameEnd"
+        game_status = "session_result"
     
     return game_status, game_status_old, print_counter_game_start, datainfo
 
@@ -830,7 +835,8 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
 
 
 # 230626 added ================================================================================================================
-def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, session_result1, session_result2, player_session, game_clear, result_graph2, result_graph3 ):
+def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, player_session,
+                   game_clear, result_graph2, result_graph3):
 
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
@@ -840,10 +846,9 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
 
     
-    
     if button_main2.draw(screen):
         game_status_old = game_status
-        game_status = "intro"
+        game_status = "GameEnd"
         
     return game_status, game_status_old
 
