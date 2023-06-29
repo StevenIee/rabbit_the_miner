@@ -94,11 +94,12 @@ def player_data(player_info_is_good):
     opts = ["choose", "#", "@"]
     group_cond = tk.StringVar()
     max_len = max([len(opt) for opt in opts])
-    padded_opts = [opt.ljust(max_len) for opt in opts]
+    padded_opts = [opt.ljus.t(max_len) for opt in opts]
     group_cond.set(padded_opts[0])
     tk.OptionMenu(root, group_cond, *padded_opts).place(x=240, y=275)
 
     tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=root.destroy).place(x=180, y=360)
+
 
     # root.overrideredirect(True)
 
@@ -783,15 +784,18 @@ def game_faa_convert(faa_z, de_x, de_y):
 
 
 
-def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, datainfo):
+def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res, cart_result, miner_intro, game_clear, button_main2, button_restart2, result_graph, datainfo):
     block_num = datainfo.stagenum;
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     screen.blit(game_cl_res, (de_x*0.025, de_y*0.5-200))
-    screen.blit(cart_result, (de_x-930, de_y-750))
-    screen.blit(miner_intro, (de_x-750, de_y-900))
-    screen.blit(game_clear, (de_x*0.05, 120))
+    screen.blit(cart_result, (de_x-920, de_y-770))
+    screen.blit(miner_intro,(de_x-680, de_y-940))
+    screen.blit(game_clear,(de_x*0.05+100, 120))
+    screen.blit(result_graph, (de_x*0.05, de_y-310))
     
+
+       
     # stage_result 보여주기
         
     gold_word = '  :  ' + str(stage_result[0])
@@ -826,13 +830,15 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
 
 
 # 230626 added ================================================================================================================
-def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, session_result1, session_result2, player_session ):
+def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, session_result1, session_result2, player_session, game_clear, result_graph2, result_graph3 ):
 
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     screen.blit(session_word, (de_x*0.025, de_y*0.5-200)) # text 이용해서? session n clear 로 만들어도 되니까 player_session도 대려옴
-    screen.blit(session_result1, (de_x, de_y))
-    screen.blit(session_result2, (de_x, de_y))
+    screen.blit(game_clear,(de_x*0.05+700, 120))
+    screen.blit(result_graph2, (de_x*0.25-230, de_y-750))
+    screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
+
     
     
     if button_main2.draw(screen):

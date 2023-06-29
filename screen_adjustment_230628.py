@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 
 # game file path & data path ===================================path 설정 필요
-org_path = 'D:/DCNL/DTx/neurofeedback/rabbit_the_miner/rabbit_the_miner'
+org_path = 'C:/Users/Emotion/Desktop/DTx/rabbit_the_miner'
 os.chdir(org_path) 
 
 # my modules
@@ -157,7 +157,7 @@ button_rerest = button_adjustment.Button(de_x/2+165,900, button_reresti, 370, 12
 button_restarti = pygame.image.load('IMAGES/picset/button/re_start2.png').convert_alpha() 
 # button_restart = pygame.transform.scale(button_restart, (370, 120))
 button_restart = button_adjustment.Button(de_x*0.5-185, de_y*0.64, button_restarti, 370, 120)
-button_restart2 = button_adjustment.Button(580,830, button_restarti, 370, 120)
+button_restart2 = button_adjustment.Button(1320,880, button_restarti, 370, 95)
 
 button_resumei = pygame.image.load('IMAGES/picset/button/resume2.png').convert_alpha() 
 # button_resume = pygame.transform.scale(button_resume, (370, 120))
@@ -170,7 +170,7 @@ button_jstart = button_adjustment.Button(de_x/2-165,900, button_jstarti, 370, 12
 button_maini = pygame.image.load('IMAGES/picset/button/main2.png').convert_alpha() 
 # button_main = pygame.transform.scale(button_main, (370, 120))
 button_main = button_adjustment.Button(de_x*0.5-185, de_y*0.51, button_maini, 370, 120)
-button_main2 = button_adjustment.Button(130,830, button_maini, 370, 120)
+button_main2 = button_adjustment.Button(1320,770, button_maini, 370, 95)
 
 button_pausei = pygame.image.load('IMAGES/picset/button/pause2.png').convert_alpha() 
 # button_pause = pygame.transform.scale(button_pause, (70, 70))
@@ -230,7 +230,7 @@ game_start = pygame.image.load('IMAGES/picset/object/start.png').convert_alpha()
 game_start = pygame.transform.scale(game_start, (600, 150))
 
 game_clear = pygame.image.load('IMAGES/picset/object/clear.png').convert_alpha() 
-game_clear = pygame.transform.scale(game_clear, (1100, 200))
+game_clear = pygame.transform.scale(game_clear, (800, 200))
 
 
 
@@ -280,13 +280,13 @@ game_cl_b = pygame.image.load('IMAGES/picset/result_2.png').convert_alpha()
 game_cl_b = pygame.transform.scale(game_cl_b, (de_x*0.95, de_y*0.9))
 
 game_cl_res = pygame.image.load('IMAGES/picset/result.png').convert_alpha() 
-game_cl_res = pygame.transform.scale(game_cl_res, (923, 445))
+game_cl_res = pygame.transform.scale(game_cl_res, (900, 400))
 
 game_cl_dia = pygame.image.load('IMAGES/picset/object/cl_dia.png').convert_alpha() 
-game_cl_dia = pygame.transform.scale(game_cl_dia, (1000, 250))
+game_cl_dia = pygame.transform.scale(game_cl_dia, (900, 200))
 
 game_cl_gold = pygame.image.load('IMAGES/picset/object/cl_gold.png').convert_alpha() 
-game_cl_gold = pygame.transform.scale(game_cl_gold, (1000, 250))
+game_cl_gold = pygame.transform.scale(game_cl_gold, (900, 200))
 
 
 
@@ -307,7 +307,7 @@ rest_eye_loc = [(de_x/2-800,de_y/2-220), (de_x/2-800,de_y/2-200), (de_x/2-800,de
 
 
 miner_intro = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
-miner_intro = pygame.transform.scale(miner_intro, (700, 800))
+miner_intro = pygame.transform.scale(miner_intro, (500, 600))
 
 
 
@@ -358,8 +358,16 @@ cart_empty = pygame.transform.scale(cart_empty, (600, 600))
 
 cart_intro = pygame.transform.scale(cart_full, (600, 600))
 
-cart_result = pygame.transform.scale(cart_full, (500, 500))
+cart_result = pygame.transform.scale(cart_full, (400, 400))
 
+result_graph = pygame.image.load('IMAGES/picset/stage_result_ex.png').convert_alpha()
+#result_graph = pygame.transform.scale(result_graph, (800, 300))
+
+result_graph2 = pygame.image.load('IMAGES/picset/session_result_ex1.png').convert_alpha()
+result_graph2 = pygame.transform.scale(result_graph2, (600, 600))
+
+result_graph3 = pygame.image.load('IMAGES/picset/session_result_ex2.png').convert_alpha()
+result_graph3 = pygame.transform.scale(result_graph3, (600, 600))
 
 
 # =========================================================================
@@ -558,7 +566,6 @@ def gaming_pause():
     screen.blit(game_pauseb,(de_x*0.025,de_y*0.05))
     screen.blit(pause_title,(de_x*0.5-275, de_y*0.2))
     
-
     
 # 여기 수정 하면 됨 230628 ==================================================
 # 여기서 이미지 위치 조정 
@@ -567,21 +574,23 @@ def gaming_result():
     screen.blit(game_back,(0,0))
     screen.blit(game_cl_b,(de_x*0.025,de_y*0.05))
     screen.blit(game_cl_res,(de_x*0.025,de_y*0.5-200))
-    screen.blit(cart_result,(de_x-930, de_y-750))
-    screen.blit(miner_intro,(de_x-750, de_y-900))
-    screen.blit(game_clear,(de_x*0.05, 120))
-
+    screen.blit(cart_result,(de_x-920, de_y-770))
+    screen.blit(miner_intro,(de_x-680, de_y-940))
+    screen.blit(game_clear,(de_x*0.05+100, 120))
+    screen.blit(result_graph, (de_x*0.05, de_y-310))
 
 def session_result():
     screen.blit(game_back,(0,0))
     screen.blit(game_cl_b,(de_x*0.025,de_y*0.05))
-
-
+    screen.blit(game_clear,(de_x*0.05+700, 120))
+    screen.blit(result_graph2, (de_x*0.25-230, de_y-750))
+    screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
+    
 
 def all_session():
     screen.blit(game_back,(0,0))
     screen.blit(game_cl_b,(de_x*0.025,de_y*0.05))
-
+    
 
 #%% start function
 

@@ -147,10 +147,10 @@ def back_img(de_x, de_y):
     game_cl_b = pygame.transform.scale(game_cl_b, (de_x*0.95, de_y*0.9))
     
     game_cl_res = pygame.image.load('IMAGES/picset/result.png').convert_alpha() 
-    game_cl_res = pygame.transform.scale(game_cl_res, (923, 445))
+    game_cl_res = pygame.transform.scale(game_cl_res, (900, 400))
     
     game_clear = pygame.image.load('IMAGES/picset/object/clear.png').convert_alpha() 
-    game_clear = pygame.transform.scale(game_clear, (1100, 200))
+    game_clear = pygame.transform.scale(game_clear, (800, 200))
     
     
     session_word = pygame.image.load('IMAGES/picset/object/clear.png').convert_alpha() 
@@ -176,16 +176,16 @@ def cart_img():
 
 def graph_img():
     # graph 사진 사이즈 조절 해서 넣어야 함
-    stage_temp_result = pygame.image.load('IMAGES/picset/stage_result_ex.png').convert_alpha()
-    stage_temp_result = pygame.transform.scale(stage_temp_result, (600, 600))
+    result_graph = pygame.image.load('IMAGES/picset/stage_result_ex.png').convert_alpha()
+    #result_graph = pygame.transform.scale(result_graph, (800, 300))
+
+    result_graph2 = pygame.image.load('IMAGES/picset/session_result_ex1.png').convert_alpha()
+    result_graph2 = pygame.transform.scale(result_graph2, (600, 600))
+
+    result_graph3 = pygame.image.load('IMAGES/picset/session_result_ex2.png').convert_alpha()
+    result_graph3 = pygame.transform.scale(result_graph3, (600, 600))
     
-    session_result1 = pygame.image.load('IMAGES/picset/session_result_ex1.png').convert_alpha() 
-    session_result1 = pygame.transform.scale(session_result1, (600, 600))
-    
-    session_result2 = pygame.image.load('IMAGES/picset/session_result_ex2.png').convert_alpha() 
-    session_result2 = pygame.transform.scale(session_result2, (600, 600))
-    
-    return stage_temp_result, session_result1, session_result2
+    return result_graph, result_graph2, result_graph3
 
 # =========================================================================================================================
 
