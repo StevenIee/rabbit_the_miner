@@ -5,8 +5,6 @@ Created on Wed Feb 15 16:07:32 2023
 @author: JISU
 """
 
-# import pygame
-# from assets import *
 import assets as AS
 import numpy as np
 from datetime import datetime
@@ -20,19 +18,12 @@ import tkinter as tk
 import pickle
 from DataInfo import DataInfo
 
-# class Player_data:
-
-# global ani_start
-from tkinter import messagebox
-
-
 def is_number(string):
     try:
         float(string)
         return True
     except ValueError:
         return False
-
 
 def player_data(player_info_is_good):
     global root
@@ -49,7 +40,6 @@ def player_data(player_info_is_good):
     tests: param의 tests와 동일.
     """
 
-    
     datainfo = None;
     datafile_name = None;
     root = tk.Tk()
@@ -100,7 +90,6 @@ def player_data(player_info_is_good):
 
     tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=root.destroy).place(x=180, y=360)
 
-
     # root.overrideredirect(True)
 
     root.protocol("WM_DELETE_WINDOW", on_closing)
@@ -120,10 +109,8 @@ def player_data(player_info_is_good):
 
     tests = [check_id, check_session, check_stage, check_condition]
 
-    # check if all the tests have been good. If good say player_info_is_good is good and move on.
+    #  Check if all the tests have been good. If good say player_info_is_good is good and move on.
     if all(tests):  # all() tests if list contains False. Returns True when all is True.
-        player_info_is_good = True
-        
         player_id = int(player_id.get())
         session_num = int(session_num.get())
         stage_num = int(stage_num.get())
@@ -136,95 +123,103 @@ def player_data(player_info_is_good):
 
         player_date_temp = datetime.now()
         player_date = player_date_temp.strftime('%Y_%m_%d_%H%M%S')
-        
-        # data saving path
+
         org_path = './'
-        if not os.path.isdir(org_path+'data/'):
-            os.mkdir(org_path+'data/')
-            
-        data_path = org_path + 'data/' + str(player_id) 
-        if not os.path.isdir(data_path):
-            os.mkdir(data_path)
-            os.mkdir(data_path+'/fig')
+        data_path = org_path + 'data/' + str(player_id)
+        player_filename = 'Player_' + str(player_id)
+        datafile_name = data_path + '/' + player_filename + '_data.pickle'
 
-        player_filename = 'Player_' + str(player_id) ##
+        # Create First Subject Files!
+        if session_num == 1 and stage_num == 1:
+            if not os.path.isdir(org_path+'data/'):
+                os.mkdir(org_path+'data/')
+            if not os.path.isdir(data_path):
+                os.mkdir(data_path)
+                os.mkdir(data_path+'/fig')
+            datainfo = DataInfo(player_id)
+            datainfo.folder_path = data_path
+            with open(file=datafile_name, mode='wb') as f:
+                pickle.dump(datainfo, f)
 
+            ###########################################################
+            # INSERT CODE CHECKING PREVIOUS DATA AND PREVENT OVERRIDE #
+            ###########################################################
 
-        datafile_name = data_path + '/' + player_filename + '_data.pickle' ##
-            
-            # init data
-        datainfo = DataInfo(player_id);
-        datainfo.folder_path = data_path;
-        with open(file= datafile_name, mode='wb') as f:
-            pickle.dump(datainfo, f)
-
-
-        if session_num > 1:
+        else:  # 세션 1과 스테이지 1을 제외한 모든 경우
             print('\n\nWelcome Back!')
             with open(file=datafile_name, mode='rb') as f:
-                datainfo=pickle.load(f)
-            # checking if stored last session matches the current session number
-            if datainfo.session_num == int(session_num):
-                print('session number matches')
-            else:
-                print('please check the session number')
-                print('last session was ' + str(datainfo.session_num-1))
-                print('please put session number ' + str(datainfo.session_num))
-                player_info_is_good = False
-        
-            if datainfo.stagenum == int(stage_num):  # game_result
-                if datainfo.stagenum == 1:
-                    datainfo.session_date = player_date;
-            
-            else:
-                print('please check the block number')
-                print('last block was ' + str(datainfo.stagenum-1))
-                print('please put block number ' + str(datainfo.stagenum))
-                player_info_is_good = False
+                datainfo = pickle.load(f)
+            # Current Session number should not match the stored session number!
 
+        # CHECK SESSION NUMBER
+        if datainfo.session_num == int(session_num):
+            print('Somethings wrong. Current session matches the Previous Session'
+                 'THis will override the data')
 
-        #print('\nloading....\n')
-        #print(player_info_is_good)
-        
-    else:
-        player_info_is_good = False
-        datafile_name = ""
+        elif datainfo.session_num == int(session_num) - 1:
+            print('Current Session is 1 greater than the Previous Session. All things Good')
+
+        elif datainfo.session_num < int(session_num) - 1:
+            print('please check the session number')
+            print('last session was ' + str(datainfo.session_num-1))
+            print('please put session number ' + str(datainfo.session_num))
+
+        #  CHECK STAGE NUMBER
+        if int(datainfo.stagenum) == 6:
+            datainfo.stagenum = 0
+
+        if datainfo.stagenum == int(stage_num):
+            print('Somethings wrong. Current stage matches the Previous stage'
+                 'This will override the data')
+        elif datainfo.stagenum == int(stage_num) - 1:
+            print('Current Stage is 1 greater than the Previous Stage. All things Good')
+
+        elif datainfo.stagenum < int(stage_num) - 1:
+            print('please check the Stage number')
+            print('last Stage was ' + str(datainfo.stagenum-1))
+            print('please put Stage number ' + str(datainfo.stagenum))
+
+        print(datainfo.session_num, session_num, datainfo.stagenum, stage_num)
+        if datainfo.session_num == session_num-1 and datainfo.stagenum == stage_num-1:
+            datainfo.session_num = session_num
+            datainfo.stagenum = stage_num
+            player_info_is_good = True
+        else:
+            player_info_is_good = False
+        print("end", player_info_is_good)
 
     return datainfo, datafile_name, player_info_is_good, tests
 
 
 def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni):
-    # button_start = AS.Button(1400, 700, button_starti, 370, 120) method 버튼 없어져서 위치 안맞음
     button_start = AS.Button(1400, 770, button_starti, 370, 120)
-    
     button_start2 = AS.Button(de_x/2-165,900, button_starti, 370, 120)
-    button_start3 = AS.Button(de_x/2-(165*3),900, button_starti, 370, 120)
+    button_start3 = AS.Button(de_x/2-(165 * 3), 900, button_starti, 370, 120)
     button_method = AS.Button(1400, 840, button_methodi, 370, 120)
     button_rerest = AS.Button(de_x/2+165,900, button_reresti, 370, 120)
     button_restart = AS.Button(de_x*0.5-185, de_y*0.64, button_restarti, 370, 120)
-    # button_restart2 = AS.Button(580,830, button_restarti, 370, 120) # 블락버전으로 바꾸려구!
     button_restart2 = AS.Button(580,830, button_resumei, 370, 120)
     button_resume = AS.Button(de_x*0.5-185, de_y*0.77, button_resumei, 370, 120)
     button_jstart = AS.Button(de_x/2-165,900, button_jstarti, 370, 120)
     button_main = AS.Button(de_x*0.5-185, de_y*0.51, button_maini, 370, 120)
     button_main2 = AS.Button(130,830, button_maini, 370, 120)
     button_pause = AS.Button(de_x*0.94, 40, button_pausei, 70, 70)
-    
-    
-    button_right = AS.Button(de_x*0.94, de_y-200, button_pausei, 70, 70)
-    
-    button_left = AS.Button(de_x*0.94-100, de_y-200, button_pausei, 70, 70)
-    button_up = AS.Button(de_x*0.94-50, de_y-250, button_pausei, 70, 70)
-    button_down = AS.Button(de_x*0.94-50, de_y-150, button_pausei, 70, 70)
-    button_test = AS.Button(de_x*0.94, de_y-350, button_testi, 70, 70)
+    button_right = AS.Button(de_x * 0.94, de_y-200, button_pausei, 70, 70)
+    button_left = AS.Button(de_x * 0.94-100, de_y-200, button_pausei, 70, 70)
+    button_up = AS.Button(de_x * 0.94-50, de_y-250, button_pausei, 70, 70)
+    button_down = AS.Button(de_x * 0.94-50, de_y-150, button_pausei, 70, 70)
+    button_test = AS.Button(de_x * 0.94, de_y-350, button_testi, 70, 70)
     
     # 230626 added button
     button_return = AS.Button(de_x*0.94, de_y-350, button_returni, 70, 70)
     
-    return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return
+    return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, \
+           button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, \
+           button_down, button_test, button_return
 
 
-def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, datainfo):
+def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start,
+          game_status, game_status_old, datainfo):
     screen.blit(background_img, (0, 0))
     screen.blit(title_gold, (1100, 70)) # 1050,40
     screen.blit(title_word, (1200, 50))
@@ -270,7 +265,7 @@ def method(screen, game_status, game_status_old, de_x, de_y, method_back, button
 
 def rest_method(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart):
     screen.blit(resting_back, (0, 0))
-    screen.blit(rest_expl, (de_x*0.05, de_y*0.07))
+    screen.blit(rest_expl, (de_x*0.05, de_y * 0.07))
     screen.blit(rest_title, ((de_x-1000)/2, 50))
     connection_check = True
 
@@ -854,7 +849,9 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
 
 
 
-def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return, session_word, session_result1, session_result2, player_session, current_session, button_right, button_left ):
+def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return,
+                session_word, session_result1, session_result2, player_session, current_session,
+                button_right, button_left):
     
     # session result 원래는 이전 결과 불러와야하는데, 일단은 예시용으로 같은 result graph
     screen.blit(game_back, (0, 0))
@@ -862,7 +859,7 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
     
     
     # session 몇 이라는 제목
-    screen.blit(session_word, (de_x*0.025, de_y*0.5-200))
+    screen.blit(session_word, (de_x*0.025, de_y * 0.5-200))
     # session 결과들 
     screen.blit(session_result1, (de_x, de_y))
     screen.blit(session_result2, (de_x, de_y))
@@ -875,7 +872,7 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
     if current_session == 1:
         if button_right.draw(screen):
             current_session = current_session + 1
-    elif  current_session == player_session:
+    elif current_session == player_session:
         if button_left.draw(screen):
             current_session = current_session - 1
     elif (current_session >= 2) & (current_session < player_session):
@@ -884,9 +881,6 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
         if button_left.draw(screen):
             current_session = current_session - 1
 
-
-        
-    
-    return game_status, game_status_old, current_session
+    return game_status, game_status_old
 
 # ================================================================================================================================

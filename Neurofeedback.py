@@ -174,21 +174,18 @@ class Neurofeedback:
 
                     game_status, game_status_old, self.datainfo = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, self.datainfo)
                     # print(connection_check)
-                    
-                    
-                
+
                 # 230626 added screen (all session results) ==========================================================================
                 elif game_status == "all_session":
                     if print_counter_all_session == False:
                         print("이전 세션 결과")
                         print_counter_all_session = True
 
-                    game_status, game_status_old = GP.all_session(self.screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return, session_word, session_result1, session_result2, self.player_session, current_session, button_right, button_left)
-
+                    game_status, game_status_old = GP.all_session(self.screen, game_status, game_status_old, de_x, de_y,
+                                                                  game_back, game_cl_b, button_return, session_word,
+                                                                  session_result1, session_result2, self.datainfo.session_num,
+                                                                  current_session, button_right, button_left)
                 #==================================================================================================================
-                
-
-                
 
                 # resting state 안내문
                 elif game_status == "rest_method":
@@ -322,10 +319,11 @@ class Neurofeedback:
                         print("이번 세션 결과")
                         print_counter_session_result = True
                     
-                    # 마지막에 session_result1, session_result2는 data이용해서 만들어야 함 *일단 이렇게 대충 아무사진이나 넣어서 배치만!
+                    # 마지막에 session_result1, session_result2는 data 이용해서 만들어야 함 *일단 이렇게 대충 아무사진이나 넣어서 배치만!
                     game_status, game_status_old = GP.session_result(self.screen, game_status, game_status_old, de_x, de_y,
                                                                      game_back, game_cl_b, button_main2, session_word,
-                                                                     self.datainfo.session_num, game_clear, session_result1, session_result2)
+                                                                     self.datainfo.session_num, game_clear, session_result1,
+                                                                     session_result2)
 
 
                 #==================================================================================================================
