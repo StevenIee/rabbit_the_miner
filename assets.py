@@ -163,13 +163,15 @@ def back_img(de_x, de_y):
 
 def miner_img():
     miner_intro = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
-    miner_intro = pygame.transform.scale(miner_intro, (700, 800))
+    miner_intro = pygame.transform.scale(miner_intro, (500, 600))
     return miner_intro
 
 
 def cart_img():
     cart_full = pygame.image.load('IMAGES/picset/cart/cart_2.png').convert_alpha() 
     cart_full = pygame.transform.scale(cart_full, (600, 600))
+
+    
     return cart_full
 
 # 230626 added ========================================================================================================
