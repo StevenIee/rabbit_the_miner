@@ -27,18 +27,13 @@ if __name__ == "__main__":
     print('developed by Steven Lee, Jisu Chung, Minwoo Kim\n')
     print(print1+ '\n\n')
     print('Player Information')
-    
+
     while player_data_is_good is False:
         datainfo, player_datafile, player_data_is_good, tests = GP.player_data(player_data_is_good)
 
-
     # %% start game!
     test_mode = True
-    # test_mode = False
-
-    datainfo.save_path = player_datafile;
-
+    datainfo.save_path = player_datafile
     NF = Neurofeedback(datainfo, test_mode)
-
     print("ending NF game")
 
