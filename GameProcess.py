@@ -143,6 +143,7 @@ def player_data(player_info_is_good):
             datainfo.eeg_path = eeg_path
             datainfo.group_cond = group_cond # 1 or 2
             
+            
             with open(file=datafile_name, mode='wb') as f:
                 pickle.dump(datainfo, f)
 
@@ -195,6 +196,7 @@ def player_data(player_info_is_good):
         if datainfo.session_num == session_num-1 and datainfo.stagenum == stage_num-1:
             datainfo.session_num = session_num
             datainfo.stagenum = stage_num
+            datainfo.session_date[session_num-1] = player_date;
             player_info_is_good = True
         else:
             player_info_is_good = False
@@ -547,7 +549,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 faa_z = (avgfaa - faa_mean) /faa_std; # z-score the raw faa by baseline faa
                 # game_bound_old = game_bound
                 game_faa, game_bound = game_faa_convert(faa_z, de_x, de_y)
-                stage_bounds.append([stage_bounds, cumtime])
+                #stage_bounds.append([stage_bounds, cumtime])
+                stage_bounds.append([game_bound, cumtime])
                 if test_mode:
                     game_bound = 4
                     # game_bound = random.randrange(0,4)

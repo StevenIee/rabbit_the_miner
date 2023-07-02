@@ -26,7 +26,6 @@ class DataInfo():
         # subject data 
         self.baseline_FAA = [[None, None],[None, None],[None, None],[None, None],[None, None],[None, None]]; # mean, std
         self.base_FAA_result =[None, None, None, None, None, None];
-        self.baseline_FAA_fname = None;
         self.NF_FAA_mean = [[None, None, None, None, None],
                             [None, None, None, None, None],
                             [None, None, None, None, None],
@@ -39,7 +38,6 @@ class DataInfo():
                             [None, None, None, None, None],
                             [None, None, None, None, None],
                             [None, None, None, None, None]];
-        self.NF_FAA_fname = [None, None, None, None, None, None];
         self.stage_result = [[[None, None], [None, None], [None, None], [None, None], [None, None]],
                              [[None, None], [None, None], [None, None], [None, None], [None, None]],
                              [[None, None], [None, None], [None, None], [None, None], [None, None]],
