@@ -229,7 +229,7 @@ class Neurofeedback:
                         
                         # 3.raw_EEG 저장 into csv
                         base_result_fname = self.datainfo.eeg_path + '/baseEEG_s' + str(session_num)+'.csv';
-                        temp_EEG;
+                        temp_EEG=np.transpose(temp_EEG);
                         EEG_df = pd.DataFrame(temp_EEG, columns = ['Left_ch','Right_ch','time'])
                         EEG_df.to_csv(base_result_fname, sep=',')
                         
@@ -302,7 +302,7 @@ class Neurofeedback:
                         
                         # 4. Raw EEG
                         nf_result_fname = self.datainfo.eeg_path + '/nfEEG_s'+str(session_num)+'_b'+str(stagenum-1) +'.csv';
-                        temp_EEG;
+                        temp_EEG=np.transpose(temp_EEG);
                         EEG_nf_df = pd.DataFrame(temp_EEG, columns = ['Left_ch','Right_ch','time'])
                         EEG_nf_df.to_csv(nf_result_fname, sep=',')
                         

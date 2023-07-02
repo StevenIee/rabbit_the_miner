@@ -155,7 +155,7 @@ def player_data(player_info_is_good):
             if not os.path.isdir(data_path):
                 print('NO SUBJECT INFO. PLEASE CHECK')
                 check_id = False;
-                continue # [(나중에 다시 체크하기)] 서브젝트 정보가 없을때
+                #continue # [(나중에 다시 체크하기)] 서브젝트 정보가 없을때
                 
             with open(file=datafile_name, mode='rb') as f:
                 datainfo = pickle.load(f)
@@ -210,18 +210,18 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     button_method = AS.Button(1400, 840, button_methodi, 370, 120)
     button_rerest = AS.Button(de_x/2+165,900, button_reresti, 370, 120)
     button_restart = AS.Button(de_x*0.5-185, de_y*0.64, button_restarti, 370, 120)
-<<<<<<< HEAD
+#<<<<<<< HEAD
     # button_restart2 = AS.Button(580,830, button_restarti, 370, 120) # 블락버전으로 바꾸려구!
     button_restart2 = AS.Button(1320,880, button_resumei, 370, 95)
-=======
+#=======
     button_restart2 = AS.Button(580,830, button_resumei, 370, 120)
->>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
+#>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     button_resume = AS.Button(de_x*0.5-185, de_y*0.77, button_resumei, 370, 120)
     button_jstart = AS.Button(de_x/2-165,900, button_jstarti, 370, 120)
     button_main = AS.Button(de_x*0.5-185, de_y*0.51, button_maini, 370, 120)
     button_main2 = AS.Button(1320,770, button_maini, 370, 95)
     button_pause = AS.Button(de_x*0.94, 40, button_pausei, 70, 70)
-<<<<<<< HEAD
+#<<<<<<< HEAD
     
 
     button_right = AS.Button(de_x*0.94, de_y-200, button_pausei, 70, 70)
@@ -230,13 +230,13 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     button_up = AS.Button(de_x*0.94-50, de_y-250, button_pausei, 70, 70)
     button_down = AS.Button(de_x*0.94-50, de_y-150, button_pausei, 70, 70)
     button_test = AS.Button(de_x*0.94, de_y-350, button_testi, 70, 70)
-=======
+#=======
     button_right = AS.Button(de_x * 0.94, de_y-200, button_pausei, 70, 70)
     button_left = AS.Button(de_x * 0.94-100, de_y-200, button_pausei, 70, 70)
     button_up = AS.Button(de_x * 0.94-50, de_y-250, button_pausei, 70, 70)
     button_down = AS.Button(de_x * 0.94-50, de_y-150, button_pausei, 70, 70)
     button_test = AS.Button(de_x * 0.94, de_y-350, button_testi, 70, 70)
->>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
+#>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     
     # 230626 added button
     button_return = AS.Button(de_x*0.94, de_y-350, button_returni, 70, 70)
@@ -883,14 +883,14 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
  
 
 
-<<<<<<< HEAD
-def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return, session_word, result_graph2, result_graph3, player_session, current_session, button_right, button_left ):
-=======
+#<<<<<<< HEAD
+#def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return, session_word, result_graph2, result_graph3, player_session, current_session, button_right, button_left ):
+#=======
 
 def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return,
                 session_word, session_result1, session_result2, player_session, current_session,
                 button_right, button_left):
->>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
+#>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     
     # session result 원래는 이전 결과 불러와야하는데, 일단은 예시용으로 같은 result graph
     screen.blit(game_back, (0, 0))
