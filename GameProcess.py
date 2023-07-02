@@ -126,6 +126,7 @@ def player_data(player_info_is_good):
 
         org_path = './'
         data_path = org_path + 'data/' + str(player_id)
+        eeg_path = data_path+'/raweeg';
         player_filename = 'Player_' + str(player_id)
         datafile_name = data_path + '/' + player_filename + '_data.pickle'
 
@@ -135,9 +136,13 @@ def player_data(player_info_is_good):
                 os.mkdir(org_path+'data/')
             if not os.path.isdir(data_path):
                 os.mkdir(data_path)
+                os.mkdir(eeg_path)
                 os.mkdir(data_path+'/fig')
             datainfo = DataInfo(player_id)
             datainfo.folder_path = data_path
+            datainfo.eeg_path = eeg_path
+            datainfo.group_cond = group_cond # 1 or 2
+            
             with open(file=datafile_name, mode='wb') as f:
                 pickle.dump(datainfo, f)
 
@@ -147,6 +152,11 @@ def player_data(player_info_is_good):
 
         else:  # 세션 1과 스테이지 1을 제외한 모든 경우
             print('\n\nWelcome Back!')
+            if not os.path.isdir(data_path):
+                print('NO SUBJECT INFO. PLEASE CHECK')
+                check_id = False;
+                continue # [(나중에 다시 체크하기)] 서브젝트 정보가 없을때
+                
             with open(file=datafile_name, mode='rb') as f:
                 datainfo = pickle.load(f)
             # Current Session number should not match the stored session number!
@@ -155,6 +165,8 @@ def player_data(player_info_is_good):
         if datainfo.session_num == int(session_num):
             print('Somethings wrong. Current session matches the Previous Session'
                  'THis will override the data')
+            # [(나중에 다시 체크하기)] overide 하겠냐는 질문하고 옵션 설정하기 
+            
 
         elif datainfo.session_num == int(session_num) - 1:
             print('Current Session is 1 greater than the Previous Session. All things Good')
@@ -342,8 +354,10 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
         eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr, EC.srate)
 
         # calculate data using fft
-        faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-
+        # faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
+        group_cond = datainfo.group_cond;
+        faa = EC.calc_asymmetry2(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range, group_cond);
+        
         base_result.append([round(faa, 3), round(cumtime, 3), time_temp])
         # print(faa)
         
@@ -492,8 +506,10 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 # online-processing 2. preprocessing
                 eeg_rejected = EC.preprocessing(eeg_temp, EC.filter_range, EC.noise_thr,EC.srate)
                 # calculate FAA using fft
-                raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
-
+                # raw_faa = EC.calc_asymmetry(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range);
+                group_cond = datainfo.group_cond;
+                raw_faa = EC.calc_asymmetry2(eeg_rejected, EC.fft_win_len, EC.cutOff, EC.alpha_idx_range, group_cond);
+        
                 faa_z = (raw_faa - faa_mean) / faa_std  # z-score the raw faa by baseline faa
                 game_faa, statbar_loc = statbar_loc_convert(faa_z, de_x, de_y)
 

@@ -17,9 +17,11 @@ class DataInfo():
         self.folder_path = None;
         self.session_num = 0;
         self.stagenum = 0;
+        self.group_cond = 1;
         self.session_date = [None, None, None, None, None, None];
         self.restEver = [False,False,False,False,False,False];
         self.save_path = None;
+        self.eeg_path = None;
         
         # subject data 
         self.baseline_FAA = [[None, None],[None, None],[None, None],[None, None],[None, None],[None, None]]; # mean, std
@@ -52,5 +54,12 @@ class DataInfo():
                             [None, None, None, None, None]];
                              
         
-        # EEG data
+        # EEG data path
+        self.EEG_path_baseline = [None, None, None, None, None, None];
+        self.EEG_path_game = [[None, None, None, None, None],
+                            [None, None, None, None, None],
+                            [None, None, None, None, None],
+                            [None, None, None, None, None],
+                            [None, None, None, None, None],
+                            [None, None, None, None, None]];
         

@@ -85,6 +85,22 @@ def calc_asymmetry( data_fft, fft_win_len, cutOff, alpha_idx_range):
     faa = (F4 - F3)/(F3 + F4);
     return faa
 
+def calc_asymmetry2( data_fft, fft_win_len, cutOff, alpha_idx_range, group_cond):
+    alpha_l= alpha_idx_range[0];
+    alpha_h= alpha_idx_range[1];
+    fft_temp1 = fft(data_fft[0,:]) / fft_win_len*2; fft1 = np.abs(fft_temp1[0:cutOff]) ;
+    fft_temp2 = fft(data_fft[1,:]) / fft_win_len*2; fft2 = np.abs(fft_temp2[0:cutOff]) ;
+    # calculate asymmetry
+    F3 = np.mean(fft1[alpha_l:alpha_h+1]);
+    # print('F3 : ', str(F3))
+    F4 = np.mean(fft2[alpha_l:alpha_h+1]);
+    # print('F3 : ', str(F3))
+    if group_cond== 1:
+        faa = (F4 - F3)/(F3 + F4);
+    else:
+        faa = (F3 + F4) / 2;
+        
+    return faa
 
 def reject_outliers(numarray, m = 3):
     d = np.abs(numarray - np.median(numarray))

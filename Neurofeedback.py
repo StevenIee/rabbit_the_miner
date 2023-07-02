@@ -16,6 +16,7 @@ import rpyc
 import time
 from DataInfo import DataInfo
 import numpy as np
+import pandas as pd
 import pickle
 class Neurofeedback:
     def __init__(self, datainfo, test_mode):
@@ -216,20 +217,28 @@ class Neurofeedback:
                 elif game_status == "rest_result":
                     if print_counter_rest_result == False:
                         print("휴지기 뇌파 측정 결과 제시")
+                        print("BASELINE 데이터 저장 중...")
                         
-                        # resting 후 결과 저장 (save datainfo in pickle) 
+                        # resting 결과 저장
                         session_num = self.datainfo.session_num;
+                        # 1. continuous FAA
                         self.datainfo.base_FAA_result[session_num-1] = base_result;
+                        
+                        # 2. MEAN/STD FAA
+                        # -> GP.resting
+                        
+                        # 3.raw_EEG 저장 into csv
+                        base_result_fname = self.datainfo.eeg_path + '/baseEEG_s' + str(session_num)+'.csv';
+                        temp_EEG;
+                        EEG_df = pd.DataFrame(temp_EEG, columns = ['Left_ch','Right_ch','time'])
+                        EEG_df.to_csv(base_result_fname, sep=',')
+                        
+                        #raw data path 저장
+                        self.datainfo.EEG_path_baseline[session_num-1] = base_result_fname;
+                        
+                        # 4. pickle 저장
                         with open(file= self.datainfo.save_path, mode='wb') as f:
                             pickle.dump(self.datainfo, f)
-
-                        file_name_without_ext, ext = os.path.splitext(self.datainfo.save_path)
-                        base_result_fname = file_name_without_ext + '_baseEEG_s' + str(session_num)+'.pickle';
-
-                        with open(file= base_result_fname, mode='wb') as ee:
-                            # raw EEG 저장 
-                            EEG=temp_EEG;
-                            pickle.dump(EEG, ee)
                             
                         print_counter_rest_result = True
                     # del all_sprites
@@ -282,25 +291,31 @@ class Neurofeedback:
                         session_num = self.datainfo.session_num;
                         stagenum = self.datainfo.stagenum;
                         # self.datainfo.NF_FAA_fname[self.datainfo.stagenum-1] = nf_result_fname;
+                        # 1. continuous FAA
+                        self.datainfo.NF_FAA_result[session_num-1][stagenum-1] = nf_result;
+                        # 2. MEAN/STD FAA
+                        # -> GP.gaming
+                        # 3. stage results & bounds
                         self.datainfo.stage_result[session_num-1][stagenum-1][0] = stage_result[0];
                         self.datainfo.stage_result[session_num-1][stagenum-1][1] = stage_result[1];
                         self.datainfo.stage_bounds[session_num-1][stagenum-1] = stage_bounds;
-                        self.datainfo.NF_FAA_result[session_num-1][stagenum-1] = nf_result;
+                        
+                        # 4. Raw EEG
+                        nf_result_fname = self.datainfo.eeg_path + '/nfEEG_s'+str(session_num)+'_b'+str(stagenum-1) +'.csv';
+                        temp_EEG;
+                        EEG_nf_df = pd.DataFrame(temp_EEG, columns = ['Left_ch','Right_ch','time'])
+                        EEG_nf_df.to_csv(nf_result_fname, sep=',')
+                        
+                        #raw data path 저장
+                        self.datainfo.EEG_path_game[session_num-1][stagenum-1] = nf_result_fname;
                         
                         # Block number update
                         self.datainfo.stagenum = self.datainfo.stagenum+1; 
-                        # save
+                        
+                        # 5. pickle 저장 save
                         with open(file= self.datainfo.save_path, mode='wb') as f:
                             pickle.dump(self.datainfo, f)
-                            
-                        file_name_without_ext, ext = os.path.splitext(self.datainfo.save_path)
-                        nf_result_fname = file_name_without_ext+'_nfEEG_s'+str(session_num)+'_b'+str(stagenum-1) +'.pickle';
 
-                        with open(file= nf_result_fname, mode='wb') as ee2:
-                            # raw EEG 저장 
-                            EEG=temp_EEG;
-                            pickle.dump(EEG, ee2)
-                            
                             
                     game_status, game_status_old, \
                     print_counter_game_start, self.datainfo = GP.game_result(self.screen,game_status, game_status_old,
