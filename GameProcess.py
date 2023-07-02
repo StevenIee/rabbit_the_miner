@@ -486,9 +486,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 game_st = False
                 game_stop = False
                 
-            # neurofeedback FAA 저장
-            nf_faa_mean = np.mean(np.array(nf_result)[:, 0])
-            datainfo.NF_FAA_mean[session_num-1][block_num-1] = nf_faa_mean;
+            
 
         else: # game stop이 아니라면
             # [UPDATE FOR FAA]
@@ -673,6 +671,10 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 # game stop
                 game_stop = True
                 game_status = "game_result"
+                
+                # neurofeedback FAA 저장
+                nf_faa_mean = np.mean(np.array(nf_result)[:, 0])
+                datainfo.NF_FAA_mean[session_num-1][block_num-1] = nf_faa_mean;
                 
             if button_pause.draw(screen):
                 game_stop = True    
