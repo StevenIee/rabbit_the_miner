@@ -17,6 +17,7 @@ import sys
 import tkinter as tk
 import pickle
 from DataInfo import DataInfo
+import matplotlib.pyplot as plt
 
 def is_number(string):
     try:
@@ -129,6 +130,34 @@ def player_data(player_info_is_good):
         eeg_path = data_path+'/raweeg';
         player_filename = 'Player_' + str(player_id)
         datafile_name = data_path + '/' + player_filename + '_data.pickle'
+        
+        
+        #plot making
+        datainfo = DataInfo(player_id)
+        SB = datainfo.stage_bounds[session_num-1][stage_num -1]
+        
+        if SB is not None:
+            # Plotting SB
+            plt.plot(SB, marker='o')
+            
+            # Adding labels and title to the plot
+            plt.xlabel('시간')
+            plt.ylabel('생산성')
+            plt.title('토끼의 생산성!')
+            
+            # Specifying the folder path to save the plot
+            folder_path = data_path + '/fig'
+            
+            # Creating the folder if it does not exist
+            os.makedirs(folder_path, exist_ok=True)
+            
+            # Saving the plot as a PNG image
+            plot_path = os.path.join(folder_path, 'faa_mean_plot.png')
+            plt.savefig(plot_path)
+        else:
+            print("No data available to plot.")
+        
+        
 
         # Create First Subject Files!
         if session_num == 1 and stage_num == 1:
@@ -138,7 +167,7 @@ def player_data(player_info_is_good):
                 os.mkdir(data_path)
                 os.mkdir(eeg_path)
                 os.mkdir(data_path+'/fig')
-            datainfo = DataInfo(player_id)
+            #datainfo = DataInfo(player_id)
             datainfo.folder_path = data_path
             datainfo.eeg_path = eeg_path
             datainfo.group_cond = group_cond  # 1 or 2
@@ -216,7 +245,8 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     # button_restart2 = AS.Button(580,830, button_restarti, 370, 120) # 블락버전으로 바꾸려구!
     button_restart2 = AS.Button(1320,880, button_resumei, 370, 95)
 #=======
-    button_restart2 = AS.Button(580,830, button_resumei, 370, 120)
+    button_restart2 = AS.Button(1320,830, button_resumei, 370, 95)
+    # 이전 결과 = button_adjustment.Button(1320,770, button_maini, 370, 95) > 이거 활성화 시키면 위의 button_restart2 다시 선언한거 삭제하면 됩니다.
 #>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     button_resume = AS.Button(de_x*0.5-185, de_y*0.77, button_resumei, 370, 120)
     button_jstart = AS.Button(de_x/2-165,900, button_jstarti, 370, 120)
@@ -849,9 +879,11 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     screen.blit(for_dia, ((de_x-500-dia_x)/2, 500+(dia_y/1.5)))
     
     print_counter_game_start = None;
+    '''
     if button_main2.draw(screen):
         game_status_old = game_status
         game_status = "intro"
+    '''
     if button_restart2.draw(screen):
         game_status_old = game_status
         game_status = "game_start"

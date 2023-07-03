@@ -105,6 +105,7 @@ def button_img():
     button_pausei = pygame.image.load('IMAGES/picset/button/pause2.png').convert_alpha() 
     button_testi = pygame.image.load('IMAGES/picset/button/test_start.png').convert_alpha()
     button_returni = pygame.image.load('IMAGES/picset/button/test_return.png').convert_alpha()
+    #이전결과 = pygame.image.load('IMAGES/picset/button/이전결과 사진').convert_alpha()
 
     return button_starti, button_methodi, button_reresti,\
            button_restarti, button_resumei, button_jstarti, \
