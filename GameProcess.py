@@ -115,9 +115,11 @@ def player_data(player_info_is_good):
         check_session = True
     if is_number(str(stage_num.get())) is True and int(stage_num.get()) <= 5: # 5 is the maximum number of stages in a session
         check_stage = True
-    if group_cond.get() != 'choose':
+    if int(session_num.get()) == 1 and int(stage_num.get()) == 1 and group_cond.get() != 'choose':
         check_condition = True
-
+    if int(session_num.get()) > 1 or int(stage_num.get()) > 1:
+        check_condition = True
+    breakpoint()
     tests = [check_id, check_session, check_stage, check_condition]
 
     #  Check if all the tests have been good. If good say player_info_is_good is good and move on.
@@ -239,6 +241,7 @@ def player_data(player_info_is_good):
             datainfo.stagenum = stage_num
             datainfo.session_date[session_num-1] = player_date;
             player_info_is_good = True
+
         else:
             player_info_is_good = False
         print("end", player_info_is_good)
