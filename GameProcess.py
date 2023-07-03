@@ -134,9 +134,6 @@ def player_data(player_info_is_good):
         if session_num == 1 and stage_num == 1:
             if not os.path.isdir(org_path+'data/'):
                 os.mkdir(org_path+'data/')
-
-            if not os.path.isdir(data_path + '/raweeg/'):
-                os.mkdir(data_path + '/raweeg/')
             if not os.path.isdir(data_path):
                 os.mkdir(data_path)
                 os.mkdir(eeg_path)
@@ -144,7 +141,7 @@ def player_data(player_info_is_good):
             datainfo = DataInfo(player_id)
             datainfo.folder_path = data_path
             datainfo.eeg_path = eeg_path
-            datainfo.group_cond = group_cond # 1 or 2
+            datainfo.group_cond = group_cond  # 1 or 2
             
             
             with open(file=datafile_name, mode='wb') as f:
