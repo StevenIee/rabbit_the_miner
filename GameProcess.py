@@ -41,6 +41,14 @@ def player_data(player_info_is_good):
     tests: param의 tests와 동일.
     """
 
+    def on_field_change(*args):
+        if stage_num.get() != '1' or session_num.get() != '1':
+            optionmenu.config(state='disabled')
+        else:
+            optionmenu.config(state='normal')
+
+
+
     datainfo = None;
     datafile_name = None;
     root = tk.Tk()
@@ -74,11 +82,13 @@ def player_data(player_info_is_good):
     tk.Label(root, text="세션번호", width=20, font=("bold", 10)).place(x=68, y=180)
     session_num = tk.StringVar()
     session_num.set(session_default_text)
+    session_num.trace('w', on_field_change)
     tk.Entry(root, textvariable=session_num).place(x=240, y=180)
 
     tk.Label(root, text="스테이지번호", width=20, font=("bold", 10)).place(x=68, y=230)
     stage_num = tk.StringVar()
     stage_num.set(stage_num_default_text)
+    stage_num.trace('w', on_field_change)
     tk.Entry(root, textvariable=stage_num).place(x=240, y=230)
 
     tk.Label(root, text="조건그룹", width=20, font=("bold", 10)).place(x=68, y=280)
@@ -87,8 +97,8 @@ def player_data(player_info_is_good):
     max_len = max([len(opt) for opt in opts])
     padded_opts = [opt.ljust(max_len) for opt in opts]
     group_cond.set(padded_opts[0])
-    tk.OptionMenu(root, group_cond, *padded_opts).place(x=240, y=275)
-
+    optionmenu = tk.OptionMenu(root, group_cond, *padded_opts)
+    optionmenu.place(x=240, y=275)
     tk.Button(root, text='입력완료', width=20, bg='brown', fg='white', command=root.destroy).place(x=180, y=360)
 
     # root.overrideredirect(True)
@@ -170,9 +180,11 @@ def player_data(player_info_is_good):
             #datainfo = DataInfo(player_id)
             datainfo.folder_path = data_path
             datainfo.eeg_path = eeg_path
-            datainfo.group_cond = group_cond  # 1 or 2
-            
-            
+            if group_cond == "#":
+                datainfo.group_cond = 1
+            if group_cond == "@":
+                datainfo.group_cond = 2
+
             with open(file=datafile_name, mode='wb') as f:
                 pickle.dump(datainfo, f)
 

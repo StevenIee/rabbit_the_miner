@@ -17,7 +17,7 @@ class DataInfo():
         self.folder_path = None;
         self.session_num = 0;
         self.stagenum = 0;
-        self.group_cond = 1;
+        self.group_cond = 0;
         self.session_date = [None, None, None, None, None, None];
         self.restEver = [False,False,False,False,False,False];
         self.save_path = None;
