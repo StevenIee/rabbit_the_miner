@@ -134,6 +134,9 @@ def player_data(player_info_is_good):
         if session_num == 1 and stage_num == 1:
             if not os.path.isdir(org_path+'data/'):
                 os.mkdir(org_path+'data/')
+
+            if not os.path.isdir(data_path + '/raweeg/'):
+                os.mkdir(data_path + '/raweeg/')
             if not os.path.isdir(data_path):
                 os.mkdir(data_path)
                 os.mkdir(eeg_path)
