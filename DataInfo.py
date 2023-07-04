@@ -15,6 +15,7 @@ class DataInfo():
         # subject information
         self.player_id = player_id;
         self.folder_path = None;
+        self.figure_path = None;
         self.session_num = 0;
         self.stagenum = 0;
         self.group_cond = 0;

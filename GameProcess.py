@@ -142,31 +142,6 @@ def player_data(player_info_is_good):
         datafile_name = data_path + '/' + player_filename + '_data.pickle'
         
         
-        #plot making
-        datainfo = DataInfo(player_id)
-        SB = datainfo.stage_bounds[session_num-1][stage_num -1]
-        
-        if SB is not None:
-            # Plotting SB
-            plt.plot(SB, marker='o')
-            
-            # Adding labels and title to the plot
-            plt.xlabel('시간')
-            plt.ylabel('생산성')
-            plt.title('토끼의 생산성!')
-            
-            # Specifying the folder path to save the plot
-            folder_path = data_path + '/fig'
-            
-            # Creating the folder if it does not exist
-            os.makedirs(folder_path, exist_ok=True)
-            
-            # Saving the plot as a PNG image
-            plot_path = os.path.join(folder_path, 'faa_mean_plot.png')
-            plt.savefig(plot_path)
-        else:
-            print("No data available to plot.")
-        
         
 
         # Create First Subject Files!
@@ -177,7 +152,7 @@ def player_data(player_info_is_good):
                 os.mkdir(data_path)
                 os.mkdir(eeg_path)
                 os.mkdir(data_path+'/fig')
-            #datainfo = DataInfo(player_id)
+            datainfo = DataInfo(player_id)
             datainfo.folder_path = data_path
             datainfo.eeg_path = eeg_path
             if group_cond == "#":
@@ -482,9 +457,11 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
     # game_bound = 0
     # game_bound_old = 0
     session_num = datainfo.session_num;
+    stage_num = datainfo.stagenum;
     faa_mean  = datainfo.baseline_FAA[session_num-1][0];
     faa_std =  datainfo.baseline_FAA[session_num-1][1];
     block_num = datainfo.stagenum;
+    player_id = datainfo.player_id;
     
     # setting timers
     if game_st is False:
@@ -514,9 +491,9 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
             # game stop 이라면
             screen.blit(game_pauseb, (de_x*0.025, de_y*0.05))
             screen.blit(pause_title, (de_x*0.5-275, de_y*0.2))
-            
+            '''
             # bound plot 저장
-            bound_savefname = datainfo.folder_path + '/stage_summary_s' + str(datainfo.session_num) + '_b' +str(datainfo.stage_num) +'.png'
+            bound_savefname = datainfo.figure_path + '/stage_summary_s' + str(datainfo.session_num) + '_b' +str(datainfo.stage_num) +'.png'
             print('save line plot ...')
             EC.bound_line_plot_save(stage_bounds, bound_savefname)
             
@@ -529,7 +506,33 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 game_status = "game_start"
                 game_st = False
                 game_stop = False
+             '''   
+            #plot making
+            org_path = './'
+            data_path = org_path + 'data/' + str(player_id)
+            datainfo = DataInfo(player_id)
+            SB = datainfo.stage_bounds[session_num-1][stage_num -1]
+            
+            if SB is not None:
+                # Plotting SB
+                plt.plot(SB, marker='o')
                 
+                # Adding labels and title to the plot
+                plt.xlabel('시간')
+                plt.ylabel('생산성')
+                plt.title('토끼의 생산성!')
+                
+                # Specifying the folder path to save the plot
+                figure_path = data_path + '/fig'
+                datainfo.figure_path = figure_path;
+                # Creating the folder if it does not exist
+                os.makedirs(figure_path, exist_ok=True)
+                 
+                # Saving the plot as a PNG image
+                plot_path = os.path.join(figure_path, 'faa_mean_plot.png')
+                plt.savefig(plot_path)
+            else:
+                print("No data available to plot.")
             
 
         else: # game stop이 아니라면
