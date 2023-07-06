@@ -119,7 +119,7 @@ def player_data(player_info_is_good):
         check_condition = True
     if int(session_num.get()) > 1 or int(stage_num.get()) > 1:
         check_condition = True
-    breakpoint()
+    # breakpoint()
     tests = [check_id, check_session, check_stage, check_condition]
 
     #  Check if all the tests have been good. If good say player_info_is_good is good and move on.
