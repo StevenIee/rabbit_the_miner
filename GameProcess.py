@@ -510,33 +510,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 game_st = False
                 game_stop = False
              '''   
-            #plot making
-            org_path = './'
-            data_path = org_path + 'data/' + str(player_id)
-            datainfo = DataInfo(player_id)
-            SB = datainfo.stage_bounds[session_num-1][stage_num -1]
-            
-            if SB is not None:
-                # Plotting SB
-                plt.plot(SB, marker='o')
-                
-                # Adding labels and title to the plot
-                plt.xlabel('시간')
-                plt.ylabel('생산성')
-                plt.title('토끼의 생산성!')
-                
-                # Specifying the folder path to save the plot
-                figure_path = data_path + '/fig'
-                datainfo.figure_path = figure_path;
-                # Creating the folder if it does not exist
-                os.makedirs(figure_path, exist_ok=True)
-                 
-                # Saving the plot as a PNG image
-                plot_path = os.path.join(figure_path, 'faa_mean_plot.png')
-                plt.savefig(plot_path)
-            else:
-                print("No data available to plot.")
-            
+
 
         else: # game stop이 아니라면
             # [UPDATE FOR FAA]
@@ -726,7 +700,34 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 # neurofeedback FAA 저장
                 nf_faa_mean = np.mean(np.array(nf_result)[:, 0])
                 datainfo.NF_FAA_mean[session_num-1][block_num-1] = nf_faa_mean;
-                
+
+                # plot making
+                org_path = './'
+                data_path = org_path + 'data/' + str(player_id)
+                datainfo = DataInfo(player_id)
+                SB = datainfo.stage_bounds[session_num - 1][stage_num - 1]
+
+                if SB is not None:
+                    # Plotting SB
+                    plt.plot(SB, marker='o')
+
+                    # Adding labels and title to the plot
+                    plt.xlabel('시간')
+                    plt.ylabel('생산성')
+                    plt.title('토끼의 생산성!')
+
+                    # Specifying the folder path to save the plot
+                    figure_path = data_path + '/fig'
+                    datainfo.figure_path = figure_path;
+                    # Creating the folder if it does not exist
+                    os.makedirs(figure_path, exist_ok=True)
+
+                    # Saving the plot as a PNG image
+                    plot_path = os.path.join(figure_path, 'faa_mean_plot.png')
+                    plt.savefig(plot_path)
+                else:
+                    print("No data available to plot.")
+
             if button_pause.draw(screen):
                 game_stop = True    
             
