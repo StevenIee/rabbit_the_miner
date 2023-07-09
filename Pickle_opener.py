@@ -1,6 +1,6 @@
 import pickle
 from pprint import pprint
-path = 'data/1/Player_1_data.pickle'
+path = 'data/2/Player_2_data.pickle'
 with open(path, 'rb') as file:
     data = pickle.load(file)
 

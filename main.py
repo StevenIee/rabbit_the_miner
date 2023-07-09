@@ -32,7 +32,7 @@ if __name__ == "__main__":
         datainfo, player_datafile, player_data_is_good, tests = GP.player_data(player_data_is_good)
 
     # %% start game!
-    test_mode = True
+    test_mode = False
     datainfo.save_path = player_datafile
     NF = Neurofeedback(datainfo, test_mode)
     print("ending NF game")

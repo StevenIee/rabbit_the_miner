@@ -704,7 +704,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 # plot making
                 org_path = './'
                 data_path = org_path + 'data/' + str(player_id)
-                datainfo = DataInfo(player_id)
+                # datainfo = DataInfo(player_id)
                 SB = datainfo.stage_bounds[session_num - 1][stage_num - 1]
 
                 if SB is not None:
@@ -957,8 +957,8 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
     screen.blit(session_word, (de_x*0.025, de_y * 0.5-200))
     # session 결과들 
     
-    screen.blit(result_graph2, (de_x*0.25-230, de_y-750))
-    screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
+    # screen.blit(result_graph2, (de_x*0.25-230, de_y-750))
+    # screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
     
     
     # 오른쪽 위?에 언제든 메인으로 돌아갈 수 있는 버튼
