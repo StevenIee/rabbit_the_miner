@@ -466,12 +466,12 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
         
     if button_rerest.draw(screen):
         game_status_old = game_status
-        game_status = "rest_start"
-        resting_start = False
+        game_status = "rest_method"
+        # resting_start = False
         
         # game_rest_did
         
-    return game_status, game_status_old, datainfo, resting_start
+    return game_status, game_status_old, datainfo
 
 
 def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd, game_st, game_stop,

@@ -92,6 +92,11 @@ class resting_eye(pygame.sprite.Sprite):
 def resting_eye_play(screen, all_sprites, mt):
     all_sprites.update(mt)
     all_sprites.draw(screen)
+    # print(rest_st)
+    # if rest_st:
+    #     all_sprites.index = 0
+    #     # rest_st = False
+    # return rest_st
 
 
 def button_img():

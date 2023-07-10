@@ -193,6 +193,9 @@ class Neurofeedback:
                     if print_counter_rest_method == False:
                         print("휴지기 뇌파 측정 설명 시작")
                         print_counter_rest_method = True
+                        print_counter_rest_start = False
+                        rest_st = True
+                       
                         
                     game_status, game_status_old, connection_check = GP.rest_method(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart)
                     # print(connection_check)
@@ -201,12 +204,14 @@ class Neurofeedback:
                 elif game_status == "rest_start":
                     if print_counter_rest_start == False:
                         print("휴지기 뇌파 측정 시작")
+                        resting_start = False
                         times[1] = time.time()
                         temp_EEG = np.array([]);
                         print_counter_rest_start = True
+                        resting_eye.index = 0
 
                     all_sprites = pygame.sprite.Group(resting_eye)
-                    game_status, game_status_old, resting_start, base_result,  self.datainfo, temp_EEG = \
+                    game_status, game_status_old, resting_start, base_result,  self.datainfo, temp_EEG= \
                         GP.resting(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_ins,
                                    all_sprites, button_jstart, resting_start, eye_1, mt,  base_result, self.rpy,
                                    times,  test_mode, self.datainfo, temp_EEG)#, resting_eye )
@@ -218,6 +223,7 @@ class Neurofeedback:
                     if print_counter_rest_result == False:
                         print("휴지기 뇌파 측정 결과 제시")
                         print("BASELINE 데이터 저장 중...")
+                        print_counter_rest_method = False
                         
                         # resting 결과 저장
                         session_num = self.datainfo.session_num;
@@ -242,7 +248,7 @@ class Neurofeedback:
                             
                         print_counter_rest_result = True
                     # del all_sprites
-                    game_status, game_status_old, self.datainfo, resting_start = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
+                    game_status, game_status_old, self.datainfo = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
                                                                   resting_back, rest_rep, button_start3,
                                                                   button_rerest, self.datainfo, resting_start)
 
