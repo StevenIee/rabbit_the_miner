@@ -119,7 +119,7 @@ def player_data(player_info_is_good):
         check_condition = True
     if int(session_num.get()) > 1 or int(stage_num.get()) > 1:
         check_condition = True
-    # breakpoint()
+
     tests = [check_id, check_session, check_stage, check_condition]
 
     #  Check if all the tests have been good. If good say player_info_is_good is good and move on.
@@ -285,21 +285,7 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
     screen.blit(miner_intro, (140, 130))
     screen.blit(cart_full, (750, 450))
 
-    # Resting 측정 후 Methods가 나오도록 변경 예정.
-    # if button_method.draw(screen):
-    #     game_status_old = game_statusdatainfo.session_num
-    #     game_status = "method"
 
-    # 게임 시작 버튼을 그리면서 버튼이 눌릴때 게인 status의 변화를 유발 한다.
-    # if button_start.draw(screen):
-    #     game_status_old = game_status
-    #     if datainfo.restEver[datainfo.session_num-1] == False:
-    #         game_status = "rest_method"
-    #     else:
-    #         game_status = "method";
-    
-    # 230626 added ===========================================================================================================
-    # 귀찮아서 일단 추가되어있던 button_method 사용함, 나중에 얘를 위해서 바꿔야함!!
     if int(datainfo.session_num) > 1:
         if button_s2start.draw(screen):
             game_status_old = game_status
@@ -319,9 +305,7 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
                 game_status = "rest_method"
             else:
                 game_status = "method";
-    
-    # =========================================================================================================================
-    
+
     
     return game_status, game_status_old, datainfo
 
@@ -372,10 +356,6 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
 
 
     times = [round(cumtime, 3), round(curtime, 3)]
-    # print("times: ", times)
-
-    # 3초 (RESTING_EYE 디폴트 값) 이전:
-    # print("eye animation duration: ", T.RESTING_EYE)
 
     if cumtime < T.RESTING_EYE:
         AS.resting_eye_play(screen, all_sprites, mt)
@@ -478,13 +458,9 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
            game_pauseb, pause_title, button_pause, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat,
            game_stbar, cart_group, miner_set, game_rock, game_reward, mt, miner_sprites, ani_start, ani_frame, test_mode,
            game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, datainfo, add_frame, stage_bounds, temp_EEG):
-# def gaming(screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt):
-    # background 
-    # global ani_start
-    # reward_num = 0
+
     starting_time = 4
-    # game_bound = 0
-    # game_bound_old = 0
+
     session_num = datainfo.session_num;
     stage_num = datainfo.stagenum;
     faa_mean  = datainfo.baseline_FAA[session_num-1][0];
@@ -514,15 +490,12 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
         times = [[round(cumtime, 3), round(curtime, 3)], [round(cumtime, 3), round(curtime, 3)]];
     
     screen.blit(game_back, (0, 0))
-    # print(times)
-    # print(times[0][0] - times[1][0])
-    
+
     
     # there's a blank screen for 2 seconds
     # finally let's start the game!!!
     if times[0][0] > starting_time and game_st is True:
-        # REWARD 누적 된 거
-        # ani_start = False
+
 
         if game_stop:
             # game stop 이라면
@@ -639,41 +612,18 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
             else:
                 cart_num = 0
             
-            # if game_bound > 2:
-    
-#     if game_bound_old != 3 or game_bound_old != 4 :
-#         bound_st = temp_curtime
-#     else:
-#         bound_now = temp_curtime
-#         bound_cum = bound_now - bound_st
-    
-#     if bound_cum >= 10: # positive 한 상태 10초 이상 유지
-#         reward_select = 2
-#     elif reward_select != 2 and bound_cum < 10:
-#         reward_select = 1
-    
-    
-#     if reward_select == 1:
-#         draw_reward = game_reward[0]
-    
-#     elif reward_select == 2:
-#         draw_reward = game_reward[1]
-    
-#     draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
-    
-            # print(ani_start)
+
             if ani_start:
                 
                 ani_start, ani_frame, index_num, reward_frame, stage_result, add_frame = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, reward_num, cart_group, cart_num, ani_frame, index_num, reward_frame, stage_result, game_bound, add_frame)
-                # print(reward_num)
-                
+                   
             elif game_bound == 3 or game_bound == 4:
                 ani_start = True
                 ani_frame = 0
                 reward_frame = 0
                 
                 draw_reward, bound_time, reward_num = miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_reward, bound_time, reward_num)
-                # print(reward_num)
+
                 screen.blit(game_rock,(de_x-600, de_y-600))
                 screen.blit(miner_set[3],(690, 205))
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
@@ -704,36 +654,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 # cart
                 screen.blit(cart_group[cart_num],(de_x/2-950, de_y-625))
             
-            # else:
-            #     screen.blit(miner_set[3],(690, 205))
 
-            # else:
-            #     # reward_select = 1 # 1 gold 2 dia
-            #     ani_start = True
-            #     ani_frame = 0
-            
-            
-            
-            # reward_select = 1 # reward - faa positive 하게 유지되는 시간 재서 결정해야함 (지금은 일단 ㄱㄱ)
-            # reward_add = 0
-            # ani_start = True
-            
-            # if reward_select == 1:
-            #     draw_reward = game_reward[0]
-            # elif reward_select == 2:
-            #     draw_reward = game_reward[1]
-            # draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
-
-            # if ani_start == True:
-                
-                
-            #     ani_start, ani_frame = AS.miner_ani_starter(screen, miner_sprites, game_bound, mt, game_rock, de_x, de_y, draw_reward, cart_group, cart_num, ani_frame)
-                
-                # if still_ani:
-                    
-                # else:
-                    # ani_start = False
-            # print(game_bound_old, game_bound)
             game_bound_old = game_bound
             
 
@@ -837,18 +758,8 @@ def miner_animate(game_bound, game_bound_old, temp_curtime, game_reward, draw_re
             draw_reward = game_reward[0]
             draw_reward = pygame.transform.rotate(draw_reward, random.randint(1,4)*90)
             reward_num = 1
-            
-    # AS.miner_ani_starter
-    
-    # animation_end = False
-    # if animation_end:
-    #     miner_wait = False
-    # else:
-    #     miner_wait = True
-    
-    # print(reward_num)
-    # print(bound_time[2])
-    return draw_reward, bound_time, reward_num #miner_wait
+
+    return draw_reward, bound_time, reward_num 
 
 
 def statbar_loc_convert(faa_z, de_x, de_y):
@@ -911,7 +822,7 @@ def game_faa_convert(faa_z, de_x, de_y):
         game_bound = 4
     
     
-    return game_faa, game_bound #, statbar_loc
+    return game_faa, game_bound 
 
 
 
@@ -962,15 +873,8 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     screen.blit(for_dia, ((de_x-500-dia_x)/2, 500+(dia_y/1.5)))
     
     print_counter_game_start = None;
-    '''
-    if button_main2.draw(screen):
-        game_status_old = game_status
-        game_status = "intro"
-    '''
-    # if button_restart2.draw(screen):
-    #     game_status_old = game_status
-    #     game_status = "game_start"
-    #     print_counter_game_start = False;
+
+
     if datainfo.stagenum > 5:
         
         if button_result.draw(screen):
@@ -988,17 +892,15 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
 
 
 
-
-
-
-# 230626 added ================================================================================================================
 def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main3, session_worimg, datainfo,
                    game_clear, result_graph2, result_graph3, button_bye):
 
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
-    screen.blit(session_worimg, (de_x/2-300, 75)) # text 이용해서? session n clear 로 만들어도 되니까 player_session도 대려옴
-    # screen.blit(game_clear,(de_x*0.025, de_y*0.5-200))
+    screen.blit(session_worimg, (de_x/2-300, 75))
+
+
+    # plot result graph
     screen.blit(result_graph2, (de_x*0.25-230, de_y-800))
     screen.blit(result_graph3, (de_x*0.25+570, de_y-800))
 
@@ -1017,7 +919,7 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     elif datainfo.session_num == 5:
         session_show = font6.render('5th', False, 'White')
         
-    # sess_x, sess_y = session_show.get_size()
+
     screen.blit(session_show, ((450, 90)))
     
     
@@ -1045,20 +947,19 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
                 button_right, button_left):
 #>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     
-    # session result 원래는 이전 결과 불러와야하는데, 일단은 예시용으로 같은 result graph
+
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     
     
     screen.blit(prev_session, (250, 75))
     
-    # session 결과들 
+    # plot session results
     screen.blit(result_graph2, (de_x*0.25-230, de_y-820))
     screen.blit(result_graph3, (de_x*0.25+570, de_y-820))
-    # 
+
     
-    
-    # 오른쪽 위?에 언제든 메인으로 돌아갈 수 있는 버튼
+
     if button_return.draw(screen):
         game_status_old = game_status
         game_status = "intro"
@@ -1087,7 +988,7 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
     elif current_session == 5:
         session_show = font6.render('5th Session', False, 'White')
         
-    # sess_x, sess_y = session_show.get_size()
+
     screen.blit(session_show, ((760, 900)))
 
 

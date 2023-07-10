@@ -20,11 +20,7 @@ import pandas as pd
 import pickle
 class Neurofeedback:
     def __init__(self, datainfo, test_mode):
-    # def __init__(self, player_id, player_session, player_block, manual_faa_mean, manual_faa_std, player_datafile, test_mode):
 
-        # self.player_id = datainfo.player_id
-        #self.player_session = datainfo.session_num
-        # self.player_block = datainfo.stagenum
         self.datainfo = datainfo
         self.connect = Connect() 
         self.rpy = None
@@ -95,7 +91,7 @@ class Neurofeedback:
         cart_full = AS.cart_img()
         
                 
-        # 230626 added ================================================================================================================
+        # 230626 temporally added ================================================================================================================
         #result example images
         stage_temp_result, session_result1, session_result2 = AS.graph_img()
         # ========================================================================================================================    
@@ -105,9 +101,7 @@ class Neurofeedback:
         game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, game_ready = AS.gaming_img()
         
         resting_eye = AS.resting_eye((de_x/2-800, de_y/2-220))
-        # self.all_sprites = pygame.sprite.Group(resting_eye)
         miner_ani = AS.miner_animation()
-        # self.miner_sprites = pygame.sprite.Group(miner_ani)
 
         eye_1 = pygame.image.load('IMAGES/picset/resting/eye1.png').convert_alpha()
         eye_1 = pygame.transform.scale(eye_1, (1600, 560))
@@ -124,7 +118,6 @@ class Neurofeedback:
         print_counter_rest_result = False
         print_counter_game_start = False
         print_counter_game_result = False
-        # newly added pages
         print_counter_session_result = False    
         print_counter_all_session = False
 
@@ -138,8 +131,6 @@ class Neurofeedback:
             for event in pygame.event.get():
         
                 keys_act = pygame.key.get_pressed()
-                # mouse = pygame.mouse.get_pos()
-                # click = pygame.mouse.get_pressed()
 
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -148,20 +139,10 @@ class Neurofeedback:
                 if keys_act[pygame.K_ESCAPE]:
                     run = False
                 
-                # 게임 시작 스페이스바
-                #if keys_act[pygame.K_SPACE]:
-
-                # game_status = "game_start"
-                # faa_mean = 0
-                # faa_std = 0
+   
 
             if game_starter:
-                # if print_counter_starter == False:
-                #     print("게임 시작합니다. 서버 접속 중")
-                #     print_counter_starter = True
-                # Connection check
-                # 1) before baseline, 2) before main_game
-                # print(connection_check)
+
                 if connection_check == False:
                     self.rpy, connection_check = self.connect.check(connection_check)
                     print('Connected to EEG data server')
@@ -174,9 +155,7 @@ class Neurofeedback:
                         print_counter_intro = True
 
                     game_status, game_status_old, self.datainfo = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_oldsession, button_start, game_status, game_status_old, self.datainfo, button_s2start)
-                    # print(connection_check)
 
-                # 230626 added screen (all session results) ==========================================================================
                 elif game_status == "all_session":
                     if print_counter_all_session == False:
                         print("이전 세션 결과")
@@ -186,7 +165,6 @@ class Neurofeedback:
                                                                   game_back, game_cl_b, button_return, prev_session,
                                                                   session_result1, session_result2, self.datainfo,
                                                                   current_session, button_right, button_left)
-                #==================================================================================================================
 
                 # resting state 안내문
                 elif game_status == "rest_method":
@@ -198,7 +176,7 @@ class Neurofeedback:
                        
                         
                     game_status, game_status_old, connection_check = GP.rest_method(self.screen, game_status, game_status_old, de_x, de_y, resting_back, rest_expl, rest_title, button_jstart)
-                    # print(connection_check)
+
 
                 # resting state 측정하는 중
                 elif game_status == "rest_start":
@@ -294,11 +272,12 @@ class Neurofeedback:
                                           button_resume, button_main, button_restart, times, nf_result, self.rpy,
                                           game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt,
                                           miner_sprites, ani_start , ani_frame, self.test_mode, game_ready, game_bound, game_bound_old, draw_reward, bound_time, index_num, reward_frame, stage_result, reward_num, self.datainfo, add_frame, stage_bounds,temp_EEG)
-                    # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar, cart_group, miner_set, game_rock, game_reward, mt)
-                    
-                    # game_status, game_status_old, game_result, game_rd, game_st, game_stop, times, nf_result = GP.gaming2(self.screen, game_status, game_status_old, de_x, de_y, faa_mean, faa_std, game_back, game_rd, game_st, game_stop, game_pauseb, pause_title, button_resume, button_main, button_restart, times, nf_result, self.rpy, game_stat, game_stbar)
+
+
                     print_counter_game_result = False;
-                # miner 게임 작동 결과
+                    
+                    
+                    # miner 게임 작동 결과
                 elif game_status == "game_result":
                     if print_counter_game_result == False:
                         print("뉴로피드백 블록 결과 제시")
@@ -346,7 +325,6 @@ class Neurofeedback:
 
 
                     
-                # 230626 added screen ===========================================================================================
                 elif game_status == "session_result":
                     if print_counter_session_result == False:
                         print("이번 세션 결과")
@@ -359,10 +337,9 @@ class Neurofeedback:
                                                                      session_result2, button_bye)
 
 
-                #==================================================================================================================
-                   
                 
-                # 이거 연결된 것도 없구...나중에 다른 버튼이랑 연결시켜서 해야할듯
+                
+
                 elif game_status == "GameEnd":
                     print("겜끝!")
                     
@@ -375,15 +352,14 @@ class Neurofeedback:
                     
                     pygame.quit()
             
+            
             # 인트로 이전 PRESS SPACE TO START 화면
             else:
                 pass
-                # self.screen.fill((100, 100, 110))
-                # self.screen.blit(for_start, ((de_x-font_x)/2, 500))
-                #
+
             pygame.display.update()
             
-            # 60 fps로 유지
+
             clock.tick(60)
         
         pygame.quit()
