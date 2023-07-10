@@ -91,7 +91,7 @@ class Neurofeedback:
         # images
         background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word = AS.back_img(de_x, de_y)
         # objects
-        miner_intro = AS.miner_img()
+        miner_intro, miner_result = AS.miner_img()
         cart_full = AS.cart_img()
         
                 
@@ -320,8 +320,8 @@ class Neurofeedback:
                     game_status, game_status_old, \
                     print_counter_game_start, self.datainfo = GP.game_result(self.screen,game_status, game_status_old,
                                                                              stage_result, de_x, de_y, game_back, game_cl_b,
-                                                                             game_cl_res, cart_full, miner_intro, game_clear,
-                                                                             button_main2, button_restart2, stage_temp_result, self.datainfo)
+                                                                             game_cl_res, cart_full, miner_result, game_clear,
+                                                                             button_main2, button_restart2, stage_temp_result, self.datainfo, button_result)
                     game_rd = True
                     game_st = False
                     game_stop = False

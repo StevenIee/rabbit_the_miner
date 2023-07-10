@@ -254,8 +254,8 @@ def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, butto
     button_down = AS.Button(de_x*0.94-50, de_y-150, button_pausei, 70, 70)
     button_test = AS.Button(de_x*0.94, de_y-350, button_testi, 70, 70)
 #=======
-    button_right = AS.Button(de_x * 0.94, de_y-200, button_pausei, 70, 70)
-    button_left = AS.Button(de_x * 0.94-100, de_y-200, button_pausei, 70, 70)
+    button_right = AS.Button(de_x * 0.94, de_y-200, button_testi, 70, 70)
+    button_left = AS.Button(de_x * 0.94-100, de_y-200, button_testi, 70, 70)
     button_up = AS.Button(de_x * 0.94-50, de_y-250, button_pausei, 70, 70)
     button_down = AS.Button(de_x * 0.94-50, de_y-150, button_pausei, 70, 70)
     button_test = AS.Button(de_x * 0.94, de_y-350, button_testi, 70, 70)
@@ -265,7 +265,7 @@ def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, butto
     button_return = AS.Button(de_x*0.94, de_y-350, button_returni, 70, 70)
     
     
-    button_result = AS.Button(de_x*0.5-185, de_y*0.77, button_resulti, 370, 120)
+    button_result = AS.Button(1320,780, button_resulti, 370, 120)
     
     return button_start, button_start2, button_start3, button_oldsession, button_rerest, button_restart, button_restart2, \
            button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, \
@@ -889,14 +889,14 @@ def game_faa_convert(faa_z, de_x, de_y):
 
 
 def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res,
-                cart_full, miner_intro, game_clear, button_main2, button_restart2, result_graph, datainfo):
+                cart_full, miner_result, game_clear, button_main2, button_restart2, result_graph, datainfo, button_result):
     block_num = datainfo.stagenum;
     cart_full = pygame.transform.scale(cart_full, (400, 400))
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     screen.blit(game_cl_res, (de_x*0.025, de_y*0.5-200))
     screen.blit(cart_full, (de_x-920, de_y-770))
-    screen.blit(miner_intro,(de_x-680, de_y-940))
+    screen.blit(miner_result,(de_x-680, de_y-940))
     screen.blit(game_clear,(de_x*0.05+100, 120))
     screen.blit(result_graph, (de_x*0.05, de_y-310))
     
@@ -922,14 +922,22 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
         game_status_old = game_status
         game_status = "intro"
     '''
-    if button_restart2.draw(screen):
-        game_status_old = game_status
-        game_status = "game_start"
-        print_counter_game_start = False;
+    # if button_restart2.draw(screen):
+    #     game_status_old = game_status
+    #     game_status = "game_start"
+    #     print_counter_game_start = False;
     if datainfo.stagenum > 5:
         
-        game_status_old = game_status
-        game_status = "session_result"
+        if button_result.draw(screen):
+            game_status_old = game_status
+            game_status = "session_result"
+    
+    else:
+        if button_restart2.draw(screen):
+            game_status_old = game_status
+            game_status = "game_start"
+            print_counter_game_start = False;
+    
     
     return game_status, game_status_old, print_counter_game_start, datainfo
 

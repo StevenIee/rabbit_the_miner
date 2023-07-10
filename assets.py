@@ -96,7 +96,7 @@ def resting_eye_play(screen, all_sprites, mt):
 
 def button_img():
     button_starti = pygame.image.load('IMAGES/picset/button/game_start2.png').convert_alpha() 
-    button_methodi = pygame.image.load('IMAGES/picset/button/method2.png').convert_alpha() 
+    button_oldsessioni = pygame.image.load('IMAGES/picset/button/result2.png').convert_alpha() 
     button_reresti = pygame.image.load('IMAGES/picset/button/re_rest2.png').convert_alpha() 
     button_restarti = pygame.image.load('IMAGES/picset/button/re_start2.png').convert_alpha() 
     button_resumei = pygame.image.load('IMAGES/picset/button/resume2.png').convert_alpha() 
@@ -105,11 +105,12 @@ def button_img():
     button_pausei = pygame.image.load('IMAGES/picset/button/pause2.png').convert_alpha() 
     button_testi = pygame.image.load('IMAGES/picset/button/test_start.png').convert_alpha()
     button_returni = pygame.image.load('IMAGES/picset/button/test_return.png').convert_alpha()
+    button_resulti = pygame.image.load('IMAGES/picset/button/result.png').convert_alpha()
     #이전결과 = pygame.image.load('IMAGES/picset/button/이전결과 사진').convert_alpha()
 
-    return button_starti, button_methodi, button_reresti,\
+    return button_starti, button_oldsessioni, button_reresti,\
            button_restarti, button_resumei, button_jstarti, \
-           button_maini, button_pausei, button_testi, button_returni
+           button_maini, button_pausei, button_testi, button_returni, button_resulti
 
 
 def back_img(de_x, de_y):
@@ -165,7 +166,9 @@ def back_img(de_x, de_y):
 def miner_img():
     miner_intro = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
     miner_intro = pygame.transform.scale(miner_intro, (500, 600))
-    return miner_intro
+    miner_result = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
+    miner_result = pygame.transform.scale(miner_result, (500, 600))
+    return miner_intro, miner_result
 
 
 def cart_img():
