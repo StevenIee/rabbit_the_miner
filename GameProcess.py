@@ -224,7 +224,7 @@ def player_data(player_info_is_good):
     return datainfo, datafile_name, player_info_is_good, tests
 
 
-def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti):
+def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti, button_byei):
     button_start = AS.Button(1400, 770, button_starti, 370, 120)
     button_start2 = AS.Button(de_x/2-165,900, button_starti, 370, 120)
     button_start3 = AS.Button(de_x/2-(165 * 3), 900, button_starti, 370, 120)
@@ -267,9 +267,13 @@ def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, butto
     
     button_result = AS.Button(1320,780, button_resulti, 370, 120)
     
+    button_main3 = AS.Button(1000,900, button_maini, 370, 95)
+    button_bye = AS.Button(1425,900, button_byei, 370, 95)
+    
+    
     return button_start, button_start2, button_start3, button_oldsession, button_rerest, button_restart, button_restart2, \
            button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, \
-           button_down, button_test, button_return, button_result, button_s2start
+           button_down, button_test, button_return, button_result, button_s2start, button_main3, button_bye
 
 
 def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_oldsession, button_start,
@@ -965,22 +969,46 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
 
 
 # 230626 added ================================================================================================================
-def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main2, session_word, player_session,
-                   game_clear, result_graph2, result_graph3):
+def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main3, session_worimg, datainfo,
+                   game_clear, result_graph2, result_graph3, button_bye):
 
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
-    #screen.blit(session_word, (de_x*0.025, de_y*0.5-200)) # text 이용해서? session n clear 로 만들어도 되니까 player_session도 대려옴
-    screen.blit(game_clear,(de_x*0.05+700, 120))
-    screen.blit(result_graph2, (de_x*0.25-230, de_y-750))
-    screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
+    screen.blit(session_worimg, (de_x/2-300, 75)) # text 이용해서? session n clear 로 만들어도 되니까 player_session도 대려옴
+    # screen.blit(game_clear,(de_x*0.025, de_y*0.5-200))
+    screen.blit(result_graph2, (de_x*0.25-230, de_y-800))
+    screen.blit(result_graph3, (de_x*0.25+570, de_y-800))
 
 
-    '''        
-    if button_main2.draw(screen):
+
+    font6 = pygame.font.SysFont('arial', 145, True)
+    
+    if datainfo.session_num == 1:
+        session_show = font6.render('1st', False, 'White')
+    elif datainfo.session_num == 2:
+        session_show = font6.render('2nd', False, 'White')
+    elif datainfo.session_num == 3:
+        session_show = font6.render('3rd', False, 'White')
+    elif datainfo.session_num == 4:
+        session_show = font6.render('4th', False, 'White')
+    elif datainfo.session_num == 5:
+        session_show = font6.render('5th', False, 'White')
+        
+    # sess_x, sess_y = session_show.get_size()
+    screen.blit(session_show, ((450, 90)))
+    
+    
+    
+    
+    if button_main3.draw(screen):
+        game_status_old = game_status
+        game_status = "Intro"
+    if button_bye.draw(screen):
         game_status_old = game_status
         game_status = "GameEnd"
-    '''
+    
+    
+    
     return game_status, game_status_old
  
 
@@ -990,7 +1018,7 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
 #=======
 
 def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return,
-                session_word, session_result1, session_result2, player_session, current_session,
+                prev_session, session_result1, session_result2, player_session, current_session,
                 button_right, button_left):
 #>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     
@@ -1000,7 +1028,7 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
     
     
     # session 몇 이라는 제목
-    screen.blit(session_word, (de_x*0.025, de_y * 0.5-200))
+    screen.blit(prev_session, (de_x*0.025, de_y * 0.5-200))
     # session 결과들 
     
     # screen.blit(result_graph2, (de_x*0.25-230, de_y-750))

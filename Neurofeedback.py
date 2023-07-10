@@ -86,10 +86,10 @@ class Neurofeedback:
         
         # 230626 return button & session result title img added (temp img)
         # buttons
-        button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti = AS.button_img()
-        button_start, button_start2, button_start3, button_oldsession, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return, button_result, button_s2start = GP.buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti)
+        button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti, button_byei = AS.button_img()
+        button_start, button_start2, button_start3, button_oldsession, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return, button_result, button_s2start, button_main3, button_bye = GP.buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti, button_byei)
         # images
-        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word = AS.back_img(de_x, de_y)
+        background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, prev_session, session_worimg = AS.back_img(de_x, de_y)
         # objects
         miner_intro, miner_result = AS.miner_img()
         cart_full = AS.cart_img()
@@ -183,7 +183,7 @@ class Neurofeedback:
                         print_counter_all_session = True
 
                     game_status, game_status_old = GP.all_session(self.screen, game_status, game_status_old, de_x, de_y,
-                                                                  game_back, game_cl_b, button_return, session_word,
+                                                                  game_back, game_cl_b, button_return, prev_session,
                                                                   session_result1, session_result2, self.datainfo.session_num,
                                                                   current_session, button_right, button_left)
                 #==================================================================================================================
@@ -336,9 +336,9 @@ class Neurofeedback:
                     
                     # 마지막에 session_result1, session_result2는 data 이용해서 만들어야 함 *일단 이렇게 대충 아무사진이나 넣어서 배치만!
                     game_status, game_status_old = GP.session_result(self.screen, game_status, game_status_old, de_x, de_y,
-                                                                     game_back, game_cl_b, button_main2, session_word,
-                                                                     self.datainfo.session_num, game_clear, session_result1,
-                                                                     session_result2)
+                                                                     game_back, game_cl_b, button_main3, session_worimg,
+                                                                     self.datainfo, game_clear, session_result1,
+                                                                     session_result2, button_bye)
 
 
                 #==================================================================================================================
@@ -347,10 +347,12 @@ class Neurofeedback:
                 # 이거 연결된 것도 없구...나중에 다른 버튼이랑 연결시켜서 해야할듯
                 elif game_status == "GameEnd":
                     print("겜끝!")
+                    '''
+                    이부분 필요없을 것 같아서 일단 없애놓음
                     # session num and block num edit
                     self.datainfo.stagenum = 1;
                     self.datainfo.session_num =self.datainfo.session_num + 1;
-                    
+                    ''' 
                     
                     pygame.quit()
             
