@@ -897,7 +897,7 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     screen.blit(game_cl_res, (de_x*0.025, de_y*0.5-200))
     screen.blit(cart_full, (de_x-920, de_y-770))
     screen.blit(miner_result,(de_x-680, de_y-940))
-    screen.blit(game_clear,(de_x*0.05+100, 120))
+    screen.blit(game_clear,(de_x*0.05+250, 120))
     screen.blit(result_graph, (de_x*0.05, de_y-310))
     
 
@@ -907,11 +907,29 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     gold_word = '  :  ' + str(stage_result[0])
     dia_word ='  :  ' + str(stage_result[1])
     
-    font6 = pygame.font.SysFont('arial', 100, True)
-    for_gold = font6.render(gold_word, False, 'White')
-    for_dia = font6.render(dia_word, False, 'White')
+    font5 = pygame.font.SysFont('arial', 100, True)
+    for_gold = font5.render(gold_word, False, 'White')
+    for_dia = font5.render(dia_word, False, 'White')
     gold_x, gold_y = for_gold.get_size()
     dia_x, dia_y = for_dia.get_size()
+    
+    font6 = pygame.font.SysFont('arial', 145, True)
+    if datainfo.stagenum == 2:
+        stage_show = font6.render('1st', False, 'White')
+    elif datainfo.stagenum == 3:
+        stage_show = font6.render('2nd', False, 'White')
+    elif datainfo.stagenum == 4:
+        stage_show = font6.render('3rd', False, 'White')
+    elif datainfo.stagenum == 5:
+        stage_show = font6.render('4th', False, 'White')
+    elif datainfo.stagenum == 6:
+        stage_show = font6.render('5th', False, 'White')
+        
+        
+    font_x, font_y = stage_show.get_size()
+    screen.blit(stage_show, ((120, 135)))
+    
+    
     
     screen.blit(for_gold, ((de_x-500-gold_x)/2, 500-(gold_y/1.3)))
     screen.blit(for_dia, ((de_x-500-dia_x)/2, 500+(dia_y/1.5)))
