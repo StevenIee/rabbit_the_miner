@@ -169,7 +169,7 @@ def back_img(de_x, de_y):
 
 def miner_img():
     miner_intro = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
-    miner_intro = pygame.transform.scale(miner_intro, (500, 600))
+    miner_intro = pygame.transform.scale(miner_intro, (700, 800))
     miner_result = pygame.image.load('IMAGES/picset/character/miner_intro.png').convert_alpha() 
     miner_result = pygame.transform.scale(miner_result, (500, 600))
     return miner_intro, miner_result
@@ -432,6 +432,8 @@ def miner_ani_starter(screen, miner_sprite, ani_init, mt, game_rock, de_x, de_y,
             stage_result[0] += 1
         elif reward_num == 2:
             stage_result[1] += 1
+        
+        
         
         ani_start = False
         index_num = 0

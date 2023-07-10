@@ -212,7 +212,7 @@ class Neurofeedback:
                                    times,  test_mode, self.datainfo, temp_EEG)#, resting_eye )
 
                     pygame.display.update()
-
+                    
                 # resting state 다한 뒤 결과
                 elif game_status == "rest_result":
                     if print_counter_rest_result == False:
@@ -242,9 +242,9 @@ class Neurofeedback:
                             
                         print_counter_rest_result = True
                     # del all_sprites
-                    game_status, game_status_old, self.datainfo = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
+                    game_status, game_status_old, self.datainfo, resting_start = GP.rest_result(self.screen, game_status, game_status_old, de_x, de_y,
                                                                   resting_back, rest_rep, button_start3,
-                                                                  button_rerest, self.datainfo)
+                                                                  button_rerest, self.datainfo, resting_start)
 
                 # 게임 인스트럭션 부분
                 elif game_status == "method":
@@ -262,6 +262,18 @@ class Neurofeedback:
                         stage_bounds = [];
                         temp_EEG = np.array([]);
                         print("뉴로피드백 블록 시작")
+                        
+                        ani_frame = 0
+                        reward_frame = 0
+                        game_bound = 0
+                        game_bound_old = 0
+                        bound_time = [0,0,0]
+                        index_num = 0
+                        stage_result = [0, 0]
+                        reward_num = 1
+                        add_frame = 0
+                        
+                        # newly added o
                         # times[1] = time.time()
                         # reset the timer 
                         # -> times[0] : timer for FAA calc.
@@ -347,6 +359,7 @@ class Neurofeedback:
                 # 이거 연결된 것도 없구...나중에 다른 버튼이랑 연결시켜서 해야할듯
                 elif game_status == "GameEnd":
                     print("겜끝!")
+                    
                     '''
                     이부분 필요없을 것 같아서 일단 없애놓음
                     # session num and block num edit

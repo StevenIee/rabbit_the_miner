@@ -282,7 +282,7 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
     screen.blit(background_img, (0, 0))
     screen.blit(title_gold, (1100, 70)) # 1050,40
     screen.blit(title_word, (1200, 50))
-    screen.blit(miner_intro, (140, 250))
+    screen.blit(miner_intro, (140, 130))
     screen.blit(cart_full, (750, 450))
 
     # Resting 측정 후 Methods가 나오도록 변경 예정.
@@ -444,7 +444,7 @@ def resting(screen, game_status, game_status_old, de_x, de_y, resting_back, rest
     return game_status, game_status_old, resting_start, base_result, datainfo, temp_EEG
 
 
-def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, button_start3, button_rerest, datainfo):
+def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, rest_rep, button_start3, button_rerest, datainfo, resting_start):
     screen.blit(resting_back, (0, 0))
     screen.blit(rest_rep, ((de_x-1000)/2, 70))
     session_num = datainfo.session_num;
@@ -466,10 +466,12 @@ def rest_result(screen, game_status, game_status_old, de_x, de_y, resting_back, 
         
     if button_rerest.draw(screen):
         game_status_old = game_status
-        game_status = "rest_method"
+        game_status = "rest_start"
+        resting_start = False
+        
         # game_rest_did
         
-    return game_status, game_status_old, datainfo
+    return game_status, game_status_old, datainfo, resting_start
 
 
 def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd, game_st, game_stop,
@@ -492,6 +494,14 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
     
     # setting timers
     if game_st is False:
+        bound_time = [0,0,0]
+        index_num = 0
+        reward_frame = 0
+        ani_frame = 0
+        game_bound = 0
+        reward_num = 1
+        add_frame = 0
+        
         game_st = True
         cumtime = 0
         curtime = time.time()
@@ -518,6 +528,17 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
             # game stop 이라면
             screen.blit(game_pauseb, (de_x*0.025, de_y*0.05))
             screen.blit(pause_title, (de_x*0.5-275, de_y*0.2))
+            
+            
+            if button_resume.draw(screen):
+                game_stop = False
+            if button_main.draw(screen):
+                game_status = "intro"
+                game_stop = False
+            if button_restart.draw(screen):
+                game_status = "game_start"
+                game_st = False
+                game_stop = False
             '''
             # bound plot 저장
             bound_savefname = datainfo.figure_path + '/stage_summary_s' + str(datainfo.session_num) + '_b' +str(datainfo.stage_num) +'.png'
@@ -599,7 +620,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 stage_bounds.append([game_bound, cumtime])
                 if test_mode:
                     game_bound = 4
-                    # game_bound = random.randrange(0,4)
+                    # game_bound = random.randrange(3,5)
+                    # print(game_bound)
 
 
             # stat_barcolor, miner, rock, cart, reward
