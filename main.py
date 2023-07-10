@@ -18,7 +18,7 @@ player_data_is_good = False
 if __name__ == "__main__":
     # %% get player data
     
-    version_name = '2023.04.03 demo version'
+    version_name = '2023.07.10 version 1.0.0'
     print1 = '================================================================='
     print(print1)
     print(print1 + '\n')

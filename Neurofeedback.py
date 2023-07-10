@@ -86,8 +86,8 @@ class Neurofeedback:
         
         # 230626 return button & session result title img added (temp img)
         # buttons
-        button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni = AS.button_img()
-        button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return = GP.buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni)
+        button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti = AS.button_img()
+        button_start, button_start2, button_start3, button_oldsession, button_rerest, button_restart, button_restart2, button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, button_down, button_test, button_return, button_result, button_s2start = GP.buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti)
         # images
         background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method, rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word = AS.back_img(de_x, de_y)
         # objects
@@ -173,7 +173,7 @@ class Neurofeedback:
                         print("게임 인트로 시작")
                         print_counter_intro = True
 
-                    game_status, game_status_old, self.datainfo = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start, game_status, game_status_old, self.datainfo)
+                    game_status, game_status_old, self.datainfo = GP.intro(self.screen, background_img, title_gold, title_word, miner_intro, cart_full, button_oldsession, button_start, game_status, game_status_old, self.datainfo, button_s2start)
                     # print(connection_check)
 
                 # 230626 added screen (all session results) ==========================================================================

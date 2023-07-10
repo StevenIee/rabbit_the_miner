@@ -224,11 +224,12 @@ def player_data(player_info_is_good):
     return datainfo, datafile_name, player_info_is_good, tests
 
 
-def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni):
+def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, button_restarti, button_resumei, button_jstarti, button_maini, button_pausei, button_testi, button_returni, button_resulti):
     button_start = AS.Button(1400, 770, button_starti, 370, 120)
     button_start2 = AS.Button(de_x/2-165,900, button_starti, 370, 120)
     button_start3 = AS.Button(de_x/2-(165 * 3), 900, button_starti, 370, 120)
-    button_method = AS.Button(1400, 840, button_methodi, 370, 120)
+    button_oldsession = AS.Button(1400, 840, button_oldsessioni, 370, 120)
+    button_s2start = AS.Button(1400, 700, button_starti, 370, 120)
     button_rerest = AS.Button(de_x/2+165,900, button_reresti, 370, 120)
     button_restart = AS.Button(de_x*0.5-185, de_y*0.64, button_restarti, 370, 120)
 #<<<<<<< HEAD
@@ -263,13 +264,16 @@ def buttons(de_x, de_y, button_starti, button_methodi, button_reresti, button_re
     # 230626 added button
     button_return = AS.Button(de_x*0.94, de_y-350, button_returni, 70, 70)
     
-    return button_start, button_start2, button_start3, button_method, button_rerest, button_restart, button_restart2, \
+    
+    button_result = AS.Button(de_x*0.5-185, de_y*0.77, button_resulti, 370, 120)
+    
+    return button_start, button_start2, button_start3, button_oldsession, button_rerest, button_restart, button_restart2, \
            button_resume, button_jstart, button_main, button_main2, button_pause, button_right, button_left, button_up, \
-           button_down, button_test, button_return
+           button_down, button_test, button_return, button_result, button_s2start
 
 
-def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_method, button_start,
-          game_status, game_status_old, datainfo):
+def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full, button_oldsession, button_start,
+          game_status, game_status_old, datainfo, button_s2start):
     screen.blit(background_img, (0, 0))
     screen.blit(title_gold, (1100, 70)) # 1050,40
     screen.blit(title_word, (1200, 50))
@@ -282,19 +286,34 @@ def intro(screen, background_img, title_gold, title_word, miner_intro, cart_full
     #     game_status = "method"
 
     # 게임 시작 버튼을 그리면서 버튼이 눌릴때 게인 status의 변화를 유발 한다.
-    if button_start.draw(screen):
-        game_status_old = game_status
-        if datainfo.restEver[datainfo.session_num-1] == False:
-            game_status = "rest_method"
-        else:
-            game_status = "method";
+    # if button_start.draw(screen):
+    #     game_status_old = game_status
+    #     if datainfo.restEver[datainfo.session_num-1] == False:
+    #         game_status = "rest_method"
+    #     else:
+    #         game_status = "method";
     
     # 230626 added ===========================================================================================================
     # 귀찮아서 일단 추가되어있던 button_method 사용함, 나중에 얘를 위해서 바꿔야함!!
     if int(datainfo.session_num) > 1:
-        if button_method.draw(screen):
+        if button_s2start.draw(screen):
+            game_status_old = game_status
+            if datainfo.restEver[datainfo.session_num-1] == False:
+                game_status = "rest_method"
+            else:
+                game_status = "method";
+            
+        if button_oldsession.draw(screen):
             game_status_old = game_status
             game_status = "all_session"
+    
+    else:
+        if button_start.draw(screen):
+            game_status_old = game_status
+            if datainfo.restEver[datainfo.session_num-1] == False:
+                game_status = "rest_method"
+            else:
+                game_status = "method";
     
     # =========================================================================================================================
     
@@ -908,6 +927,7 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
         game_status = "game_start"
         print_counter_game_start = False;
     if datainfo.stagenum > 5:
+        
         game_status_old = game_status
         game_status = "session_result"
     
