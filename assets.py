@@ -106,11 +106,12 @@ def button_img():
     button_testi = pygame.image.load('IMAGES/picset/button/test_start.png').convert_alpha()
     button_returni = pygame.image.load('IMAGES/picset/button/test_return.png').convert_alpha()
     button_resulti = pygame.image.load('IMAGES/picset/button/result.png').convert_alpha()
+    button_byei = pygame.image.load('IMAGES/picset/button/goodbye.png').convert_alpha()
     #이전결과 = pygame.image.load('IMAGES/picset/button/이전결과 사진').convert_alpha()
 
     return button_starti, button_oldsessioni, button_reresti,\
            button_restarti, button_resumei, button_jstarti, \
-           button_maini, button_pausei, button_testi, button_returni, button_resulti
+           button_maini, button_pausei, button_testi, button_returni, button_resulti, button_byei
 
 
 def back_img(de_x, de_y):
@@ -155,12 +156,15 @@ def back_img(de_x, de_y):
     game_clear = pygame.transform.scale(game_clear, (800, 200))
     
     
-    session_word = pygame.image.load('IMAGES/picset/object/clear.png').convert_alpha() 
-    session_word = pygame.transform.scale(session_word, (1100, 200))
+    prev_session = pygame.image.load('IMAGES/picset/object/Previous_session.png').convert_alpha() 
+    prev_session = pygame.transform.scale(prev_session, (1400, 200))
+    
+    session_worimg = pygame.image.load('IMAGES/picset/object/session_result.png').convert_alpha() 
+    session_worimg = pygame.transform.scale(session_worimg, (800, 200))
     
 
     return background_img, method_back, resting_back, game_back, title_gold, title_word, rest_title, pause_title, method,\
-           rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, session_word
+           rest_ins, rest_expl, rest_rep, game_pauseb, game_cl_b, game_cl_res, game_clear, prev_session, session_worimg
 
 
 def miner_img():
