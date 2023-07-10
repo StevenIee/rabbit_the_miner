@@ -247,22 +247,23 @@ def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, butto
 #<<<<<<< HEAD
     
 
-    button_right = AS.Button(de_x*0.94, de_y-200, button_pausei, 70, 70)
+    # button_right = AS.Button(de_x*0.94, de_y-200, button_pausei, 70, 70)
     
-    button_left = AS.Button(de_x*0.94-100, de_y-200, button_pausei, 70, 70)
-    button_up = AS.Button(de_x*0.94-50, de_y-250, button_pausei, 70, 70)
-    button_down = AS.Button(de_x*0.94-50, de_y-150, button_pausei, 70, 70)
-    button_test = AS.Button(de_x*0.94, de_y-350, button_testi, 70, 70)
+    # button_left = AS.Button(de_x*0.94-100, de_y-200, button_pausei, 70, 70)
+    # button_up = AS.Button(de_x*0.94-50, de_y-250, button_pausei, 70, 70)
+    # button_down = AS.Button(de_x*0.94-50, de_y-150, button_pausei, 70, 70)
+    # button_test = AS.Button(de_x*0.94, de_y-350, button_testi, 70, 70)
 #=======
-    button_right = AS.Button(de_x * 0.94, de_y-200, button_testi, 70, 70)
-    button_left = AS.Button(de_x * 0.94-100, de_y-200, button_testi, 70, 70)
+    button_right = AS.Button(1700, de_y-170, button_testi, 70, 70)
+    button_lefti = pygame.transform.rotate(button_testi, 180)
+    button_left = AS.Button(100, de_y-170, button_lefti, 70, 70)
     button_up = AS.Button(de_x * 0.94-50, de_y-250, button_pausei, 70, 70)
     button_down = AS.Button(de_x * 0.94-50, de_y-150, button_pausei, 70, 70)
     button_test = AS.Button(de_x * 0.94, de_y-350, button_testi, 70, 70)
 #>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     
     # 230626 added button
-    button_return = AS.Button(de_x*0.94, de_y-350, button_returni, 70, 70)
+    button_return = AS.Button(150,120, button_returni, 70, 70)
     
     
     button_result = AS.Button(1320,780, button_resulti, 370, 120)
@@ -1018,7 +1019,7 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
 #=======
 
 def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_return,
-                prev_session, session_result1, session_result2, player_session, current_session,
+                prev_session, result_graph2, result_graph3, datainfo, current_session,
                 button_right, button_left):
 #>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     
@@ -1027,12 +1028,12 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     
     
-    # session 몇 이라는 제목
-    screen.blit(prev_session, (de_x*0.025, de_y * 0.5-200))
-    # session 결과들 
+    screen.blit(prev_session, (250, 75))
     
-    # screen.blit(result_graph2, (de_x*0.25-230, de_y-750))
-    # screen.blit(result_graph3, (de_x*0.25+570, de_y-750))
+    # session 결과들 
+    screen.blit(result_graph2, (de_x*0.25-230, de_y-820))
+    screen.blit(result_graph3, (de_x*0.25+570, de_y-820))
+    # 
     
     
     # 오른쪽 위?에 언제든 메인으로 돌아갈 수 있는 버튼
@@ -1043,15 +1044,31 @@ def all_session(screen, game_status, game_status_old, de_x, de_y, game_back, gam
     if current_session == 1:
         if button_right.draw(screen):
             current_session = current_session + 1
-    elif current_session == player_session:
+    elif current_session == (datainfo.session_num-1):
         if button_left.draw(screen):
             current_session = current_session - 1
-    elif (current_session >= 2) & (current_session < player_session):
+    elif (current_session >= 2) & (current_session < (datainfo.session_num-1)):
         if button_right.draw(screen):
             current_session = current_session + 1
         if button_left.draw(screen):
             current_session = current_session - 1
 
-    return game_status, game_status_old
+    font6 = pygame.font.SysFont('arial', 80, True)
+    if current_session == 1:
+        session_show = font6.render('1st Session', False, 'White')
+    elif current_session == 2:
+        session_show = font6.render('2nd Session', False, 'White')
+    elif current_session == 3:
+        session_show = font6.render('3rd Session', False, 'White')
+    elif current_session == 4:
+        session_show = font6.render('4th Session', False, 'White')
+    elif current_session == 5:
+        session_show = font6.render('5th Session', False, 'White')
+        
+    # sess_x, sess_y = session_show.get_size()
+    screen.blit(session_show, ((760, 900)))
+
+
+    return game_status, game_status_old, current_session
 
 # ================================================================================================================================

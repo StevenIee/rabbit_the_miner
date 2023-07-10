@@ -182,9 +182,9 @@ class Neurofeedback:
                         print("이전 세션 결과")
                         print_counter_all_session = True
 
-                    game_status, game_status_old = GP.all_session(self.screen, game_status, game_status_old, de_x, de_y,
+                    game_status, game_status_old, current_session = GP.all_session(self.screen, game_status, game_status_old, de_x, de_y,
                                                                   game_back, game_cl_b, button_return, prev_session,
-                                                                  session_result1, session_result2, self.datainfo.session_num,
+                                                                  session_result1, session_result2, self.datainfo,
                                                                   current_session, button_right, button_left)
                 #==================================================================================================================
 
