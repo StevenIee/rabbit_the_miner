@@ -232,11 +232,11 @@ def buttons(de_x, de_y, button_starti, button_oldsessioni, button_reresti, butto
     button_s2start = AS.Button(1400, 700, button_starti, 370, 120)
     button_rerest = AS.Button(de_x/2+165,900, button_reresti, 370, 120)
     button_restart = AS.Button(de_x*0.5-185, de_y*0.64, button_restarti, 370, 120)
-#<<<<<<< HEAD
+
     # button_restart2 = AS.Button(580,830, button_restarti, 370, 120) # 블락버전으로 바꾸려구!
     button_restart2 = AS.Button(1320,880, button_resumei, 370, 95)
-#=======
-    button_restart2 = AS.Button(1320,830, button_resumei, 370, 95)
+
+    #button_restart2 = AS.Button(1320,830, button_resumei, 370, 95)
     # 이전 결과 = button_adjustment.Button(1320,770, button_maini, 370, 95) > 이거 활성화 시키면 위의 button_restart2 다시 선언한거 삭제하면 됩니다.
 #>>>>>>> 0b14101a080d6d5514626dc39da1ace9c906df33
     button_resume = AS.Button(de_x*0.5-185, de_y*0.77, button_resumei, 370, 120)
@@ -667,41 +667,87 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 # neurofeedback FAA 저장
                 nf_faa_mean = np.mean(np.array(nf_result)[:, 0])
                 datainfo.NF_FAA_mean[session_num-1][block_num-1] = nf_faa_mean;
-
+                '''
                 # plot making
+                
+                # Add path
                 org_path = './'
                 data_path = org_path + 'data/' + str(player_id)
-                # datainfo = DataInfo(player_id)
-                SB = datainfo.stage_bounds[session_num - 1][stage_num - 1]
+                
+                y_val = [item[0] for item in stage_bounds]
+                x_val = [item[1] for item in stage_bounds]
+                
+                # Extracting 60 data points
+                num_points = 60
+                indices = np.linspace(0, len(x_val)-1, num_points, dtype=int)
+                x_val_subset = [x_val[i] for i in indices]
+                y_val_subset = [y_val[i] for i in indices]
 
-                if SB is not None:
-                    # Plotting SB
-                    plt.plot(SB, marker='o')
+                # figure size
+                fig, ax = plt.subplots(figsize=(10, 3))
+                
+                # Plotting
+                plt.plot(x_val_subset, y_val_subset, marker='$🐇$')
+                
+                # Adding labels and title to the plot
+                plt.xlabel('Time')
+                plt.ylabel('Productivity')
+                plt.title('토끼의 생산성!')
+                
+                # Set the y-axis range
+                plt.ylim(0, 4)
+                
+                # Specifying the folder path to save the plot
+                figure_path = data_path + '/fig'
+                datainfo.figure_path = figure_path;
+                # Creating the folder if it does not exist
+                os.makedirs(figure_path, exist_ok=True)
+                
+                # Saving the plot as a PNG image
+                plot_path = os.path.join(figure_path, 'faa_mean_plot_' + str(stage_num) + '.png')
+                plt.savefig(plot_path)
+                '''
+                #####################
+                # Stage Results plot #
+                #####################                # plot making
+                # Add path
+                org_path = './'
+                data_path = org_path + 'data/' + str(player_id)
+                
+                
+                y_val = [item[0] for item in stage_bounds]
+                x_val = [item[1] for item in stage_bounds]
+                
+                
+                # figure size
+                fig, ax = plt.subplots(figsize=(13, 3))
+                
+                # Plotting
+                plt.plot(x_val, y_val, marker='$🐇$')
+                
+                # Adding labels and title to the plot
+                plt.xlabel('Time')
+                plt.ylabel('Productivity')
+                plt.title('토끼의 생산성!')
+                
+                # Set the y-axis range
+                plt.ylim(-.5, 5.5)
+                
+                # Specifying the folder path to save the plot
+                figure_path = data_path + '/fig'
+                datainfo.figure_path = figure_path;
+                # Creating the folder if it does not exist
+                os.makedirs(figure_path, exist_ok=True)
+                
+                # Saving the plot as a PNG image
+                plot_path = os.path.join(figure_path, 'faa_mean_plot_' + str(stage_num) + '.png')
+                plt.savefig(plot_path)
+                
+                
 
-                    # Adding labels and title to the plot
-                    plt.xlabel('시간')
-                    plt.ylabel('생산성')
-                    plt.title('토끼의 생산성!')
-
-                    # Specifying the folder path to save the plot
-                    figure_path = data_path + '/fig'
-                    datainfo.figure_path = figure_path;
-                    # Creating the folder if it does not exist
-                    os.makedirs(figure_path, exist_ok=True)
-
-                    # Saving the plot as a PNG image
-                    plot_path = os.path.join(figure_path, 'faa_mean_plot.png')
-                    plt.savefig(plot_path)
-                else:
-                    print("No data available to plot.")
-
-            if button_pause.draw(screen):
-                game_stop = True    
-            
-        
-    # else:
-    
-    
+                              
+                    
+                       
     # stage number
     elif time.time() - times[0][1] < 2:
         screen.blit(game_pauseb, (de_x*0.025, de_y*0.05))
@@ -825,9 +871,12 @@ def game_faa_convert(faa_z, de_x, de_y):
     return game_faa, game_bound 
 
 
-
+# gaming result 는 stage result입니다.
 def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, game_back, game_cl_b, game_cl_res,
                 cart_full, miner_result, game_clear, button_main2, button_restart2, result_graph, datainfo, button_result):
+    
+    
+    
     block_num = datainfo.stagenum;
     cart_full = pygame.transform.scale(cart_full, (400, 400))
     screen.blit(game_back, (0, 0))
@@ -836,7 +885,9 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     screen.blit(cart_full, (de_x-920, de_y-770))
     screen.blit(miner_result,(de_x-680, de_y-940))
     screen.blit(game_clear,(de_x*0.05+250, 120))
-    screen.blit(result_graph, (de_x*0.05, de_y-310))
+    #screen.blit(result_graph, (de_x*0.05, de_y-310))
+    stage_num = datainfo.stagenum;
+    player_id = datainfo.player_id;
     
 
        
@@ -874,19 +925,23 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
     
     print_counter_game_start = None;
 
-
+    stage_result_graph = pygame.image.load('data/' + str(player_id) + '/fig/' + 'faa_mean_plot_' + str(stage_num-1) + '.png').convert_alpha()
+    screen.blit(stage_result_graph, (de_x*0.05, de_y-310))    
     if datainfo.stagenum > 5:
-        
+                
         if button_result.draw(screen):
             game_status_old = game_status
             game_status = "session_result"
-    
+            
+            
+
     else:
+        
         if button_restart2.draw(screen):
             game_status_old = game_status
             game_status = "game_start"
             print_counter_game_start = False;
-    
+            
     
     return game_status, game_status_old, print_counter_game_start, datainfo
 
@@ -895,6 +950,63 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
 def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main3, session_worimg, datainfo,
                    game_clear, result_graph2, result_graph3, button_bye):
 
+    #여기서 gold plot 만들기
+    #####################
+    # gold dia bar plot #
+    #####################
+    
+    # stage_result = datainfo.stage_result;
+    # stage_num = datainfo.stagenum;
+    # player_id = datainfo.player_id;
+    
+    # org_path = './'
+    # data_path = org_path + 'data/' + str(player_id)    
+    
+    # # Stages
+    # stages = ['Stage 1', 'Stage 2', 'Stage 3', 'Stage 4', 'Stage 5']
+    
+        
+    # gold = [[stage[0] for stage in session] for session in stage_result]
+    # dia = [[stage[1] for stage in session] for session in stage_result]
+
+    # # Iterate over sessions and stages to extract gold and diamond values
+    # for session in stage_result:
+    #     for stage_num, stage in enumerate(session):
+    #         gold_value = stage[0]
+    #         diamond_value = stage[1]
+    #         gold[stage_num].append(gold_value)
+    #         dia[stage_num].append(diamond_value)
+    
+                
+    # # figure size
+    # fig, ax = plt.subplots(figsize=(8, 8))
+    # x = np.arange(len(stage_result))
+    # width = 0.35
+    
+    # for i in range(len(stages)):
+    #     plt.bar(x[i], gold[i], width, label='Gold')
+    #     plt.bar(x[i], dia[i], width, label='Diamond')
+
+
+    # # Adding labels and title to the plot
+    # plt.xlabel('Stage')
+    # plt.ylabel('Amount')
+    # plt.xticks(x, stages)
+    # ax.legend
+    
+    # # Specifying the folder path to save the plot
+    # figure_path = data_path + '/fig'
+    # datainfo.figure_path = figure_path;
+    # # Creating the folder if it does not exist
+    # os.makedirs(figure_path, exist_ok=True)
+    
+    # # Saving the plot as a PNG image
+    # plot_path = os.path.join(figure_path, 'gold_dia_plot_' + str(stage_num) + '.png')
+    # plt.savefig(plot_path)
+    # plt.close()
+    
+    # gold_dia_graph = pygame.image.load('data/' + str(player_id) + '/fig/' + 'gold_dia_plot_' + str(stage_num-1) + '.png').convert_alpha()
+    
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     screen.blit(session_worimg, (de_x/2-300, 75))
@@ -918,7 +1030,6 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
         session_show = font6.render('4th', False, 'White')
     elif datainfo.session_num == 5:
         session_show = font6.render('5th', False, 'White')
-        
 
     screen.blit(session_show, ((450, 90)))
     
