@@ -955,57 +955,57 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     # gold dia bar plot #
     #####################
     
-    # stage_result = datainfo.stage_result;
-    # stage_num = datainfo.stagenum;
-    # player_id = datainfo.player_id;
+    stage_result = datainfo.stage_result;
+    stage_num = datainfo.stagenum;
+    session_num = datainfo.session_num;
+    player_id = datainfo.player_id;
     
-    # org_path = './'
-    # data_path = org_path + 'data/' + str(player_id)    
+    org_path = './'
+    data_path = org_path + 'data/' + str(player_id)    
     
-    # # Stages
-    # stages = ['Stage 1', 'Stage 2', 'Stage 3', 'Stage 4', 'Stage 5']
     
         
-    # gold = [[stage[0] for stage in session] for session in stage_result]
-    # dia = [[stage[1] for stage in session] for session in stage_result]
-
-    # # Iterate over sessions and stages to extract gold and diamond values
-    # for session in stage_result:
-    #     for stage_num, stage in enumerate(session):
-    #         gold_value = stage[0]
-    #         diamond_value = stage[1]
-    #         gold[stage_num].append(gold_value)
-    #         dia[stage_num].append(diamond_value)
+    x_labels = ['1G', '1D', '2G', '2D', '3G', '3D', '4G', '4D', '5G', '5D']
+    y_values = [stage_result[session_num - 1][0][0], stage_result[session_num - 1][0][1], stage_result[session_num - 1][1][0], stage_result[session_num - 1][1][1], 
+                stage_result[session_num - 1][2][0], stage_result[session_num - 1][2][1], stage_result[session_num - 1][3][0], stage_result[session_num - 1][3][1], 
+                stage_result[session_num - 1][4][0], stage_result[session_num - 1][4][1]]
+    
+    #stage_result_str = str(stage_result)
+    #for stage in stage_result:
+    #    y_values.append([stage[session_num - 1][0][0], stage[session_num - 1][0][1], stage[session_num - 1][1][0], stage[session_num - 1][1][1], 
+    #                     stage[session_num - 1][2][0], stage[session_num - 1][2][1], stage[session_num - 1][3][0], stage[session_num - 1][3][1], 
+    #                     stage[session_num - 1][4][0], stage[session_num - 1][4][1], stage[session_num - 1][5][0], stage[session_num - 1][5][1]])
     
                 
-    # # figure size
-    # fig, ax = plt.subplots(figsize=(8, 8))
-    # x = np.arange(len(stage_result))
-    # width = 0.35
+    # figure size
+    fig, ax = plt.subplots(figsize=(8, 8))
     
-    # for i in range(len(stages)):
-    #     plt.bar(x[i], gold[i], width, label='Gold')
-    #     plt.bar(x[i], dia[i], width, label='Diamond')
+    ax.bar(x_labels, y_values)
+    x_positions = range(len(x_labels))
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(x_labels)
 
-
-    # # Adding labels and title to the plot
-    # plt.xlabel('Stage')
-    # plt.ylabel('Amount')
-    # plt.xticks(x, stages)
-    # ax.legend
+    max_y_value = max(y_values)
+    ylim = max_y_value + 10
+    plt.ylim(-.5, ylim)
     
-    # # Specifying the folder path to save the plot
-    # figure_path = data_path + '/fig'
-    # datainfo.figure_path = figure_path;
-    # # Creating the folder if it does not exist
-    # os.makedirs(figure_path, exist_ok=True)
+    # Adding labels and title to the plot
+    plt.xlabel('Stage')
+    plt.ylabel('Amount')
+    ax.legend
     
-    # # Saving the plot as a PNG image
-    # plot_path = os.path.join(figure_path, 'gold_dia_plot_' + str(stage_num) + '.png')
-    # plt.savefig(plot_path)
-    # plt.close()
+    # Specifying the folder path to save the plot
+    figure_path = data_path + '/fig'
+    datainfo.figure_path = figure_path;
+    # Creating the folder if it does not exist
+    os.makedirs(figure_path, exist_ok=True)
     
-    # gold_dia_graph = pygame.image.load('data/' + str(player_id) + '/fig/' + 'gold_dia_plot_' + str(stage_num-1) + '.png').convert_alpha()
+    # Saving the plot as a PNG image
+    plot_path = os.path.join(figure_path, 'gold_dia_plot_' + str(session_num - 1) + '.png')
+    plt.savefig(plot_path)
+    plt.close()
+    
+    gold_dia_graph = pygame.image.load('data/' + str(player_id) + '/fig/' + 'gold_dia_plot_' + str(session_num - 1) + '.png').convert_alpha()
     
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
@@ -1013,7 +1013,7 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
 
 
     # plot result graph
-    screen.blit(result_graph2, (de_x*0.25-230, de_y-800))
+    screen.blit(gold_dia_graph, (de_x*0.25-230, de_y-800))
     screen.blit(result_graph3, (de_x*0.25+570, de_y-800))
 
 
