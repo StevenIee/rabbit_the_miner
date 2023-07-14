@@ -1022,7 +1022,7 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     # figure size
     fig, ax = plt.subplots(figsize=(8, 8))
     
-    ax.bar(x, y)
+    ax.bar(x, y, color = '#884A39')
     
     
     plt.ylim(-1, 1)
