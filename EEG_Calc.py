@@ -6,6 +6,7 @@ Created on Tue Feb 28 19:04:12 2023
 """
 import numpy as np  # Module that simplifies computations on matrices
 import numpy.matlib
+import matplotlib.pyplot as plt
 from scipy.fft import fft
 from scipy.signal import find_peaks
 from mne import filter
@@ -40,7 +41,7 @@ def get_alpha_index(freq, freq4asymmetry):
     return alpha_idx_range
 
 
-def preprocessing( eeg, filter_range, noise_thr, srate):
+def preprocessing(eeg, filter_range, noise_thr, srate):
     # low- high- pass filter
     eeg_filtered = filter.filter_data(eeg, srate, filter_range[0], filter_range[1], verbose=False);
     
@@ -84,12 +85,93 @@ def calc_asymmetry( data_fft, fft_win_len, cutOff, alpha_idx_range):
     faa = (F4 - F3)/(F3 + F4);
     return faa
 
+def calc_asymmetry2( data_fft, fft_win_len, cutOff, alpha_idx_range, group_cond):
+    alpha_l= alpha_idx_range[0];
+    alpha_h= alpha_idx_range[1];
+    fft_temp1 = fft(data_fft[0,:]) / fft_win_len*2; fft1 = np.abs(fft_temp1[0:cutOff]) ;
+    fft_temp2 = fft(data_fft[1,:]) / fft_win_len*2; fft2 = np.abs(fft_temp2[0:cutOff]) ;
+    # calculate asymmetry
+    F3 = np.mean(fft1[alpha_l:alpha_h+1]);
+    # print('F3 : ', str(F3))
+    F4 = np.mean(fft2[alpha_l:alpha_h+1]);
+    # print('F3 : ', str(F3))
+    if group_cond== 1:
+        faa = (F4 - F3)/(F3 + F4);
+    else:
+        faa = (F3 + F4) / 2;
+        
+    return faa
 
 def reject_outliers(numarray, m = 3):
     d = np.abs(numarray - np.median(numarray))
     mdev = np.median(d)
     s = d/mdev if mdev else 0
     return np.where(s>m)
+
+
+def eeg_datasaving(temp_EEG, eegdata, timedata):
+    if temp_EEG.shape[0] ==0:
+        temp_EEG = np.concatenate((eegdata, timedata));
+    else:
+
+        temp_EEG2 = np.concatenate((eegdata, timedata));
+        last_t = temp_EEG[2,-1];
+        last_t_ind = np.where(timedata[0] == last_t)[0]
+        if last_t_ind.shape[0] == 0:
+            temp_EEG = np.concatenate((temp_EEG, temp_EEG2), axis=1)
+        else:
+            last_t_index = last_t_ind[-1];
+            temp_EEG2 = temp_EEG2[:,last_t_index:];
+            temp_EEG = np.concatenate((temp_EEG, temp_EEG2), axis=1)
+    return temp_EEG
+
+
+def bound_line_plot_save(data, filename):
+    x_data = [row[1] for row in data]  # extract second column as x data
+    y_data = [row[0] for row in data]  # extract first column as y data
+    
+    fig, ax = plt.subplots()
+    ax.plot(x_data, y_data, marker='o', markersize=8, fillstyle='none', linestyle='--', color='b')
+    ax.plot(x_data, y_data, marker='o', markersize=4, color='k')
+    l = ax.fill_between(x_data, y_data)
+    ax.set_ylabel('Performance')
+    ax.set_xlabel('Game time (s)')
+    # remove tick marks
+    ax.xaxis.set_tick_params(size=0)
+    ax.yaxis.set_tick_params(size=0)
+    
+    # change the color of the top and right spines to opaque gray
+    ax.spines['right'].set_color((.8,.8,.8))
+    ax.spines['top'].set_color((.8,.8,.8))
+    
+    # xylim set
+    xmax = np.max(x_data);
+    xmin = np.min(x_data);
+    ax.set_xlim(xmin, xmax)
+    
+    ymin,ymax =ax.get_ylim();
+    ax.set_ylim(0, ymax)
+    ax.grid('on')
+    
+    # xy label
+    xlab = ax.xaxis.get_label()
+    ylab = ax.yaxis.get_label()
+    xlab.set_style('italic')
+    xlab.set_size(10)
+    ylab.set_style('italic')
+    ylab.set_size(10)
+    
+    
+    # change the fill into a blueish color with opacity .3
+    l.set_facecolors([[.5,.5,.8,.3]])
+    
+    # change the edge color (bluish and transparentish) and thickness
+    l.set_edgecolors([[0, 0, .5, .3]])
+    l.set_linewidths([3])
+    
+    fig.savefig(filename, dpi=300, bbox_inches='tight')
+
+
 
 freq, cutOff , fft_win_len = set_EEGcalc(FFT_win, srate)
 alpha_idx_range = get_alpha_index(freq, freq4asymmetry)
