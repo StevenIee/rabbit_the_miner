@@ -709,7 +709,8 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 '''
                 #####################
                 # Stage Results plot #
-                #####################                # plot making
+                #####################                
+                # plot making
                 # Add path
                 org_path = './'
                 data_path = org_path + 'data/' + str(player_id)
@@ -723,7 +724,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 fig, ax = plt.subplots(figsize=(15, 3))
                 
                 # Plotting
-                plt.plot(x_val, y_val, marker='$🐇$')
+                plt.plot(x_val, y_val, marker='$🐇$', color = "#E7B10A")
                 
                 # Adding labels and title to the plot
                 plt.xlabel('Time')
@@ -944,7 +945,6 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
             
     
     return game_status, game_status_old, print_counter_game_start, datainfo
-
 
 
 def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main3, session_worimg, datainfo,
