@@ -206,7 +206,7 @@ class Neurofeedback:
                         # resting 결과 저장
                         session_num = self.datainfo.session_num;
                         # 1. continuous FAA
-                        self.datainfo.base_FAA_result[session_num-1] = base_result;
+                        #self.datainfo.base_FAA_result[session_num-1] = base_result;
                         
                         # 2. MEAN/STD FAA
                         # -> GP.resting

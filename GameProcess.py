@@ -720,7 +720,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 
                 
                 # figure size
-                fig, ax = plt.subplots(figsize=(13, 3))
+                fig, ax = plt.subplots(figsize=(15, 3))
                 
                 # Plotting
                 plt.plot(x_val, y_val, marker='$🐇$')
@@ -728,7 +728,7 @@ def gaming(screen, game_status, game_status_old, de_x, de_y,  game_back, game_rd
                 # Adding labels and title to the plot
                 plt.xlabel('Time')
                 plt.ylabel('Productivity')
-                plt.title('토끼의 생산성!')
+                plt.title('Productivity!!')
                 
                 # Set the y-axis range
                 plt.ylim(-.5, 5.5)
@@ -977,14 +977,17 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     # figure size
     fig, ax = plt.subplots(figsize=(8, 8))
     
-    ax.bar(x_labels, y_values)
+    #set color
+    bar_color = ['#E7B10A' if (i+1) % 2 != 0 else 'blue' for i in range(len(x_labels))]
+    
+    ax.bar(x_labels, y_values, color=bar_color)
     x_positions = range(len(x_labels))
     ax.set_xticks(x_positions)
     ax.set_xticklabels(x_labels)
 
     max_y_value = max(y_values)
     ylim = max_y_value + 10
-    plt.ylim(-.5, ylim)
+    plt.ylim(0, ylim)
     
     # Adding labels and title to the plot
     plt.xlabel('Stage')
@@ -1014,15 +1017,18 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     mean = mean[session_num -1]
     mean = np.array(mean)
     x = ['1','2','3','4','5']
-    y = b - mean
-    
+    y = mean - b
+
     # figure size
     fig, ax = plt.subplots(figsize=(8, 8))
     
     ax.bar(x, y)
     
+    
+    plt.ylim(-1, 1)
+    
     # Adding labels and title to the plot
-    plt.xlabel('Baseline - FAA mean')
+    plt.xlabel('FAA mean - Baseline')
     plt.ylabel('Stage')
     
     # Specifying the folder path to save the plot
@@ -1032,11 +1038,11 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     os.makedirs(figure_path, exist_ok=True)
     
     # Saving the plot as a PNG image
-    plot_path = os.path.join(figure_path, 'baseline-FAA_plot_' + str(session_num - 1) + '.png')
+    plot_path = os.path.join(figure_path, 'FAA_plot-baseline_' + str(session_num - 1) + '.png')
     plt.savefig(plot_path)
     plt.close()
     
-    baseFAA = pygame.image.load('data/' + str(player_id) + '/fig/' + 'baseline-FAA_plot_' + str(session_num - 1) + '.png').convert_alpha()
+    baseFAA = pygame.image.load('data/' + str(player_id) + '/fig/' + 'FAA_plot-baseline_' + str(session_num - 1) + '.png').convert_alpha()
     
     
     screen.blit(game_back, (0, 0))
