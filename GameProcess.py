@@ -950,15 +950,18 @@ def game_result(screen, game_status, game_status_old, stage_result, de_x, de_y, 
 def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, game_cl_b, button_main3, session_worimg, datainfo,
                    game_clear, result_graph2, result_graph3, button_bye):
 
-    #여기서 gold plot 만들기
-    #####################
-    # gold dia bar plot #
-    #####################
+
     
     stage_result = datainfo.stage_result;
     stage_num = datainfo.stagenum;
     session_num = datainfo.session_num;
     player_id = datainfo.player_id;
+    base = datainfo.baseline_FAA
+    mean = datainfo.NF_FAA_mean
+    
+    #####################
+    # gold dia bar plot #
+    #####################
     
     org_path = './'
     data_path = org_path + 'data/' + str(player_id)    
@@ -969,12 +972,6 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     y_values = [stage_result[session_num - 1][0][0], stage_result[session_num - 1][0][1], stage_result[session_num - 1][1][0], stage_result[session_num - 1][1][1], 
                 stage_result[session_num - 1][2][0], stage_result[session_num - 1][2][1], stage_result[session_num - 1][3][0], stage_result[session_num - 1][3][1], 
                 stage_result[session_num - 1][4][0], stage_result[session_num - 1][4][1]]
-    
-    #stage_result_str = str(stage_result)
-    #for stage in stage_result:
-    #    y_values.append([stage[session_num - 1][0][0], stage[session_num - 1][0][1], stage[session_num - 1][1][0], stage[session_num - 1][1][1], 
-    #                     stage[session_num - 1][2][0], stage[session_num - 1][2][1], stage[session_num - 1][3][0], stage[session_num - 1][3][1], 
-    #                     stage[session_num - 1][4][0], stage[session_num - 1][4][1], stage[session_num - 1][5][0], stage[session_num - 1][5][1]])
     
                 
     # figure size
@@ -1007,14 +1004,49 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     
     gold_dia_graph = pygame.image.load('data/' + str(player_id) + '/fig/' + 'gold_dia_plot_' + str(session_num - 1) + '.png').convert_alpha()
     
+    
+    #########################
+    # baseline and faa plot #
+    #########################
+    
+    bf = base[session_num -1][0]
+    b = [bf,bf,bf,bf,bf]
+    mean = mean[session_num -1]
+    mean = np.array(mean)
+    x = ['1','2','3','4','5']
+    y = b - mean
+    
+    # figure size
+    fig, ax = plt.subplots(figsize=(8, 8))
+    
+    ax.bar(x, y)
+    
+    # Adding labels and title to the plot
+    plt.xlabel('Baseline - FAA mean')
+    plt.ylabel('Stage')
+    
+    # Specifying the folder path to save the plot
+    figure_path = data_path + '/fig'
+    datainfo.figure_path = figure_path;
+    # Creating the folder if it does not exist
+    os.makedirs(figure_path, exist_ok=True)
+    
+    # Saving the plot as a PNG image
+    plot_path = os.path.join(figure_path, 'baseline-FAA_plot_' + str(session_num - 1) + '.png')
+    plt.savefig(plot_path)
+    plt.close()
+    
+    baseFAA = pygame.image.load('data/' + str(player_id) + '/fig/' + 'baseline-FAA_plot_' + str(session_num - 1) + '.png').convert_alpha()
+    
+    
     screen.blit(game_back, (0, 0))
     screen.blit(game_cl_b, (de_x*0.025, de_y*0.05))
     screen.blit(session_worimg, (de_x/2-300, 75))
 
 
     # plot result graph
-    screen.blit(gold_dia_graph, (de_x*0.25-230, de_y-800))
-    screen.blit(result_graph3, (de_x*0.25+570, de_y-800))
+    screen.blit(baseFAA, (de_x*0.25-230, de_y-800))
+    screen.blit(gold_dia_graph, (de_x*0.25+570, de_y-800))
 
 
 

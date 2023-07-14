@@ -7,7 +7,7 @@ Created on Wed Apr 12 00:12:53 2023
 @author: Steven Lee
 """
 import numpy as np
-
+[]
 
 
 class DataInfo():
