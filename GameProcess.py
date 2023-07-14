@@ -1024,6 +1024,7 @@ def session_result(screen, game_status, game_status_old, de_x, de_y, game_back, 
     
     ax.bar(x, y, color = '#884A39')
     
+    plt.axhline(y=0, color='b', linewidth= 0.1)
     
     plt.ylim(-1, 1)
     
