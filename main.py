@@ -24,7 +24,7 @@ if __name__ == "__main__":
     print(print1 + '\n')
     print('                      leelab Neurofeedback\n')
     print('                                          '+version_name +'\n')
-    print('developed by Steven Lee, Jisu Chung, Minwoo Kim\n')
+    print('developed by Steven Lee, Jisu Chung, Minwoo Kim, and Jay Kim\n')
     print(print1+ '\n\n')
     print('Player Information')
 

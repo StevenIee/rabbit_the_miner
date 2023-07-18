@@ -113,9 +113,11 @@ def eeg_datasaving(temp_EEG, eegdata, timedata):
     if temp_EEG.shape[0] ==0:
         temp_EEG = np.concatenate((eegdata, timedata));
     else:
-
         temp_EEG2 = np.concatenate((eegdata, timedata));
+        
         last_t = temp_EEG[2,-1];
+        # print('last_t : ' + str(last_t))
+        
         # last_t_ind = np.where(timedata[0] == last_t)[0]
         # if last_t_ind.shape[0] == 0:
         #     temp_EEG = np.concatenate((temp_EEG, temp_EEG2), axis=1)
@@ -124,9 +126,11 @@ def eeg_datasaving(temp_EEG, eegdata, timedata):
         #     temp_EEG2 = temp_EEG2[:,last_t_index:];
         #     temp_EEG = np.concatenate((temp_EEG, temp_EEG2), axis=1)
         last_t_ind = np.argmin(np.abs(timedata[0] - last_t))
-        temp_EEG2 = temp_EEG2[:,last_t_ind:];
+        # print('last_t_ind: ' + str(last_t_ind))
+        temp_EEG2 = temp_EEG2[:,last_t_ind:-1];
         temp_EEG = np.concatenate((temp_EEG, temp_EEG2), axis=1)
         
+    # print('temp_EEG_len: '+ str(temp_EEG.shape[1]))
     return temp_EEG
 
 
