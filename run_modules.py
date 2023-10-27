@@ -12,5 +12,5 @@ def run_modules(modules):
         subprocess.run(['python', module])
 
 if __name__ == '__main__':
-    modules = ['laxtha_main.py', 'NF_server_app.py', 'main.py']
+    modules = ['NF_server_app.py', 'main.py']
     run_modules(modules)
